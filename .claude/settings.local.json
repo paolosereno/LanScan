@@ -23,7 +23,17 @@
       "Bash(./HostDiscoveryTest.exe)",
       "Bash(./IpScannerTest.exe)",
       "Bash(./IpScannerTest.exe -v2)",
-      "Bash(timeout 20 ctest:*)"
+      "Bash(timeout 20 ctest:*)",
+      "Bash(git tag:*)",
+      "Bash(qmake:*)",
+      "Bash(mingw32-make:*)",
+      "Bash(./PingServiceTest.exe)",
+      "Bash(./LatencyCalculatorTest.exe)",
+      "Bash(./JitterCalculatorTest.exe)",
+      "Bash(./PacketLossCalculatorTest.exe)",
+      "Bash(./QualityScoreCalculatorTest.exe)",
+      "Bash(./JitterCalculatorTest.exe -v2)",
+      "Bash(./PacketLossCalculatorTest.exe -v2)"
     ],
     "deny": [],
     "ask": []

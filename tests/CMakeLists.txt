@@ -92,3 +92,41 @@ add_executable(IpScannerTest
 )
 target_link_libraries(IpScannerTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
 add_test(NAME IpScannerTest COMMAND IpScannerTest)
+
+# Phase 2: Diagnostics tests
+add_executable(PingServiceTest
+    network/PingServiceTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PingService.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(PingServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME PingServiceTest COMMAND PingServiceTest)
+
+add_executable(LatencyCalculatorTest
+    network/LatencyCalculatorTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/LatencyCalculator.cpp
+)
+target_link_libraries(LatencyCalculatorTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME LatencyCalculatorTest COMMAND LatencyCalculatorTest)
+
+add_executable(JitterCalculatorTest
+    network/JitterCalculatorTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/JitterCalculator.cpp
+)
+target_link_libraries(JitterCalculatorTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME JitterCalculatorTest COMMAND JitterCalculatorTest)
+
+add_executable(PacketLossCalculatorTest
+    network/PacketLossCalculatorTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PacketLossCalculator.cpp
+)
+target_link_libraries(PacketLossCalculatorTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME PacketLossCalculatorTest COMMAND PacketLossCalculatorTest)
+
+add_executable(QualityScoreCalculatorTest
+    network/QualityScoreCalculatorTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/QualityScoreCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+)
+target_link_libraries(QualityScoreCalculatorTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME QualityScoreCalculatorTest COMMAND QualityScoreCalculatorTest)

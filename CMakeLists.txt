@@ -74,6 +74,13 @@ set(NETWORK_SOURCES
     src/network/scanner/IpScanner.cpp
     src/network/scanner/QuickScanStrategy.cpp
     src/network/scanner/DeepScanStrategy.cpp
+    src/network/diagnostics/PingService.cpp
+    src/network/diagnostics/LatencyCalculator.cpp
+    src/network/diagnostics/JitterCalculator.cpp
+    src/network/diagnostics/PacketLossCalculator.cpp
+    src/network/diagnostics/QualityScoreCalculator.cpp
+    src/network/diagnostics/MetricsAggregator.cpp
+    src/network/diagnostics/PortScanner.cpp
 )
 
 # Header files
