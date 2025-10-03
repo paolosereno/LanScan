@@ -30,7 +30,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/LanScan.git
+git clone https://github.com/paolosereno/LanScan.git
 cd LanScan
 
 # Create build directory
@@ -75,7 +75,7 @@ Location: src/path/to/files
 
 ## License
 
-TBD
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributors
 

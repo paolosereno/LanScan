@@ -3092,7 +3092,12 @@ add_lanscan_test(DeviceTableViewModelTest tests/ui/DeviceTableViewModelTest.cpp)
 ---
 
 ## License
-Da definire (MIT, GPL, proprietary)
+
+This project is licensed under the **MIT License**.
+
+See [LICENSE](LICENSE) file for full text.
+
+Copyright (c) 2025 Paolo Sereno
 
 ---
 
