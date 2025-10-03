@@ -66,6 +66,8 @@ set(NETWORK_SOURCES
     src/network/services/NetworkInterfaceDetector.cpp
     src/network/services/MacVendorLookup.cpp
     src/network/services/PortServiceMapper.cpp
+    src/network/sockets/TcpSocketManager.cpp
+    src/network/sockets/UdpSocketManager.cpp
 )
 
 # Header files
