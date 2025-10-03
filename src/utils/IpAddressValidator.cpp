@@ -5,7 +5,13 @@
 bool IpAddressValidator::isValidIpv4(const QString& ip)
 {
     QHostAddress addr(ip);
-    return addr.protocol() == QAbstractSocket::IPv4Protocol;
+    if (addr.protocol() != QAbstractSocket::IPv4Protocol) {
+        return false;
+    }
+
+    // Ensure the original string matches the parsed address
+    // This prevents QHostAddress from accepting malformed IPs like "192.168.1"
+    return addr.toString() == ip;
 }
 
 bool IpAddressValidator::isValidCidr(const QString& cidr)
@@ -71,14 +77,18 @@ QString IpAddressValidator::uInt32ToIp(quint32 value)
     return addr.toString();
 }
 
-int IpAddressValidator::calculateHostCount(int prefixLength)
+qint64 IpAddressValidator::calculateHostCount(int prefixLength)
 {
     if (prefixLength < 0 || prefixLength > 32) {
         return 0;
     }
 
+    if (prefixLength == 32) {
+        return 0; // Single host, no usable hosts
+    }
+
     int hostBits = 32 - prefixLength;
-    return (1 << hostBits) - 2; // Exclude network and broadcast addresses
+    return ((qint64)1 << hostBits) - 2; // Exclude network and broadcast addresses
 }
 
 bool IpAddressValidator::isValidOctet(int value)

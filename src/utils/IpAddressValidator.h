@@ -17,7 +17,7 @@ public:
     static QPair<QString, int> parseCidr(const QString& cidr);
     static quint32 ipToUInt32(const QString& ip);
     static QString uInt32ToIp(quint32 value);
-    static int calculateHostCount(int prefixLength);
+    static qint64 calculateHostCount(int prefixLength);
 
 private:
     IpAddressValidator() = delete;

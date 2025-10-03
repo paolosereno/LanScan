@@ -4,6 +4,8 @@
 add_executable(DeviceTest
     models/DeviceTest.cpp
     ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
 )
 target_link_libraries(DeviceTest PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME DeviceTest COMMAND DeviceTest)

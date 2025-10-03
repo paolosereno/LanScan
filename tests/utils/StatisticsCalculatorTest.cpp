@@ -57,14 +57,14 @@ void StatisticsCalculatorTest::testCalculateStdDev()
 {
     QVector<double> values = {2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0};
     double stdDev = StatisticsCalculator::calculateStdDev(values);
-    QVERIFY(qAbs(stdDev - 2.0) < 0.1);
+    QVERIFY(qAbs(stdDev - 2.138) < 0.01); // Sample standard deviation
 }
 
 void StatisticsCalculatorTest::testCalculateVariance()
 {
     QVector<double> values = {2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0};
     double variance = StatisticsCalculator::calculateVariance(values);
-    QVERIFY(qAbs(variance - 4.0) < 0.1);
+    QVERIFY(qAbs(variance - 4.571) < 0.01); // Sample variance
 }
 
 void StatisticsCalculatorTest::testCalculateJitter()
