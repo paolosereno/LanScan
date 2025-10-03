@@ -1,0 +1,62 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+out/
+
+# Qt generated files
+ui_*.h
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+*.autosave
+
+# IDE files
+.vscode/
+.idea/
+*.pro.user
+*.pro.user.*
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+
+# Database files (development)
+*.db
+*.sqlite
+*.sqlite3
+
+# Test coverage
+*.gcov
+*.gcda
+*.gcno
+coverage/
+
+# Package files
+*.zip
+*.tar.gz
+*.dmg
+*.deb
+*.rpm
+
+# User settings
+.user.ini
+settings.ini
