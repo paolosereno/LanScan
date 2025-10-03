@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git config:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(mkdir:*)",
+      "Bash(git rm:*)",
+      "Bash(cmake:*)",
+      "Read(//c/Qt/6.9.1/**)",
+      "Bash(ctest:*)",
+      "Bash(set PATH=C:Qt6.9.1msvc2022_64bin)",
+      "Bash(%PATH%)",
+      "Bash($env:PATH=\"C:\\Qt\\6.9.1\\msvc2022_64\\bin;$env:PATH\")",
+      "Bash(./IpAddressValidatorTest.exe)",
+      "Bash(./StatisticsCalculatorTest.exe)",
+      "Bash(cat:*)",
+      "Bash(gdb:*)",
+      "Bash(./HostDiscoveryTest.exe)",
+      "Bash(./IpScannerTest.exe)",
+      "Bash(./IpScannerTest.exe -v2)",
+      "Bash(timeout 20 ctest:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
