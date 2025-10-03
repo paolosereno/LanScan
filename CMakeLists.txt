@@ -68,6 +68,12 @@ set(NETWORK_SOURCES
     src/network/services/PortServiceMapper.cpp
     src/network/sockets/TcpSocketManager.cpp
     src/network/sockets/UdpSocketManager.cpp
+    src/network/discovery/HostDiscovery.cpp
+    src/network/discovery/DnsResolver.cpp
+    src/network/discovery/ArpDiscovery.cpp
+    src/network/scanner/IpScanner.cpp
+    src/network/scanner/QuickScanStrategy.cpp
+    src/network/scanner/DeepScanStrategy.cpp
 )
 
 # Header files

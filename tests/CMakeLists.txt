@@ -47,3 +47,48 @@ add_executable(SubnetCalculatorTest
 )
 target_link_libraries(SubnetCalculatorTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
 add_test(NAME SubnetCalculatorTest COMMAND SubnetCalculatorTest)
+
+add_executable(HostDiscoveryTest
+    network/HostDiscoveryTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/HostDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(HostDiscoveryTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME HostDiscoveryTest COMMAND HostDiscoveryTest)
+
+add_executable(DnsResolverTest
+    network/DnsResolverTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/DnsResolver.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(DnsResolverTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME DnsResolverTest COMMAND DnsResolverTest)
+
+add_executable(ArpDiscoveryTest
+    network/ArpDiscoveryTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/ArpDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(ArpDiscoveryTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME ArpDiscoveryTest COMMAND ArpDiscoveryTest)
+
+add_executable(IpScannerTest
+    network/IpScannerTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/IpScanner.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/QuickScanStrategy.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/DeepScanStrategy.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/SubnetCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/MacVendorLookup.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/PortServiceMapper.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/HostDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/DnsResolver.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/ArpDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/sockets/TcpSocketManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/IpAddressValidator.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+)
+target_link_libraries(IpScannerTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME IpScannerTest COMMAND IpScannerTest)

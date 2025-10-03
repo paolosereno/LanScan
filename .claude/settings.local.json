@@ -19,7 +19,11 @@
       "Bash(./IpAddressValidatorTest.exe)",
       "Bash(./StatisticsCalculatorTest.exe)",
       "Bash(cat:*)",
-      "Bash(gdb:*)"
+      "Bash(gdb:*)",
+      "Bash(./HostDiscoveryTest.exe)",
+      "Bash(./IpScannerTest.exe)",
+      "Bash(./IpScannerTest.exe -v2)",
+      "Bash(timeout 20 ctest:*)"
     ],
     "deny": [],
     "ask": []

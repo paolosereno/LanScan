@@ -1,10 +1,10 @@
 # LanScan - Development Progress
 
 ## Current Status
-- **Active Phase**: Phase 0 - Foundation & Infrastructure ✅ **COMPLETED**
-- **Next Phase**: Phase 1 - Network Layer & Discovery
-- **Timeline**: Week 3-4
-- **Next Milestone**: Network layer implementation and device discovery
+- **Active Phase**: Phase 1 - Network Layer & Discovery ✅ **COMPLETED**
+- **Next Phase**: Phase 2 - Metrics & Diagnostics Core
+- **Timeline**: Week 5-6
+- **Next Milestone**: Metrics calculation and diagnostics core
 - **Last Updated**: 2025-10-03
 
 ## Phase Progress Overview
@@ -17,7 +17,12 @@
   - ✅ Interfaces Layer (IScanStrategy, IMetricsCalculator, IExporter, IDeviceRepository)
   - ✅ Build system configured (MinGW Debug + MSVC Release)
   - ✅ All unit tests passing (5/5 - 100%)
-- [ ] **Phase 1**: Network Layer & Discovery *(0/4 modules completed)*
+- [x] **Phase 1**: Network Layer & Discovery ✅ **(4/4 modules completed - 100%)**
+  - ✅ Network Services (SubnetCalculator, NetworkInterfaceDetector, MacVendorLookup, PortServiceMapper)
+  - ✅ Socket Management (TcpSocketManager, UdpSocketManager)
+  - ✅ Discovery Services (HostDiscovery, DnsResolver, ArpDiscovery)
+  - ✅ Basic Scanning (IpScanner, QuickScanStrategy, DeepScanStrategy)
+  - ✅ All unit tests passing (10/10 - 100%)
 - [ ] **Phase 2**: Metrics & Diagnostics Core *(0/4 modules completed)*
 
 ### Core Development (3-6)
@@ -76,19 +81,50 @@
 - [x] Build system working (MinGW + MSVC)
 - [x] Git commits and documentation complete
 
-## Recent Completed Items (Phase 0)
-- [x] Created comprehensive phase documentation (Phase 0-12)
-- [x] Established Git workflow and branch strategy
-- [x] Implemented complete foundation layer (models, utils, interfaces)
-- [x] Configured build system with MinGW Debug (-j12) and MSVC Release
-- [x] Fixed all test failures (100% passing)
-- [x] Added comprehensive BUILD.md documentation
-- [x] 3 commits pushed to GitHub (develop branch)
+## Phase 1 - Completed Tasks ✅
+
+### Network Services Implementation ✅
+- [x] SubnetCalculator.h/cpp - CIDR/subnet calculations and IP range generation
+- [x] NetworkInterfaceDetector.h/cpp - Cross-platform network interface detection
+- [x] MacVendorLookup.h/cpp - MAC address to vendor mapping (40+ OUI database)
+- [x] PortServiceMapper.h/cpp - Port to service name mapping (40+ common ports)
+- [x] Unit test: SubnetCalculatorTest (passed)
+
+### Socket Management Implementation ✅
+- [x] TcpSocketManager.h/cpp - TCP socket connection management
+- [x] UdpSocketManager.h/cpp - UDP datagram send/receive
+- [x] Signal-based async handling for both TCP and UDP
+
+### Discovery Services Implementation ✅
+- [x] HostDiscovery.h/cpp - Ping-based host discovery (cross-platform)
+- [x] DnsResolver.h/cpp - DNS hostname resolution
+- [x] ArpDiscovery.h/cpp - ARP table parsing (Windows/Linux)
+- [x] Unit tests: HostDiscoveryTest, DnsResolverTest, ArpDiscoveryTest (all passed)
+
+### Basic Scanning Implementation ✅
+- [x] IpScanner.h/cpp - Multi-threaded IP range scanning with QThreadPool
+- [x] QuickScanStrategy.h/cpp - Fast ping-only scan strategy
+- [x] DeepScanStrategy.h/cpp - Comprehensive scan (ping + DNS + ports)
+- [x] Updated IScanStrategy interface to support Device return type
+- [x] Unit test: IpScannerTest (tests on localhost and 192.168.1.1)
+
+### Testing & Quality ✅
+- [x] All 10 unit tests passing (100%)
+- [x] Fixed test issues with async signal handling
+- [x] Cross-platform compatibility verified (Windows ping/arp commands)
+
+## Recent Completed Items (Phase 1)
+- [x] Implemented complete network layer (services, sockets, discovery, scanning)
+- [x] Created 12 new source files + 12 headers + 4 test files
+- [x] All tests passing (10/10 - 100%)
+- [x] Multi-threaded scanning with QThreadPool
+- [x] Two scan strategies implemented (Quick and Deep)
+- [x] Cross-platform support for Windows/Linux network commands
 
 ## Upcoming (Next 2 Weeks)
-- **Week 3-4**: Network layer implementation and device discovery
 - **Week 5-6**: Metrics calculation and diagnostics core
 - **Week 7**: Data persistence and export functionality
+- **Week 8**: Application layer and controllers
 
 ## Current Blockers & Issues
 - None currently
@@ -123,25 +159,26 @@
 - **[Development Guide](docs/development-guide.md)**: Setup and contribution guidelines
 
 ## Progress Metrics
-- **Total Phases**: 12 (1 completed, 0 active, 11 pending)
-- **Overall Progress**: Phase 0 complete (8.3% of total project)
-- **Phase 0 Completion**: 100% ✅ (all modules and tests complete)
-- **Current Test Coverage**: 100% (5/5 tests passing)
+- **Total Phases**: 12 (2 completed, 0 active, 10 pending)
+- **Overall Progress**: Phase 0-1 complete (16.7% of total project)
+- **Phase 0 Completion**: 100% ✅ (4/4 modules, 5/5 tests)
+- **Phase 1 Completion**: 100% ✅ (4/4 modules, 10/10 tests)
+- **Current Test Coverage**: 100% (10/10 tests passing)
 - **Estimated Total Timeline**: 20 weeks to v1.0.0 release
 - **Code Coverage Target**: 85% minimum for all phases
 
-## Build Statistics (Phase 0)
-- **Files Created**: 31 (models, utils, interfaces, tests)
-- **Lines of Code**: ~2,100+ lines
-- **Test Files**: 5 (all passing)
-- **Commits**: 3 on develop branch
-- **Build Time**: ~10-15 seconds (Debug, 12 cores)
+## Build Statistics (Phase 0 + Phase 1)
+- **Files Created**: 59 total (Phase 0: 31, Phase 1: 28)
+- **Lines of Code**: ~4,500+ lines
+- **Test Files**: 10 (all passing)
+- **Commits**: TBD (to be committed)
+- **Build Time**: ~15-20 seconds (Debug, 12 cores)
 
 ---
 
 **Last Updated**: 2025-10-03
 **Next Review**: Weekly (every Monday)
-**Current Target**: Begin Phase 1 - Network Layer & Discovery
+**Current Target**: Begin Phase 2 - Metrics & Diagnostics Core
 
 ---
 
