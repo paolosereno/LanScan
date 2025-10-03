@@ -5,29 +5,39 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-10%2F10%20passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-15%2F15%20passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
 ## Features
 
-### ✅ Implemented (Phase 0-1)
+### ✅ Implemented (Phase 0-2)
+
+**Network Discovery & Scanning**
 - ✅ Network device discovery (IP, hostname, MAC)
 - ✅ Multi-threaded IP range scanning
-- ✅ Ping-based host discovery (cross-platform)
+- ✅ Ping-based host discovery (cross-platform Windows/Linux/macOS)
 - ✅ DNS reverse lookup
 - ✅ ARP table parsing
 - ✅ MAC vendor identification (40+ manufacturers)
-- ✅ Port scanning (TCP/UDP)
 - ✅ Service detection (40+ common ports)
 - ✅ Two scan strategies (Quick & Deep)
 
-### 🚧 Planned (Phase 2+)
-- Real-time latency, jitter, and packet loss monitoring
+**Metrics & Diagnostics** (Phase 2)
+- ✅ Real-time latency monitoring (min/max/avg/median/stdDev)
+- ✅ Jitter calculation (standard deviation & consecutive)
+- ✅ Packet loss detection with burst pattern analysis
+- ✅ Connection quality scoring (0-100 weighted algorithm)
+- ✅ Continuous ping monitoring with history tracking
+- ✅ Port scanning (TCP Quick/Full/Custom modes)
+- ✅ Metrics aggregation with dependency injection
+
+### 🚧 Planned (Phase 3+)
+- Database persistence (SQLite)
+- Export to CSV/JSON/XML/HTML
 - Advanced diagnostics (traceroute, MTU discovery, bandwidth test)
 - Modern Qt6 GUI with dark/light themes
-- Export to CSV/JSON/XML/HTML
-- Historical data tracking
+- Historical data tracking with charts
 - Network topology visualization
 
 ## Technology Stack
@@ -117,9 +127,15 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 1 - Network Layer & Discovery ✅ **COMPLETED**
-**Next Phase**: Phase 2 - Metrics & Diagnostics Core
-**Progress**: 16.7% (2/12 phases complete)
+**Current Phase**: Phase 2 - Metrics & Diagnostics Core ✅ **COMPLETED**
+**Next Phase**: Phase 3 - Persistence & Data Management
+**Progress**: 25% (3/12 phases complete)
+**Latest Release**: [v0.2.0-phase2](https://github.com/paolosereno/LanScan/releases/tag/v0.2.0-phase2)
+
+### Recent Updates
+- **2025-10-03**: Phase 2 completed - Added metrics calculation, ping service, and port scanning
+- **2025-10-03**: Phase 1 completed - Implemented network discovery and IP scanning
+- **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ## License
 
