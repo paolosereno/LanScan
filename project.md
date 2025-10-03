@@ -32,9 +32,10 @@ Cross-platform desktop application developed in C++ with Qt for LAN scanning, mo
 ## Technology Stack
 
 ### Core Technologies
-- **Framework**: Qt 6.x (Widgets + Network + Charts)
+- **Framework**: Qt 6.9.1 (Widgets + Network + Charts)
 - **Language**: C++17 or higher
-- **Build System**: CMake
+- **Build System**: CMake 3.16+
+- **Compiler**: MinGW GCC 13.1.0 (Development), MSVC 2022 (Release)
 - **UI Design**: Qt Designer (.ui files)
 
 ### Optional Libraries
@@ -93,12 +94,33 @@ The project is structured in 12 development phases:
 - Administrative privileges (for raw socket operations)
 
 ### Building from Source
+
+#### Development Build (Recommended)
 ```bash
 git clone https://github.com/username/LanScan.git
 cd LanScan
+rm -rf build && mkdir build && cd build
+cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="C:/Qt/6.9.1/mingw_64" ..
+cmake --build . -j12
+```
+
+**Build Configuration:**
+- **Compiler**: MinGW (GCC 13.1.0)
+- **Build Type**: Debug
+- **Qt Path**: C:/Qt/6.9.1/mingw_64
+- **Parallel Jobs**: 12 cores (-j12)
+
+#### Running Tests
+```bash
+cd build
+ctest --output-on-failure
+```
+
+#### Alternative: Release Build with MSVC
+```bash
 mkdir build && cd build
-cmake ..
-cmake --build .
+cmake -DCMAKE_PREFIX_PATH="C:/Qt/6.9.1/msvc2022_64" ..
+cmake --build . --config Release -j12
 ```
 
 ### System Requirements
