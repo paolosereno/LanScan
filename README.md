@@ -49,20 +49,23 @@ cmake --build .
 
 ## Development
 
-See [project.md](project.md) for detailed architecture and development roadmap.
+- See [project.md](project.md) for detailed architecture and development roadmap
+- See [TODO.md](TODO.md) for current task list and progress tracking
 
 ### Branch Strategy
 - `main` - Production releases
 - `develop` - Development branch
-- `feature/LANSCAN-XXX-description` - Feature branches
+- `feature/phaseX-description` - Feature branches (X = 0-11)
+- `bugfix/description` - Bug fixes
+- `hotfix/description` - Critical fixes
 
 ### Commit Convention
 ```
-LANSCAN-XXX: Brief description
+[Phase X] Brief description
 
 Detailed description of changes.
 
-Refs: LANSCAN-XXX
+Location: src/path/to/files
 ```
 
 ## Project Status

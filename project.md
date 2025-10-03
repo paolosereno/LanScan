@@ -1618,7 +1618,7 @@ La roadmap è organizzata per **layer architetturali** e **priorità funzionali*
 
 ---
 
-## Git Workflow & Jira Integration
+## Git Workflow & Task Management
 
 ### Git Repository Setup
 
@@ -1715,18 +1715,18 @@ settings.ini
 ```
 main (o master)
 ├── develop
-│   ├── feature/JIRA-123-ip-scanner
-│   ├── feature/JIRA-124-latency-calculator
-│   ├── feature/JIRA-125-device-table-ui
+│   ├── feature/phase0-ip-scanner
+│   ├── feature/phase1-latency-calculator
+│   ├── feature/phase2-device-table-ui
 │   └── ...
 ├── release/v1.0.0
-└── hotfix/JIRA-200-critical-bug
+└── hotfix/critical-bug-description
 ```
 
 **Branch Naming Convention**:
-- `feature/JIRA-XXX-short-description` - Nuove funzionalità
-- `bugfix/JIRA-XXX-short-description` - Bug fix
-- `hotfix/JIRA-XXX-short-description` - Fix critici su production
+- `feature/phaseX-short-description` - Nuove funzionalità (X = numero fase 0-11)
+- `bugfix/short-description` - Bug fix
+- `hotfix/short-description` - Fix critici su production
 - `release/vX.Y.Z` - Preparazione release
 - `develop` - Branch di sviluppo principale
 - `main` - Branch production (solo release stabili)
@@ -1737,14 +1737,14 @@ main (o master)
 # 1. Crea branch develop
 git checkout -b develop
 
-# 2. Per ogni nuova feature (es. JIRA-123)
+# 2. Per ogni nuova feature (es. IpScanner in Fase 1)
 git checkout develop
 git pull origin develop
-git checkout -b feature/JIRA-123-ip-scanner
+git checkout -b feature/phase1-ip-scanner
 
 # 3. Sviluppa e committa
 git add src/core/scanning/IpScanner.h src/core/scanning/IpScanner.cpp
-git commit -m "JIRA-123: Implement IpScanner class
+git commit -m "[Phase 1] Implement IpScanner class
 
 - Add IpScanner.h/cpp with subnet scanning logic
 - Implement CIDR notation parsing
@@ -1752,7 +1752,7 @@ git commit -m "JIRA-123: Implement IpScanner class
 - Unit tests: IpScannerTest"
 
 # 4. Push branch su remote
-git push -u origin feature/JIRA-123-ip-scanner
+git push -u origin feature/phase1-ip-scanner
 
 # 5. Crea Pull Request (su GitHub/GitLab/Bitbucket)
 # (via interfaccia web)
@@ -1760,199 +1760,112 @@ git push -u origin feature/JIRA-123-ip-scanner
 # 6. Dopo merge, elimina branch locale
 git checkout develop
 git pull origin develop
-git branch -d feature/JIRA-123-ip-scanner
+git branch -d feature/phase1-ip-scanner
 ```
 
 ### Commit Message Convention
 
-**Formato Standard** (collegato a Jira):
+**Formato Standard**:
 
 ```
-JIRA-XXX: Breve descrizione (max 50 caratteri)
+[Phase X] Breve descrizione (max 50 caratteri)
 
 Descrizione dettagliata del cambiamento (max 72 caratteri per riga):
 - Cosa è stato fatto
 - Perché è stato fatto
 - Come funziona
-
-Refs: JIRA-XXX
 ```
 
 **Esempi**:
 
 ```bash
 # Feature implementation
-git commit -m "JIRA-45: Add LatencyCalculator class
+git commit -m "[Phase 2] Add LatencyCalculator class
 
 Implements latency calculation with min/avg/max/median support.
 Includes unit tests with 100% coverage.
 
-Refs: JIRA-45"
+Location: src/core/metrics/LatencyCalculator.h/cpp"
 
 # Bug fix
-git commit -m "JIRA-78: Fix packet loss calculation rounding error
+git commit -m "[Bugfix] Fix packet loss calculation rounding error
 
 PacketLossCalculator was using integer division instead of float.
-Changed calculation to use double precision.
-
-Fixes: JIRA-78"
+Changed calculation to use double precision."
 
 # Refactoring
-git commit -m "JIRA-92: Refactor DeviceRepository to use dependency injection
+git commit -m "[Phase 3] Refactor DeviceRepository to use dependency injection
 
 Extracted IDeviceRepository interface to enable mocking in tests.
-Updated all consumers to use interface instead of concrete class.
-
-Refs: JIRA-92"
+Updated all consumers to use interface instead of concrete class."
 
 # Documentation
-git commit -m "JIRA-105: Add Doxygen comments to network layer
+git commit -m "[Docs] Add Doxygen comments to network layer
 
 Added comprehensive documentation for all public APIs in
-network/services/ directory.
+network/services/ directory."
 
-Refs: JIRA-105"
+# Tests
+git commit -m "[Tests] Add unit tests for SubnetCalculator
+
+Complete test coverage for CIDR parsing and subnet calculations.
+Coverage: 100%"
 ```
 
-### Jira Project Setup
+### Task Management System
 
-#### Struttura Progetto Jira
+Il progetto usa un sistema semplice basato su **file TODO.md** per tracciare le attività, senza necessità di software esterni.
 
-**Project Key**: `LANSCAN`
+#### Struttura TODO.md
 
-**Issue Types**:
-- **Epic**: Funzionalità macro (es. "Network Scanning", "Metrics Dashboard")
-- **Story**: User story (es. "As a user, I want to scan my LAN")
-- **Task**: Compito tecnico (es. "Implement LatencyCalculator")
-- **Bug**: Difetto da correggere
-- **Sub-task**: Sotto-task di una story/task
+Il file `TODO.md` organizza le task per fase di sviluppo:
 
-#### Epics per Fase di Sviluppo
+```markdown
+# LanScan - TODO List
 
-```
-Epic: LANSCAN-1 - Foundation & Infrastructure (Fase 0)
-Epic: LANSCAN-2 - Network Layer & Discovery (Fase 1)
-Epic: LANSCAN-3 - Metrics & Diagnostics (Fase 2)
-Epic: LANSCAN-4 - Persistence & Data Management (Fase 3)
-Epic: LANSCAN-5 - Application Layer & Controllers (Fase 4)
-Epic: LANSCAN-6 - UI Foundation (Fase 5)
-Epic: LANSCAN-7 - Charts & Visualization (Fase 6)
-Epic: LANSCAN-8 - Advanced Diagnostics (Fase 7)
-Epic: LANSCAN-9 - Advanced Features (Fase 8)
-Epic: LANSCAN-10 - UI Polish & Theming (Fase 9)
-Epic: LANSCAN-11 - Testing & QA (Fase 10)
-Epic: LANSCAN-12 - Documentation & Release (Fase 11)
-```
+## Legend
+- [ ] TODO
+- [x] DONE
+- [>] IN PROGRESS
+- [!] BLOCKED
 
-#### Esempio Issue Structure per Fase 0
+## Phase 0: Foundation & Infrastructure (Week 1-2)
 
-**Epic**: LANSCAN-1 - Foundation & Infrastructure
+### Models Layer
+- [x] Device model (Device.h/cpp)
+- [x] NetworkMetrics model
+- [ ] PortInfo model
+- [ ] NetworkInterface model
 
-**Stories/Tasks**:
-```
-LANSCAN-10: Setup Git repository and CMake project
-  Type: Task
-  Priority: Highest
-  Story Points: 2
-  Sprint: Sprint 1
-  Description: Initialize Git repo, create CMakeLists.txt, configure Qt6
+### Utils Layer
+- [>] IpAddressValidator
+- [ ] Logger
+- [ ] StringFormatter
+- [ ] TimeFormatter
 
-LANSCAN-11: Create project directory structure
-  Type: Task
-  Priority: Highest
-  Story Points: 1
-  Sprint: Sprint 1
+### Interfaces
+- [ ] IScanStrategy
+- [ ] IMetricsCalculator
+- [ ] IExporter
+- [ ] IDeviceRepository
 
-LANSCAN-12: Implement Device model class
-  Type: Task
-  Priority: High
-  Story Points: 3
-  Sprint: Sprint 1
-  Acceptance Criteria:
-    - Device.h/cpp created
-    - Properties: ipAddress, hostname, macAddress, etc.
-    - Unit test: DeviceTest with 100% coverage
-
-LANSCAN-13: Implement NetworkMetrics model class
-  Type: Task
-  Priority: High
-  Story Points: 2
-  Sprint: Sprint 1
-
-LANSCAN-14: Implement IpAddressValidator utility
-  Type: Task
-  Priority: High
-  Story Points: 3
-  Sprint: Sprint 1
-  Acceptance Criteria:
-    - Validates IPv4 addresses
-    - Validates CIDR notation
-    - Unit tests: IpAddressValidatorTest
-
-LANSCAN-15: Implement Logger utility
-  Type: Task
-  Priority: Medium
-  Story Points: 3
-  Sprint: Sprint 1
-  Acceptance Criteria:
-    - Multiple log levels (DEBUG, INFO, WARN, ERROR)
-    - File and console output
-    - Thread-safe implementation
+...
 ```
 
-#### Custom Fields in Jira
+#### Task Workflow
 
-- **Git Branch**: Campo testo per tracciare nome branch
-- **Test Coverage**: Campo numerico per % coverage
-- **Component**: Componente architetturale (Core, Network, UI, Persistence, etc.)
-- **Phase**: Fase di sviluppo (0-11)
+**Stati Task**:
+- `[ ]` TODO - Da fare
+- `[>]` IN PROGRESS - In lavorazione
+- `[x]` DONE - Completata
+- `[!]` BLOCKED - Bloccata (aggiungi nota del perché)
 
-#### Workflow Jira
-
-```
-TODO → IN PROGRESS → CODE REVIEW → TESTING → DONE
-  ↓         ↓              ↓           ↓
-BLOCKED   BLOCKED      BLOCKED     BLOCKED
-```
-
-**Transizioni**:
-1. **TODO → IN PROGRESS**: Quando inizi a lavorare, crei branch Git
-2. **IN PROGRESS → CODE REVIEW**: Quando pushhi e crei PR
-3. **CODE REVIEW → TESTING**: Dopo merge, inizia testing
-4. **TESTING → DONE**: Test passano, issue completata
-5. **ANY → BLOCKED**: Quando trovi un impedimento
-
-### Git-Jira Integration
-
-#### Smart Commits
-
-Jira riconosce automaticamente riferimenti nei commit:
-
-```bash
-# Transizione automatica a "In Progress"
-git commit -m "LANSCAN-45 #in-progress Implement LatencyCalculator"
-
-# Aggiungere commento
-git commit -m "LANSCAN-45 #comment Fixed edge case with empty data"
-
-# Transizione a "Done" con tempo loggato
-git commit -m "LANSCAN-45 #done #time 3h Completed LatencyCalculator with tests"
-
-# Combinazioni multiple
-git commit -m "LANSCAN-45 #in-progress #time 2h Started implementation
-LANSCAN-46 #comment Added test data for validation"
-```
-
-#### Branch Linking
-
-In Jira, aggiungi campo "Git Branch" e popolalo:
-
-```
-Issue: LANSCAN-123
-Git Branch: feature/LANSCAN-123-ip-scanner
-```
-
-Questo permette di linkare direttamente issue→branch.
+**Quando inizi una task**:
+1. Cambia `[ ]` in `[>]`
+2. Crea branch Git: `feature/phaseX-description`
+3. Lavora sulla task
+4. Committa con messaggio `[Phase X] Description`
+5. Cambia `[>]` in `[x]` quando completata
 
 #### Pull Request Template
 
