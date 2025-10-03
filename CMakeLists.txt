@@ -60,6 +60,14 @@ set(UTILS_SOURCES
     src/utils/StatisticsCalculator.cpp
 )
 
+# Network sources
+set(NETWORK_SOURCES
+    src/network/services/SubnetCalculator.cpp
+    src/network/services/NetworkInterfaceDetector.cpp
+    src/network/services/MacVendorLookup.cpp
+    src/network/services/PortServiceMapper.cpp
+)
+
 # Header files
 set(HEADERS
     src/models/Device.h
@@ -87,6 +95,7 @@ add_executable(${PROJECT_NAME}
     ${SOURCES}
     ${MODEL_SOURCES}
     ${UTILS_SOURCES}
+    ${NETWORK_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
 )

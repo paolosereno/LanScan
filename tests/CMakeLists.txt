@@ -38,3 +38,12 @@ add_executable(LoggerTest
 )
 target_link_libraries(LoggerTest PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME LoggerTest COMMAND LoggerTest)
+
+# Network tests
+add_executable(SubnetCalculatorTest
+    network/SubnetCalculatorTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/SubnetCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/IpAddressValidator.cpp
+)
+target_link_libraries(SubnetCalculatorTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME SubnetCalculatorTest COMMAND SubnetCalculatorTest)
