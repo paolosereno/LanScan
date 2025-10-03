@@ -1,0 +1,35 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# C++ files
+*.cpp linguist-language=C++
+*.h linguist-language=C++
+*.hpp linguist-language=C++
+*.cc linguist-language=C++
+*.cxx linguist-language=C++
+
+# CMake files
+CMakeLists.txt linguist-language=CMake
+*.cmake linguist-language=CMake
+
+# Qt files
+*.ui linguist-language=XML
+*.qrc linguist-language=XML
+
+# Exclude generated files from language statistics
+*.moc linguist-generated=true
+moc_*.cpp linguist-generated=true
+ui_*.h linguist-generated=true
+qrc_*.cpp linguist-generated=true
+*_autogen/* linguist-generated=true
+
+# Documentation
+*.md linguist-documentation=true
+docs/* linguist-documentation=true
+
+# Build artifacts (should be gitignored anyway)
+build/* linguist-generated=true
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
