@@ -1,245 +1,122 @@
-# LanScan - TODO List
+# LanScan - Development Progress
 
-## Legend
-- `[ ]` TODO
-- `[>]` IN PROGRESS
-- `[x]` DONE
-- `[!]` BLOCKED
+## Current Status
+- **Active Phase**: Phase 0 - Foundation & Infrastructure
+- **Timeline**: Week 1-2
+- **Next Milestone**: Complete foundation layer (models, utils, interfaces)
+- **Estimated Completion**: End of Week 2
 
----
+## Phase Progress Overview
 
-## Phase 0: Foundation & Infrastructure (Week 1-2)
+### Foundation Phases (0-2)
+- [ ] **Phase 0**: Foundation & Infrastructure *(0/4 modules completed)*
+- [ ] **Phase 1**: Network Layer & Discovery *(0/4 modules completed)*
+- [ ] **Phase 2**: Metrics & Diagnostics Core *(0/4 modules completed)*
 
-### 0.1 Project Setup
+### Core Development (3-6)
+- [ ] **Phase 3**: Persistence & Data Management *(0/3 modules completed)*
+- [ ] **Phase 4**: Application Layer & Controllers *(0/3 modules completed)*
+- [ ] **Phase 5**: UI Foundation & Views *(0/5 modules completed)*
+- [ ] **Phase 6**: Charts & Visualization *(0/3 modules completed)*
+
+### Advanced Features (7-9)
+- [ ] **Phase 7**: Advanced Diagnostics *(0/4 modules completed)*
+- [ ] **Phase 8**: Advanced Features *(0/4 modules completed)*
+- [ ] **Phase 9**: UI Polish & Theming *(0/4 modules completed)*
+
+### Quality & Release (10-12)
+- [ ] **Phase 10**: Testing & Quality Assurance *(0/5 modules completed)*
+- [ ] **Phase 11**: Documentation & Release *(0/4 modules completed)*
+- [ ] **Phase 12**: Post-Release & Maintenance *(ongoing)*
+
+## Active Tasks (Current Week)
+
+### Project Setup
 - [x] Initialize Git repository
 - [x] Create .gitignore
-- [x] Create README.md
-- [x] Create project.md documentation
-- [ ] Setup CMakeLists.txt base
-- [ ] Configure Qt6 in CMake
-- [ ] Create project directory structure
+- [x] Create README.md and project documentation
+- [x] Organize phase documents
+- [ ] Setup CMakeLists.txt with Qt6 configuration
+- [ ] Create complete project directory structure
 
-### 0.2 Models Layer
-- [ ] Device.h/cpp - Entità dispositivo
-- [ ] NetworkMetrics.h/cpp - Entità metriche
-- [ ] PortInfo.h/cpp - Info porta
-- [ ] NetworkInterface.h/cpp - Interfaccia di rete
-- [ ] Test: DeviceTest
-- [ ] Test: NetworkMetricsTest
+### Models Layer Implementation
+- [ ] Device.h/cpp - Core device entity
+- [ ] NetworkMetrics.h/cpp - Network metrics entity
+- [ ] PortInfo.h/cpp - Port information entity
+- [ ] NetworkInterface.h/cpp - Network interface entity
+- [ ] Unit tests for all models
 
-### 0.3 Utils Layer
-- [ ] Logger.h/cpp - Sistema logging (DEBUG, INFO, WARN, ERROR)
-- [ ] IpAddressValidator.h/cpp - Validazione IP/CIDR
-- [ ] StringFormatter.h/cpp - Formattazione stringhe
-- [ ] TimeFormatter.h/cpp - Formattazione date/ore
-- [ ] StatisticsCalculator.h/cpp - Calcoli statistici
-- [ ] Test: IpAddressValidatorTest
-- [ ] Test: StatisticsCalculatorTest
+### Utils Layer Implementation
+- [ ] Logger.h/cpp - Logging system (DEBUG, INFO, WARN, ERROR)
+- [ ] IpAddressValidator.h/cpp - IP/CIDR validation
+- [ ] StringFormatter.h/cpp - String formatting utilities
+- [ ] TimeFormatter.h/cpp - Date/time formatting
+- [ ] StatisticsCalculator.h/cpp - Statistical calculations
+- [ ] Unit tests for all utilities
 
-### 0.4 Interfaces Layer
-- [ ] IScanStrategy.h - Interface strategia scan
-- [ ] IMetricsCalculator.h - Interface calcolatori
-- [ ] IExporter.h - Interface export
-- [ ] IDeviceRepository.h - Interface repository
+### Interfaces Layer
+- [ ] IScanStrategy.h - Scanning strategy interface
+- [ ] IMetricsCalculator.h - Metrics calculator interface
+- [ ] IExporter.h - Data export interface
+- [ ] IDeviceRepository.h - Device repository interface
 
-**Deliverable**: Infrastruttura base funzionante, modelli dati, utilities testate
+## Recent Completed Items
+- [x] Created comprehensive phase documentation (Phase 0-12)
+- [x] Simplified project.md to focus on overview
+- [x] Organized documentation structure
+- [x] Established Git workflow and branch strategy
 
----
+## Upcoming (Next 2 Weeks)
+- **Week 3-4**: Network layer implementation and device discovery
+- **Week 5-6**: Metrics calculation and diagnostics core
+- **Week 7**: Data persistence and export functionality
 
-## Phase 1: Network Layer & Core Discovery (Week 3-4)
+## Current Blockers & Issues
+- None currently
 
-### 1.1 Network Services
-- [ ] SubnetCalculator.h/cpp - Calcoli subnet/CIDR
-- [ ] NetworkInterfaceDetector.h/cpp - Rilevamento interfacce
-- [ ] MacVendorLookup.h/cpp - Lookup vendor (OUI database)
-- [ ] PortServiceMapper.h/cpp - Mapping porta→servizio
-- [ ] Test: SubnetCalculatorTest
-- [ ] Test: NetworkInterfaceDetectorTest
+## Technical Decisions Made
+- **Framework**: Qt 6.x (Widgets + Network + Charts)
+- **Build System**: CMake with auto-generated UI compilation
+- **Architecture**: SRP-based layered architecture with MVVM for UI
+- **Database**: SQLite for local data persistence
+- **Testing**: Qt Test framework with 85%+ coverage target
+- **Version Control**: GitFlow with feature branches per phase
 
-### 1.2 Socket Management
-- [ ] TcpSocketManager.h/cpp - Gestione socket TCP
-- [ ] UdpSocketManager.h/cpp - Gestione socket UDP
-- [ ] Test: Socket mock tests
+## Resources & Dependencies
+- **Required**: Qt 6.2+, CMake 3.16+, C++17 compiler
+- **Optional**: libpcap/WinPcap for advanced packet capture
+- **Platform**: Windows 10/11, Linux (Ubuntu 20.04+), macOS 11+
 
-### 1.3 Discovery Services
-- [ ] HostDiscovery.h/cpp - Ping-based discovery (QProcess)
-- [ ] DnsResolver.h/cpp - Risoluzione DNS
-- [ ] ArpDiscovery.h/cpp - Risoluzione ARP
-- [ ] Test: HostDiscoveryTest
-- [ ] Test: DnsResolverTest
+## Development Environment Setup
+- [ ] Qt 6.2+ installation and configuration
+- [ ] CMake build system setup
+- [ ] IDE configuration (Qt Creator recommended)
+- [ ] Git repository and branch setup complete ✓
 
-### 1.4 Basic Scanning
-- [ ] IpScanner.h/cpp - Scansione IP range
-- [ ] ScanStrategy.h/cpp - Strategia quick scan
-- [ ] Test: IpScannerTest
+## Quick Reference Links
+- **[Phase Documents](docs/phases/)**: Complete task breakdown for each phase
+- **[Project Overview](project.md)**: Main project documentation
+- **[Architecture Guide](docs/architecture-overview.md)**: System design and patterns
+- **[Development Guide](docs/development-guide.md)**: Setup and contribution guidelines
 
-**Deliverable**: Scansione subnet e discovery dispositivi con IP, hostname, MAC
-
----
-
-## Phase 2: Metrics & Diagnostics Core (Week 5-6)
-
-### 2.1 Ping Service
-- [ ] PingService.h/cpp - Esecuzione ping (QProcess wrapper)
-- [ ] Parsing output ping (cross-platform)
-- [ ] Test: PingServiceTest
-
-### 2.2 Metrics Calculators
-- [ ] LatencyCalculator.h/cpp - Calcolo latenza (min/avg/max/median)
-- [ ] JitterCalculator.h/cpp - Calcolo jitter (std deviation)
-- [ ] PacketLossCalculator.h/cpp - Calcolo packet loss %
-- [ ] QualityScoreCalculator.h/cpp - Score qualità
-- [ ] Test: LatencyCalculatorTest
-- [ ] Test: JitterCalculatorTest
-- [ ] Test: PacketLossCalculatorTest
-- [ ] Test: QualityScoreCalculatorTest
-
-### 2.3 Metrics Aggregation
-- [ ] MetricsAggregator.h/cpp - Aggregazione metriche
-- [ ] Continuous ping tracking (history)
-- [ ] Test: MetricsAggregatorTest
-
-### 2.4 Port Scanning
-- [ ] PortScanner.h/cpp - Scansione porte TCP
-- [ ] Quick scan (porte comuni)
-- [ ] Custom port ranges
-- [ ] Test: PortScannerTest
-
-**Deliverable**: Metriche latenza, jitter, packet loss per ogni dispositivo + port scan
+## Progress Metrics
+- **Total Phases**: 12 (0 completed, 1 active, 11 pending)
+- **Current Phase Completion**: ~15% (setup tasks completed)
+- **Estimated Total Timeline**: 20 weeks to v1.0.0 release
+- **Code Coverage Target**: 85% minimum for all phases
 
 ---
 
-## Phase 3: Persistence & Data Management (Week 7)
-
-### 3.1 Repository Pattern
-- [ ] DeviceRepository.h/cpp - Persistenza dispositivi (SQLite)
-- [ ] DeviceCache.h/cpp - Cache in-memory
-- [ ] Database schema creation
-- [ ] Test: DeviceRepositoryTest
-
-### 3.2 Export Functionality
-- [ ] ExportStrategy.h - Interface export
-- [ ] CsvExporter.h/cpp - Export CSV
-- [ ] JsonExporter.h/cpp - Export JSON
-- [ ] Test: CsvExporterTest
-- [ ] Test: JsonExporterTest
-
-### 3.3 Settings Management
-- [ ] SettingsManager.h/cpp - QSettings wrapper
-- [ ] ConfigValidator.h/cpp - Validazione config
-- [ ] Test: SettingsManagerTest
-
-**Deliverable**: Dati persistono, export CSV/JSON funzionante
+**Last Updated**: 2025-01-03
+**Next Review**: Weekly (every Monday)
+**Phase Target**: Complete Phase 0 foundation by end of Week 2
 
 ---
 
-## Phase 4: Application Layer & Controllers (Week 8-9)
+## Legend
+- `[ ]` Not Started
+- `[>]` In Progress
+- `[x]` Completed
+- `[!]` Blocked
 
-### 4.1 Core Coordinators
-- [ ] ScanCoordinator.h/cpp - Coordina scansioni multiple
-- [ ] Multi-threading con QThread
-- [ ] Progress tracking
-- [ ] Test: ScanCoordinatorTest
-
-### 4.2 Controllers
-- [ ] ScanController.h/cpp - Controlla workflow scansione
-- [ ] MetricsController.h/cpp - Controlla raccolta metriche
-- [ ] ExportController.h/cpp - Controlla export
-- [ ] Test: Integration tests
-
-### 4.3 Management Services
-- [ ] ProfileManager.h/cpp - Gestione profili scan
-- [ ] FavoritesManager.h/cpp - Gestione preferiti
-- [ ] Test: ProfileManagerTest
-
-**Deliverable**: Business logic completa, workflow orchestrati, threading
-
----
-
-## Phase 5: UI Foundation & Basic Views (Week 10-11)
-
-### 5.1 Qt Designer Files (.ui)
-- [ ] mainwindow.ui - Layout finestra principale
-- [ ] scanconfigdialog.ui - Dialog configurazione scan
-- [ ] devicetablewidget.ui - Widget tabella dispositivi
-
-### 5.2 ViewModels
-- [ ] DeviceTableViewModel.h/cpp - ViewModel tabella (QAbstractTableModel)
-- [ ] Custom delegates per rendering
-- [ ] Test: DeviceTableViewModelTest
-
-### 5.3 Main Window & Basic UI
-- [ ] MainWindow.h/cpp - Finestra principale
-- [ ] Menu bar, toolbar, status bar
-- [ ] Connessioni signals/slots
-- [ ] Integration con ScanController
-
-### 5.4 Device Table Widget
-- [ ] DeviceTableWidget.h/cpp - Widget tabella
-- [ ] Context menu (ping, dettagli, rimuovi)
-- [ ] Sorting, filtering
-
-### 5.5 Scan Config Dialog
-- [ ] ScanConfigDialog.h/cpp - Dialog config
-- [ ] ScanConfigViewModel.h/cpp - ViewModel
-- [ ] Input IP range, scan type, threads
-
-**Deliverable**: UI base funzionante, scansione da GUI, tabella dispositivi
-
----
-
-## Phase 6: Charts & Metrics Visualization (Week 12)
-
-### 6.1 QtCharts Integration
-- [ ] Setup QtCharts in CMake
-- [ ] ChartViewModel.h/cpp - ViewModel grafici
-
-### 6.2 Chart Widgets
-- [ ] LatencyChart.h/cpp - Grafico latenza (QLineSeries)
-- [ ] PacketLossChart.h/cpp - Grafico packet loss (QBarSeries)
-- [ ] JitterChart.h/cpp - Grafico jitter (QSplineSeries)
-- [ ] Real-time update dei grafici
-
-### 6.3 Metrics Widget
-- [ ] metricswidget.ui - Layout widget metriche
-- [ ] MetricsWidget.h/cpp - Widget view
-- [ ] MetricsViewModel.h/cpp - ViewModel
-- [ ] Integration con MetricsController
-
-**Deliverable**: Grafici latenza/jitter/packet loss real-time
-
----
-
-## Phase 7-11: Advanced Features (Week 13-20)
-
-_Vedere project.md per task dettagliate delle fasi successive_
-
----
-
-## Current Focus
-
-**Current Phase**: Phase 0 - Foundation & Infrastructure
-**Current Week**: Week 1-2
-**Next Milestone**: Complete foundation layer (models, utils, interfaces)
-
----
-
-## Notes & Blockers
-
-### Active Blockers
-- None
-
-### Technical Decisions
-- Using Qt 6.x framework
-- CMake build system
-- SQLite for local database
-- Qt Test framework for testing
-
-### Resources Needed
-- Qt 6.2+ installed
-- CMake 3.16+
-- C++17 compiler
-
----
-
-Last Updated: 2025-01-03
+*For detailed task breakdowns and implementation guidance, see individual phase documents in `docs/phases/`*
