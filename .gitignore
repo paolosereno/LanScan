@@ -60,3 +60,6 @@ coverage/
 # User settings
 .user.ini
 settings.ini
+
+# Claude Code local settings
+.claude/settings.local.json
