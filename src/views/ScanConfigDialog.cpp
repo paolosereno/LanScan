@@ -12,6 +12,10 @@ ScanConfigDialog::ScanConfigDialog(ScanConfigViewModel* viewModel, QWidget* pare
 {
     ui->setupUi(this);
 
+    // Disconnect the automatic accept/reject connections from .ui file
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+
     setupValidators();
     setupConnections();
     loadConfigFromViewModel();
@@ -47,9 +51,11 @@ void ScanConfigDialog::setupConnections() {
     connect(ui->detectNetworkButton, &QPushButton::clicked,
             this, &ScanConfigDialog::onDetectNetwork);
 
-    // Dialog buttons
+    // Dialog buttons - connect to our custom handlers
     connect(ui->buttonBox, &QDialogButtonBox::accepted,
             this, &ScanConfigDialog::onAccepted);
+    connect(ui->buttonBox, &QDialogButtonBox::rejected,
+            this, &QDialog::reject);
 
     // ViewModel validation
     connect(viewModel, &ScanConfigViewModel::validationChanged,

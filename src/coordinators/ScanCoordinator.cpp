@@ -1,6 +1,8 @@
 #include "coordinators/ScanCoordinator.h"
 #include "../models/Device.h"
 #include "../network/scanner/IpScanner.h"
+#include "../network/scanner/QuickScanStrategy.h"
+#include "../network/scanner/DeepScanStrategy.h"
 #include "../network/diagnostics/PortScanner.h"
 #include "../network/diagnostics/MetricsAggregator.h"
 #include "../network/services/SubnetCalculator.h"
@@ -98,9 +100,15 @@ void ScanCoordinator::startScan(const ScanConfig& config) {
 
     emit scanStarted(totalProgress);
 
-    // Use IpScanner to perform the scan
-    if (ipScanner) {
+    // Create and set the appropriate scan strategy based on config
+    IScanStrategy* strategy = createScanStrategy(config);
+    if (ipScanner && strategy) {
+        ipScanner->setScanStrategy(strategy);
         ipScanner->startScan(config.subnet);
+    } else {
+        Logger::error("Failed to create scan strategy");
+        emit scanError("Failed to create scan strategy");
+        cleanup();
     }
 }
 
@@ -208,4 +216,21 @@ void ScanCoordinator::onScanFinished() {
     }
 
     cleanup();
+}
+
+IScanStrategy* ScanCoordinator::createScanStrategy(const ScanConfig& config) {
+    // Determine scan strategy based on configuration
+    if (config.scanPorts && config.resolveArp && config.resolveDns) {
+        // Deep scan: everything enabled
+        Logger::debug("Creating DeepScanStrategy");
+        return new DeepScanStrategy();
+    } else if (config.resolveDns && !config.scanPorts && !config.resolveArp) {
+        // Quick scan: only DNS
+        Logger::debug("Creating QuickScanStrategy");
+        return new QuickScanStrategy();
+    } else {
+        // Default to QuickScanStrategy for any other combination
+        Logger::debug("Creating QuickScanStrategy (default)");
+        return new QuickScanStrategy();
+    }
 }

@@ -14,6 +14,7 @@ class Device;
 class IpScanner;
 class PortScanner;
 class MetricsAggregator;
+class IScanStrategy;
 
 /**
  * @brief Coordinates multiple scan operations with multi-threading support
@@ -168,6 +169,7 @@ private:
     void processDiscoveredDevice(Device& device);
     void updateProgress(const QString& currentIp);
     void cleanup();
+    IScanStrategy* createScanStrategy(const ScanConfig& config);
 };
 
 #endif // SCANCOORDINATOR_H

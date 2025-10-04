@@ -39,6 +39,13 @@ bool DatabaseManager::open(const QString& dbPath) {
     }
 
     Logger::info("DatabaseManager: Database opened successfully: " + dbPath);
+
+    // Create schema if it doesn't exist
+    if (!createSchema()) {
+        Logger::error("DatabaseManager: Failed to create schema");
+        return false;
+    }
+
     return true;
 }
 
