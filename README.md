@@ -11,7 +11,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
 
 ## Features
 
-### ✅ Implemented (Phase 0-4)
+### ✅ Implemented (Phase 0-5)
 
 **Network Discovery & Scanning** (Phase 0-1)
 - ✅ Network device discovery (IP, hostname, MAC)
@@ -50,11 +50,22 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Scan profile management with JSON persistence
 - ✅ Favorite devices management with tagging support
 
-### 🚧 Planned (Phase 5+)
-- UI foundation and basic views
+**UI Foundation & Views** (Phase 5)
+- ✅ MVVM architecture pattern implementation
+- ✅ Qt Designer UI layouts (mainwindow, device table, scan dialog)
+- ✅ Main window with menu bar, toolbar, status bar
+- ✅ Device table widget with sorting and filtering
+- ✅ Custom delegates (LED status indicator, quality score progress bar)
+- ✅ Scan configuration dialog with input validation
+- ✅ Context menu with device actions
+- ✅ Full dependency injection architecture
+- ✅ Signal/slot connections for async UI updates
+
+### 🚧 Planned (Phase 6+)
+- Charts and metrics visualization (QtCharts integration)
 - Advanced diagnostics (traceroute, MTU discovery, bandwidth test)
-- Modern Qt6 GUI with dark/light themes
-- Historical data tracking with charts
+- UI polish with dark/light themes
+- Historical data tracking with trend analysis
 - Network topology visualization
 - Wake-on-LAN support
 
@@ -145,12 +156,13 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 4 - Application Layer & Controllers ✅ **COMPLETED**
-**Next Phase**: Phase 5 - UI Foundation & Views
-**Progress**: 42% (5/12 phases complete)
-**Latest Release**: [v0.4.0-phase4](https://github.com/paolosereno/LanScan/releases/tag/v0.4.0-phase4) (ready)
+**Current Phase**: Phase 5 - UI Foundation & Views ✅ **COMPLETED**
+**Next Phase**: Phase 6 - Charts & Visualization
+**Progress**: 50% (6/12 phases complete)
+**Latest Release**: [v0.5.0-phase5](https://github.com/paolosereno/LanScan/releases/tag/v0.5.0-phase5)
 
 ### Recent Updates
+- **2025-10-04**: Phase 5 completed - MVVM-based Qt GUI with ViewModels, Views, and custom delegates
 - **2025-10-04**: Phase 4 completed - Application layer with multi-threaded controllers and management services
 - **2025-10-04**: Phase 3 completed - Database persistence, export functionality, and settings management
 - **2025-10-03**: Phase 2 completed - Added metrics calculation, ping service, and port scanning
@@ -158,10 +170,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 139 total
-- **Lines of Code**: ~12,000+
+- **Files Created**: 158 total
+- **Lines of Code**: ~14,000+
 - **Test Coverage**: 15/19 tests passing (79% - 4 pre-existing failures)
-- **Build Time**: ~30-35 seconds (Debug, 12 cores)
+- **Build Time**: ~35-40 seconds (Debug, 12 cores)
+- **Executable Size**: 34 MB (Debug build)
 
 ## License
 
