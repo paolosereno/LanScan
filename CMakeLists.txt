@@ -38,6 +38,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/coordinators
     ${CMAKE_SOURCE_DIR}/include/controllers
     ${CMAKE_SOURCE_DIR}/include/managers
+    ${CMAKE_SOURCE_DIR}/include/viewmodels
+    ${CMAKE_SOURCE_DIR}/include/views
+    ${CMAKE_SOURCE_DIR}/include/delegates
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${CMAKE_SOURCE_DIR}/src/utils
@@ -48,6 +51,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/coordinators
     ${CMAKE_SOURCE_DIR}/src/managers
     ${CMAKE_SOURCE_DIR}/src/viewmodels
+    ${CMAKE_SOURCE_DIR}/src/views
+    ${CMAKE_SOURCE_DIR}/src/delegates
     ${CMAKE_SOURCE_DIR}/src/persistence
     ${CMAKE_SOURCE_DIR}/src/ui
     ${CMAKE_SOURCE_DIR}/src/core
@@ -135,7 +140,26 @@ set(MANAGER_SOURCES
     src/managers/FavoritesManager.cpp
 )
 
-# Header files
+# ViewModel sources (Phase 5)
+set(VIEWMODEL_SOURCES
+    src/viewmodels/DeviceTableViewModel.cpp
+    src/viewmodels/ScanConfigViewModel.cpp
+)
+
+# View sources (Phase 5)
+set(VIEW_SOURCES
+    src/views/MainWindow.cpp
+    src/views/DeviceTableWidget.cpp
+    src/views/ScanConfigDialog.cpp
+)
+
+# Delegate sources (Phase 5)
+set(DELEGATE_SOURCES
+    src/delegates/StatusDelegate.cpp
+    src/delegates/QualityScoreDelegate.cpp
+)
+
+# Header files (for MOC)
 set(HEADERS
     src/models/Device.h
     src/models/NetworkMetrics.h
@@ -157,12 +181,24 @@ set(HEADERS
     include/managers/ProfileManager.h
     include/managers/FavoritesManager.h
     include/utils/ProgressTracker.h
+    include/viewmodels/DeviceTableViewModel.h
+    include/viewmodels/ScanConfigViewModel.h
+    include/views/MainWindow.h
+    include/views/DeviceTableWidget.h
+    include/views/ScanConfigDialog.h
+    include/delegates/StatusDelegate.h
+    include/delegates/QualityScoreDelegate.h
 )
 
-# UI files
+# UI files (Phase 5)
 set(UI_SOURCES
-    ui/MainWindow.ui
+    ui/mainwindow.ui
+    ui/scanconfigdialog.ui
+    ui/devicetablewidget.ui
 )
+
+# Set AUTOUIC search paths for UI files
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
 # Create executable
 add_executable(${PROJECT_NAME}
@@ -176,6 +212,9 @@ add_executable(${PROJECT_NAME}
     ${COORDINATOR_SOURCES}
     ${CONTROLLER_SOURCES}
     ${MANAGER_SOURCES}
+    ${VIEWMODEL_SOURCES}
+    ${VIEW_SOURCES}
+    ${DELEGATE_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
 )

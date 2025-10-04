@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScanConfigDialog</class>
+ <widget class="QDialog" name="ScanConfigDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Scan Configuration</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="scanTypeGroup">
+     <property name="title">
+      <string>Scan Type</string>
+     </property>
+     <layout class="QVBoxLayout" name="scanTypeLayout">
+      <item>
+       <widget class="QComboBox" name="scanTypeComboBox">
+        <item>
+         <property name="text">
+          <string>Quick Scan (Ping + DNS)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Deep Scan (Ping + DNS + ARP + Ports)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Custom</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="networkGroup">
+     <property name="title">
+      <string>Network</string>
+     </property>
+     <layout class="QFormLayout" name="networkLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="subnetLabel">
+        <property name="text">
+         <string>Subnet (CIDR):</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="subnetLineEdit">
+        <property name="placeholderText">
+         <string>e.g., 192.168.1.0/24</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="detectNetworkButton">
+        <property name="text">
+         <string>Detect Local Network</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="optionsGroup">
+     <property name="title">
+      <string>Options</string>
+     </property>
+     <layout class="QFormLayout" name="optionsLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="threadLabel">
+        <property name="text">
+         <string>Thread Count:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="threadSpinBox">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>64</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="timeoutLabel">
+        <property name="text">
+         <string>Timeout:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="timeoutSpinBox">
+        <property name="minimum">
+         <number>100</number>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+        <property name="suffix">
+         <string> ms</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="resolveDnsCheckBox">
+        <property name="text">
+         <string>Resolve DNS Hostnames</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="resolveArpCheckBox">
+        <property name="text">
+         <string>Resolve ARP (MAC Address)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QCheckBox" name="scanPortsCheckBox">
+        <property name="text">
+         <string>Scan Common Ports</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ScanConfigDialog</receiver>
+   <slot>accept()</slot>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ScanConfigDialog</receiver>
+   <slot>reject()</slot>
+  </connection>
+ </connections>
+</ui>
