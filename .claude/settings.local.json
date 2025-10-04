@@ -37,7 +37,8 @@
       "Bash(./tests/DeviceRepositoryTest.exe)",
       "Bash(./tests/CsvExporterTest.exe)",
       "Bash(./tests/JsonExporterTest.exe)",
-      "Bash(./tests/SettingsManagerTest.exe)"
+      "Bash(./tests/SettingsManagerTest.exe)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

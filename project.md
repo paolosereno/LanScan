@@ -70,8 +70,8 @@ The project is structured in 12 development phases:
 - **[Phase 2](docs/phases/phase-2-metrics-diagnostics.md)**: Metrics and diagnostics core
 
 ### Core Development (3-6)
-- **[Phase 3](docs/phases/phase-3-persistence-data-management.md)**: Persistence and data management
-- **[Phase 4](docs/phases/phase-4-application-controllers.md)**: Application layer and controllers
+- **[Phase 3](docs/phases/phase-3-persistence-data-management.md)**: Persistence and data management ✅
+- **[Phase 4](docs/phases/phase-4-controllers.md)**: Application layer and controllers ✅
 - **[Phase 5](docs/phases/phase-5-ui-foundation-views.md)**: UI foundation and basic views
 - **[Phase 6](docs/phases/phase-6-charts-visualization.md)**: Charts and metrics visualization
 

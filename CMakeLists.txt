@@ -22,6 +22,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Charts
     Test
     Sql
+    Concurrent
 )
 
 # Include directories
@@ -34,6 +35,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/database
     ${CMAKE_SOURCE_DIR}/include/export
     ${CMAKE_SOURCE_DIR}/include/config
+    ${CMAKE_SOURCE_DIR}/include/coordinators
+    ${CMAKE_SOURCE_DIR}/include/controllers
+    ${CMAKE_SOURCE_DIR}/include/managers
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${CMAKE_SOURCE_DIR}/src/utils
@@ -41,6 +45,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/network
     ${CMAKE_SOURCE_DIR}/src/services
     ${CMAKE_SOURCE_DIR}/src/controllers
+    ${CMAKE_SOURCE_DIR}/src/coordinators
+    ${CMAKE_SOURCE_DIR}/src/managers
     ${CMAKE_SOURCE_DIR}/src/viewmodels
     ${CMAKE_SOURCE_DIR}/src/persistence
     ${CMAKE_SOURCE_DIR}/src/ui
@@ -111,6 +117,24 @@ set(CONFIG_SOURCES
     src/config/ConfigValidator.cpp
 )
 
+# Coordinator sources (Phase 4)
+set(COORDINATOR_SOURCES
+    src/coordinators/ScanCoordinator.cpp
+)
+
+# Controller sources (Phase 4)
+set(CONTROLLER_SOURCES
+    src/controllers/ScanController.cpp
+    src/controllers/MetricsController.cpp
+    src/controllers/ExportController.cpp
+)
+
+# Manager sources (Phase 4)
+set(MANAGER_SOURCES
+    src/managers/ProfileManager.cpp
+    src/managers/FavoritesManager.cpp
+)
+
 # Header files
 set(HEADERS
     src/models/Device.h
@@ -126,6 +150,13 @@ set(HEADERS
     src/interfaces/IMetricsCalculator.h
     src/interfaces/IExporter.h
     src/interfaces/IDeviceRepository.h
+    include/coordinators/ScanCoordinator.h
+    include/controllers/ScanController.h
+    include/controllers/MetricsController.h
+    include/controllers/ExportController.h
+    include/managers/ProfileManager.h
+    include/managers/FavoritesManager.h
+    include/utils/ProgressTracker.h
 )
 
 # UI files
@@ -142,6 +173,9 @@ add_executable(${PROJECT_NAME}
     ${DATABASE_SOURCES}
     ${EXPORT_SOURCES}
     ${CONFIG_SOURCES}
+    ${COORDINATOR_SOURCES}
+    ${CONTROLLER_SOURCES}
+    ${MANAGER_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
 )
@@ -153,6 +187,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Network
     Qt6::Charts
     Qt6::Sql
+    Qt6::Concurrent
 )
 
 # Enable testing

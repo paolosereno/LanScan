@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QList>
+#include <QMetaType>
 #include "PortInfo.h"
 #include "NetworkMetrics.h"
 
