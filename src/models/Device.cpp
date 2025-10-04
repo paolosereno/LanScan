@@ -13,47 +13,33 @@ Device::Device(const QString& ip, const QString& hostname)
 }
 
 // Getters
-QString Device::ip() const
-{
-    return m_ip;
-}
+QString Device::getId() const { return m_id; }
+QString Device::getIp() const { return m_ip; }
+QString Device::ip() const { return m_ip; }
 
-QString Device::hostname() const
-{
-    return m_hostname;
-}
+QString Device::getHostname() const { return m_hostname; }
+QString Device::hostname() const { return m_hostname; }
 
-QString Device::macAddress() const
-{
-    return m_macAddress;
-}
+QString Device::getMacAddress() const { return m_macAddress; }
+QString Device::macAddress() const { return m_macAddress; }
 
-QString Device::vendor() const
-{
-    return m_vendor;
-}
+QString Device::getVendor() const { return m_vendor; }
+QString Device::vendor() const { return m_vendor; }
 
-bool Device::isOnline() const
-{
-    return m_isOnline;
-}
+bool Device::isOnline() const { return m_isOnline; }
 
-QDateTime Device::lastSeen() const
-{
-    return m_lastSeen;
-}
+QDateTime Device::getLastSeen() const { return m_lastSeen; }
+QDateTime Device::lastSeen() const { return m_lastSeen; }
 
-QList<PortInfo> Device::openPorts() const
-{
-    return m_openPorts;
-}
+QList<PortInfo> Device::getOpenPorts() const { return m_openPorts; }
+QList<PortInfo> Device::openPorts() const { return m_openPorts; }
 
-NetworkMetrics Device::metrics() const
-{
-    return m_metrics;
-}
+NetworkMetrics Device::getMetrics() const { return m_metrics; }
+NetworkMetrics Device::metrics() const { return m_metrics; }
 
 // Setters
+void Device::setId(const QString& id) { m_id = id; }
+
 void Device::setIp(const QString& ip)
 {
     m_ip = ip;

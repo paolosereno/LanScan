@@ -21,10 +21,19 @@ find_package(Qt6 REQUIRED COMPONENTS
     Network
     Charts
     Test
+    Sql
 )
 
 # Include directories
 include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/utils
+    ${CMAKE_SOURCE_DIR}/include/interfaces
+    ${CMAKE_SOURCE_DIR}/include/network
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/export
+    ${CMAKE_SOURCE_DIR}/include/config
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${CMAKE_SOURCE_DIR}/src/utils
@@ -83,6 +92,25 @@ set(NETWORK_SOURCES
     src/network/diagnostics/PortScanner.cpp
 )
 
+# Database sources
+set(DATABASE_SOURCES
+    src/database/DatabaseManager.cpp
+    src/database/DeviceCache.cpp
+    src/database/DeviceRepository.cpp
+)
+
+# Export sources
+set(EXPORT_SOURCES
+    src/export/CsvExporter.cpp
+    src/export/JsonExporter.cpp
+)
+
+# Config sources
+set(CONFIG_SOURCES
+    src/config/SettingsManager.cpp
+    src/config/ConfigValidator.cpp
+)
+
 # Header files
 set(HEADERS
     src/models/Device.h
@@ -111,6 +139,9 @@ add_executable(${PROJECT_NAME}
     ${MODEL_SOURCES}
     ${UTILS_SOURCES}
     ${NETWORK_SOURCES}
+    ${DATABASE_SOURCES}
+    ${EXPORT_SOURCES}
+    ${CONFIG_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
 )
@@ -121,6 +152,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Widgets
     Qt6::Network
     Qt6::Charts
+    Qt6::Sql
 )
 
 # Enable testing

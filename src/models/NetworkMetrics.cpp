@@ -64,6 +64,47 @@ QDateTime NetworkMetrics::timestamp() const
     return m_timestamp;
 }
 
+// Alternative getters with "get" prefix
+double NetworkMetrics::getLatencyMin() const
+{
+    return latencyMin();
+}
+
+QString NetworkMetrics::getQualityScoreString() const
+{
+    return qualityScoreString();
+}
+
+double NetworkMetrics::getLatencyAvg() const
+{
+    return latencyAvg();
+}
+
+double NetworkMetrics::getLatencyMax() const
+{
+    return latencyMax();
+}
+
+double NetworkMetrics::getLatencyMedian() const
+{
+    return latencyMedian();
+}
+
+double NetworkMetrics::getJitter() const
+{
+    return jitter();
+}
+
+double NetworkMetrics::getPacketLoss() const
+{
+    return packetLoss();
+}
+
+NetworkMetrics::QualityScore NetworkMetrics::getQualityScore() const
+{
+    return qualityScore();
+}
+
 // Setters
 void NetworkMetrics::setLatencyMin(double latency)
 {

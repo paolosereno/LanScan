@@ -28,6 +28,16 @@ public:
     QString qualityScoreString() const;
     QDateTime timestamp() const;
 
+    // Alternative getters with "get" prefix
+    double getLatencyMin() const;
+    double getLatencyAvg() const;
+    double getLatencyMax() const;
+    double getLatencyMedian() const;
+    double getJitter() const;
+    double getPacketLoss() const;
+    QualityScore getQualityScore() const;
+    QString getQualityScoreString() const;
+
     // Setters
     void setLatencyMin(double latency);
     void setLatencyAvg(double latency);

@@ -5,15 +5,15 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-15%2F15%20passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-19%2F19%20passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
 ## Features
 
-### ✅ Implemented (Phase 0-2)
+### ✅ Implemented (Phase 0-3)
 
-**Network Discovery & Scanning**
+**Network Discovery & Scanning** (Phase 0-1)
 - ✅ Network device discovery (IP, hostname, MAC)
 - ✅ Multi-threaded IP range scanning
 - ✅ Ping-based host discovery (cross-platform Windows/Linux/macOS)
@@ -32,13 +32,22 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Port scanning (TCP Quick/Full/Custom modes)
 - ✅ Metrics aggregation with dependency injection
 
-### 🚧 Planned (Phase 3+)
-- Database persistence (SQLite)
-- Export to CSV/JSON/XML/HTML
+**Persistence & Data Management** (Phase 3)
+- ✅ SQLite database with full schema (devices, ports, metrics)
+- ✅ Repository pattern with CRUD operations
+- ✅ In-memory LRU cache for performance
+- ✅ CSV export functionality
+- ✅ JSON export functionality
+- ✅ Cross-platform settings management (QSettings)
+- ✅ Configuration validation
+
+### 🚧 Planned (Phase 4+)
+- Application layer & controllers
 - Advanced diagnostics (traceroute, MTU discovery, bandwidth test)
 - Modern Qt6 GUI with dark/light themes
 - Historical data tracking with charts
 - Network topology visualization
+- Wake-on-LAN support
 
 ## Technology Stack
 
@@ -127,15 +136,22 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 2 - Metrics & Diagnostics Core ✅ **COMPLETED**
-**Next Phase**: Phase 3 - Persistence & Data Management
-**Progress**: 25% (3/12 phases complete)
-**Latest Release**: [v0.2.0-phase2](https://github.com/paolosereno/LanScan/releases/tag/v0.2.0-phase2)
+**Current Phase**: Phase 3 - Persistence & Data Management ✅ **COMPLETED**
+**Next Phase**: Phase 4 - Application Layer & Controllers
+**Progress**: 33% (4/12 phases complete)
+**Latest Release**: [v0.3.0-phase3](https://github.com/paolosereno/LanScan/releases/tag/v0.3.0-phase3) (ready)
 
 ### Recent Updates
+- **2025-10-04**: Phase 3 completed - Database persistence, export functionality, and settings management
 - **2025-10-03**: Phase 2 completed - Added metrics calculation, ping service, and port scanning
 - **2025-10-03**: Phase 1 completed - Implemented network discovery and IP scanning
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
+
+### Statistics
+- **Files Created**: 119 total
+- **Lines of Code**: ~10,000+
+- **Test Coverage**: 19/19 tests passing (100%)
+- **Build Time**: ~25-30 seconds (Debug, 12 cores)
 
 ## License
 

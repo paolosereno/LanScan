@@ -52,6 +52,27 @@ QString PortInfo::stateString() const
     }
 }
 
+// Alternative getters with "get" prefix
+int PortInfo::getPort() const
+{
+    return portNumber();
+}
+
+PortInfo::Protocol PortInfo::getProtocol() const
+{
+    return protocol();
+}
+
+QString PortInfo::getService() const
+{
+    return service();
+}
+
+PortInfo::State PortInfo::getState() const
+{
+    return state();
+}
+
 // Setters
 void PortInfo::setPortNumber(int portNumber)
 {

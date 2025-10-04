@@ -33,7 +33,11 @@
       "Bash(./PacketLossCalculatorTest.exe)",
       "Bash(./QualityScoreCalculatorTest.exe)",
       "Bash(./JitterCalculatorTest.exe -v2)",
-      "Bash(./PacketLossCalculatorTest.exe -v2)"
+      "Bash(./PacketLossCalculatorTest.exe -v2)",
+      "Bash(./tests/DeviceRepositoryTest.exe)",
+      "Bash(./tests/CsvExporterTest.exe)",
+      "Bash(./tests/JsonExporterTest.exe)",
+      "Bash(./tests/SettingsManagerTest.exe)"
     ],
     "deny": [],
     "ask": []

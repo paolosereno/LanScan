@@ -130,3 +130,47 @@ add_executable(QualityScoreCalculatorTest
 )
 target_link_libraries(QualityScoreCalculatorTest PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME QualityScoreCalculatorTest COMMAND QualityScoreCalculatorTest)
+
+# Phase 3: Persistence & Data Management tests
+add_executable(DeviceRepositoryTest
+    DeviceRepositoryTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceCache.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(DeviceRepositoryTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql)
+add_test(NAME DeviceRepositoryTest COMMAND DeviceRepositoryTest)
+
+add_executable(CsvExporterTest
+    CsvExporterTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/CsvExporter.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(CsvExporterTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME CsvExporterTest COMMAND CsvExporterTest)
+
+add_executable(JsonExporterTest
+    JsonExporterTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/JsonExporter.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(JsonExporterTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME JsonExporterTest COMMAND JsonExporterTest)
+
+add_executable(SettingsManagerTest
+    SettingsManagerTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/config/SettingsManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(SettingsManagerTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME SettingsManagerTest COMMAND SettingsManagerTest)

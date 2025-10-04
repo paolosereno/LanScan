@@ -28,6 +28,12 @@ public:
     State state() const;
     QString stateString() const;
 
+    // Alternative getters with "get" prefix
+    int getPort() const;
+    Protocol getProtocol() const;
+    QString getService() const;
+    State getState() const;
+
     // Setters
     void setPortNumber(int portNumber);
     void setProtocol(Protocol protocol);
