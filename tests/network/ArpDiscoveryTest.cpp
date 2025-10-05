@@ -1,4 +1,5 @@
 #include <QtTest>
+#include <QNetworkInterface>
 #include "network/discovery/ArpDiscovery.h"
 
 class ArpDiscoveryTest : public QObject
@@ -10,6 +11,7 @@ private slots:
     void testGetMacAddress();
     void testArpTableFormat();
     void testInvalidIp();
+    void testLocalInterfaceMac();
 };
 
 void ArpDiscoveryTest::testGetArpTable()
@@ -79,6 +81,42 @@ void ArpDiscoveryTest::testInvalidIp()
     QVERIFY(ArpDiscovery::getMacAddress("").isEmpty());
     QVERIFY(ArpDiscovery::getMacAddress("invalid").isEmpty());
     QVERIFY(ArpDiscovery::getMacAddress("999.999.999.999").isEmpty());
+}
+
+void ArpDiscoveryTest::testLocalInterfaceMac()
+{
+    // Test that we can get MAC address for local interfaces
+    // Get a local IP address
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+
+    for (const QNetworkInterface& iface : interfaces) {
+        if (iface.flags() & QNetworkInterface::IsLoopBack) {
+            continue;
+        }
+
+        QList<QNetworkAddressEntry> entries = iface.addressEntries();
+        for (const QNetworkAddressEntry& entry : entries) {
+            if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                QString localIP = entry.ip().toString();
+                QString expectedMac = iface.hardwareAddress();
+
+                if (!expectedMac.isEmpty() && !localIP.isEmpty()) {
+                    qDebug() << "Testing local interface:" << localIP << "expected MAC:" << expectedMac;
+
+                    QString mac = ArpDiscovery::getMacAddress(localIP);
+                    qDebug() << "Got MAC:" << mac;
+
+                    QVERIFY(!mac.isEmpty());
+                    QCOMPARE(mac, expectedMac);
+
+                    // Only test one interface
+                    return;
+                }
+            }
+        }
+    }
+
+    qDebug() << "No local interface found to test";
 }
 
 QTEST_MAIN(ArpDiscoveryTest)

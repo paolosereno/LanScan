@@ -2,6 +2,8 @@
 #include "utils/Logger.h"
 #include <QProcess>
 #include <QRegularExpression>
+#include <QNetworkInterface>
+#include <QList>
 
 QMap<QString, QString> ArpDiscovery::getArpTable()
 {
@@ -29,8 +31,43 @@ QMap<QString, QString> ArpDiscovery::getArpTable()
 
 QString ArpDiscovery::getMacAddress(const QString& ip)
 {
+    // First check if this IP belongs to a local interface
+    QString localMac = getLocalMacAddress(ip);
+    if (!localMac.isEmpty()) {
+        return localMac;
+    }
+
+    // Otherwise check ARP table
     QMap<QString, QString> arpTable = getArpTable();
     return arpTable.value(ip, QString());
+}
+
+QString ArpDiscovery::getLocalMacAddress(const QString& ip)
+{
+    // Check all network interfaces to see if the IP matches a local interface
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+
+    for (const QNetworkInterface& iface : interfaces) {
+        // Skip loopback
+        if (iface.flags() & QNetworkInterface::IsLoopBack) {
+            continue;
+        }
+
+        // Check all addresses on this interface
+        QList<QNetworkAddressEntry> entries = iface.addressEntries();
+        for (const QNetworkAddressEntry& entry : entries) {
+            if (entry.ip().toString() == ip) {
+                // Found matching IP - return MAC address
+                QString mac = iface.hardwareAddress();
+                if (!mac.isEmpty()) {
+                    Logger::debug(QString("Found local MAC for %1: %2").arg(ip).arg(mac));
+                    return mac;
+                }
+            }
+        }
+    }
+
+    return QString();
 }
 
 QString ArpDiscovery::parseArpOutput(const QString& output)

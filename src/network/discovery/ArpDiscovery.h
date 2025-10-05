@@ -9,6 +9,7 @@ class ArpDiscovery
 public:
     static QMap<QString, QString> getArpTable();
     static QString getMacAddress(const QString& ip);
+    static QString getLocalMacAddress(const QString& ip);
 
 private:
     ArpDiscovery() = delete;
