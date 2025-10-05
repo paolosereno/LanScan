@@ -240,6 +240,20 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
 )
 
+# Install OUI database
+install(FILES
+    ${CMAKE_SOURCE_DIR}/scripts/oui_database.txt
+    DESTINATION bin
+    OPTIONAL
+)
+
+# Install scripts for manual updates
+install(FILES
+    ${CMAKE_SOURCE_DIR}/scripts/download_oui.py
+    DESTINATION bin/scripts
+    OPTIONAL
+)
+
 # Platform-specific settings
 if(WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES
