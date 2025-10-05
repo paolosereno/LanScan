@@ -2,10 +2,32 @@
 #include "utils/Logger.h"
 #include <QFile>
 #include <QTextStream>
+#include <QCoreApplication>
+#include <QDir>
+#include <QMutexLocker>
+
+MacVendorLookup* MacVendorLookup::m_instance = nullptr;
+QMutex MacVendorLookup::m_mutex;
 
 MacVendorLookup::MacVendorLookup()
 {
-    loadBuiltinDatabase();
+    // Don't load anything in constructor - use loadDefaultDatabase() instead
+}
+
+MacVendorLookup::~MacVendorLookup()
+{
+}
+
+MacVendorLookup* MacVendorLookup::instance()
+{
+    if (m_instance == nullptr) {
+        QMutexLocker locker(&m_mutex);
+        if (m_instance == nullptr) {
+            m_instance = new MacVendorLookup();
+            m_instance->loadDefaultDatabase();
+        }
+    }
+    return m_instance;
 }
 
 QString MacVendorLookup::lookupVendor(const QString& macAddress)
@@ -98,6 +120,33 @@ void MacVendorLookup::loadBuiltinDatabase()
     m_ouiDatabase["020054"] = "Novell";
 
     Logger::debug(QString("Loaded %1 built-in OUI entries").arg(m_ouiDatabase.size()));
+}
+
+bool MacVendorLookup::loadDefaultDatabase()
+{
+    // Try to load external OUI database first
+    QStringList searchPaths = {
+        "oui_database.txt",                              // Current directory
+        QCoreApplication::applicationDirPath() + "/oui_database.txt",  // App directory
+        QDir::homePath() + "/.lanscan/oui_database.txt", // User home
+        "data/oui_database.txt"                          // Data subdirectory
+    };
+
+    for (const QString& path : searchPaths) {
+        QFile file(path);
+        if (file.exists()) {
+            Logger::info(QString("Found OUI database at: %1").arg(path));
+            if (loadOuiDatabase(path)) {
+                Logger::info(QString("Successfully loaded %1 OUI entries from external database").arg(m_ouiDatabase.size()));
+                return true;
+            }
+        }
+    }
+
+    // Fallback to built-in database
+    Logger::warn("External OUI database not found, using built-in database (limited coverage)");
+    loadBuiltinDatabase();
+    return false;
 }
 
 int MacVendorLookup::databaseSize() const

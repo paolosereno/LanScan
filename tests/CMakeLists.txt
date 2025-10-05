@@ -174,3 +174,11 @@ add_executable(SettingsManagerTest
 )
 target_link_libraries(SettingsManagerTest PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME SettingsManagerTest COMMAND SettingsManagerTest)
+
+add_executable(MacVendorLookupTest
+    MacVendorLookupTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/MacVendorLookup.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(MacVendorLookupTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME MacVendorLookupTest COMMAND MacVendorLookupTest)

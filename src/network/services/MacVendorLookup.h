@@ -3,21 +3,33 @@
 
 #include <QString>
 #include <QMap>
+#include <QMutex>
 
 class MacVendorLookup
 {
 public:
-    MacVendorLookup();
+    // Singleton instance
+    static MacVendorLookup* instance();
 
     QString lookupVendor(const QString& macAddress);
     bool loadOuiDatabase(const QString& filepath);
     void loadBuiltinDatabase();
+    bool loadDefaultDatabase();
 
     int databaseSize() const;
 
 private:
-    QMap<QString, QString> m_ouiDatabase;
+    MacVendorLookup();
+    ~MacVendorLookup();
 
+    // Disable copy
+    MacVendorLookup(const MacVendorLookup&) = delete;
+    MacVendorLookup& operator=(const MacVendorLookup&) = delete;
+
+    static MacVendorLookup* m_instance;
+    static QMutex m_mutex;
+
+    QMap<QString, QString> m_ouiDatabase;
     QString extractOui(const QString& macAddress);
 };
 

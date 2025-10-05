@@ -59,10 +59,9 @@ Device DeepScanStrategy::scan(const QString& ip)
     if (!mac.isEmpty()) {
         device.setMacAddress(mac);
 
-        // Lookup vendor from MAC
-        MacVendorLookup vendorLookup;
-        QString vendor = vendorLookup.lookupVendor(mac);
-        if (!vendor.isEmpty()) {
+        // Lookup vendor from MAC using singleton
+        QString vendor = MacVendorLookup::instance()->lookupVendor(mac);
+        if (!vendor.isEmpty() && vendor != "Unknown") {
             device.setVendor(vendor);
         }
     }
