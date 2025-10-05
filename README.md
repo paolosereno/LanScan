@@ -17,9 +17,14 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Network device discovery (IP, hostname, MAC)
 - ✅ Multi-threaded IP range scanning
 - ✅ Ping-based host discovery (cross-platform Windows/Linux/macOS)
-- ✅ DNS reverse lookup
-- ✅ ARP table parsing
-- ✅ MAC vendor identification (40+ manufacturers)
+- ✅ DNS reverse lookup with IP-as-hostname validation
+- ✅ ARP table parsing with local interface detection
+- ✅ **MAC vendor identification (38,169+ manufacturers)**
+  - IEEE OUI database integration (1.2 MB, bundled)
+  - Locally Administered Address (LAA) detection
+  - Automatic vendor lookup for physical devices
+  - VM/Container/VPN device identification
+  - Singleton pattern for efficient database loading
 - ✅ Service detection (40+ common ports)
 - ✅ Two scan strategies (Quick & Deep)
 
@@ -133,9 +138,29 @@ cmake --build . -j$(nproc)
 ctest --output-on-failure
 ```
 
+## Database & Data Files
+
+### OUI Database (Vendor Identification)
+
+LanScan includes the IEEE OUI database for automatic vendor identification:
+
+- **Database**: `oui_database.txt` (38,169+ vendors, ~1.2 MB)
+- **Location**: Bundled with installation, loaded automatically
+- **Update**: Manual updates via `scripts/download_oui.py`
+- **Fallback**: Built-in database with 36 common vendors
+
+For details, see [OUI Database README](scripts/OUI_DATABASE_README.md) and [Deployment Strategy](docs/oui-database-strategy.md).
+
+### Device Database
+
+- **Format**: SQLite
+- **Location**: `lanscan.db` (created in application directory)
+- **Schema**: Devices, ports, metrics with full history
+- **Size**: Grows with scan data (~1-10 MB typical)
+
 ## Development
 
-- See [project.md](project.md) for detailed architecture and development roadmap
+- See [PROJECT.md](PROJECT.md) for detailed architecture and development roadmap
 - See [TODO.md](TODO.md) for current task list and progress tracking
 
 ### Branch Strategy
@@ -162,6 +187,9 @@ Location: src/path/to/files
 **Latest Release**: [v0.5.0-phase5](https://github.com/paolosereno/LanScan/releases/tag/v0.5.0-phase5)
 
 ### Recent Updates
+- **2025-10-05**: Added IEEE OUI database integration (38,169 vendors) with LAA detection
+- **2025-10-05**: Fixed DNS hostname validation and local interface MAC detection
+- **2025-10-05**: Implemented singleton pattern for efficient vendor lookup
 - **2025-10-04**: Phase 5 completed - MVVM-based Qt GUI with ViewModels, Views, and custom delegates
 - **2025-10-04**: Phase 4 completed - Application layer with multi-threaded controllers and management services
 - **2025-10-04**: Phase 3 completed - Database persistence, export functionality, and settings management
