@@ -3,6 +3,7 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QThread>
+#include <QRegularExpression>
 
 DnsResolver::DnsResolver(QObject *parent)
     : QObject(parent)
@@ -98,11 +99,21 @@ void DnsResolver::onLookupFinished(const QHostInfo& info)
     Logger::debug(QString("onLookupFinished called for: %1").arg(m_currentIp));
     Logger::debug(QString("  Error code: %1").arg(info.error()));
     Logger::debug(QString("  Error string: %1").arg(info.errorString()));
-    Logger::debug(QString("  Hostname: %1").arg(info.hostName()));
+    Logger::debug(QString("  Hostname: '%1'").arg(info.hostName()));
     Logger::debug(QString("  Addresses count: %1").arg(info.addresses().size()));
 
     if (info.error() == QHostInfo::NoError && !info.hostName().isEmpty()) {
         QString hostname = info.hostName();
+
+        // Validate hostname - should not be an IP address
+        // If reverse DNS returns an IP instead of hostname, treat as failure
+        QRegularExpression ipRegex("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
+        if (ipRegex.match(hostname).hasMatch()) {
+            Logger::warn(QString("DNS returned IP address instead of hostname for %1: %2").arg(m_currentIp).arg(hostname));
+            emit resolveFailed(m_currentIp);
+            return;
+        }
+
         Logger::debug(QString("Resolved %1 to %2").arg(m_currentIp).arg(hostname));
         emit hostnameResolved(m_currentIp, hostname);
     } else {
