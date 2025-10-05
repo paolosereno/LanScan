@@ -23,11 +23,12 @@ signals:
     void resolveFailed(const QString& ip);
 
 private slots:
-    void onLookupFinished();
+    void onLookupFinished(const QHostInfo& info);
 
 private:
-    QHostInfo m_lookupId;
+    int m_lookupId;
     QString m_currentIp;
+    bool m_destroyed;
 };
 
 #endif // DNSRESOLVER_H

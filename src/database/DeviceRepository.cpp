@@ -9,15 +9,27 @@ DeviceRepository::DeviceRepository(DatabaseManager* dbManager)
 }
 
 void DeviceRepository::save(const Device& device) {
-    if (exists(device.getId())) {
-        update(device);
-    } else {
-        saveToDatabase(device);
-    }
+    // Check if device exists by IP (not ID, since new devices don't have ID yet)
+    Device existing = findByIp(device.getIp());
 
-    // Update cache
-    if (cacheEnabled) {
-        cache.put(device.getId(), device);
+    if (!existing.getIp().isEmpty()) {
+        // Device exists, update it
+        Device updatedDevice = device;
+        updatedDevice.setId(existing.getId());  // Keep the same ID
+        update(updatedDevice);
+
+        // Update cache
+        if (cacheEnabled) {
+            cache.put(updatedDevice.getId(), updatedDevice);
+        }
+    } else {
+        // New device, insert it
+        saveToDatabase(device);
+
+        // Update cache
+        if (cacheEnabled && !device.getId().isEmpty()) {
+            cache.put(device.getId(), device);
+        }
     }
 }
 

@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Paolo Sereno");
 
     // Initialize logger
+    Logger::setLogLevel(Logger::DEBUG);  // Enable DEBUG logging
     Logger::info("LanScan v0.5.0-phase5 starting...");
 
     // ========== Infrastructure Setup ==========
