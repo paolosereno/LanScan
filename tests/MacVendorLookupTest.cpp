@@ -17,6 +17,7 @@ private slots:
     void testMacFormats();
     void testEmptyMac();
     void testShortMac();
+    void testLocallyAdministeredMac();
 
 private:
     MacVendorLookup* vendorLookup;
@@ -125,6 +126,28 @@ void MacVendorLookupTest::testShortMac()
     QString vendor = vendorLookup->lookupVendor("00:30");
     qDebug() << "Short MAC ->" << vendor;
     QCOMPARE(vendor, QString("Unknown"));
+}
+
+void MacVendorLookupTest::testLocallyAdministeredMac()
+{
+    // Test locally administered addresses (LAA)
+    // These have bit 1 set in the first octet
+    QString vendor1 = vendorLookup->lookupVendor("CA:D3:A3:A9:77:33");
+    qDebug() << "LAA CA:D3:A3:A9:77:33 ->" << vendor1;
+    QCOMPARE(vendor1, QString("Locally Administered"));
+
+    QString vendor2 = vendorLookup->lookupVendor("32:16:9D:09:4E:04");
+    qDebug() << "LAA 32:16:9D:09:4E:04 ->" << vendor2;
+    QCOMPARE(vendor2, QString("Locally Administered"));
+
+    QString vendor3 = vendorLookup->lookupVendor("5E:E9:31:06:D3:ED");
+    qDebug() << "LAA 5E:E9:31:06:D3:ED ->" << vendor3;
+    QCOMPARE(vendor3, QString("Locally Administered"));
+
+    // Test that universally administered addresses are NOT detected as LAA
+    QString vendor4 = vendorLookup->lookupVendor("00:30:65:12:34:56");
+    qDebug() << "UAA 00:30:65:12:34:56 ->" << vendor4;
+    QVERIFY(vendor4 != QString("Locally Administered"));
 }
 
 QTEST_MAIN(MacVendorLookupTest)

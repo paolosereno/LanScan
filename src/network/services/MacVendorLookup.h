@@ -31,6 +31,7 @@ private:
 
     QMap<QString, QString> m_ouiDatabase;
     QString extractOui(const QString& macAddress);
+    bool isLocallyAdministered(const QString& oui);
 };
 
 #endif // MACVENDORLOOKUP_H

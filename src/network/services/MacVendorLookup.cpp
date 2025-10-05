@@ -38,7 +38,32 @@ QString MacVendorLookup::lookupVendor(const QString& macAddress)
         return "Unknown";
     }
 
+    // Check if this is a locally administered address (LAA)
+    if (isLocallyAdministered(oui)) {
+        return "Locally Administered";
+    }
+
     return m_ouiDatabase.value(oui, "Unknown");
+}
+
+bool MacVendorLookup::isLocallyAdministered(const QString& oui)
+{
+    // Check the second bit of the first octet
+    // If set, this is a locally administered address (not globally unique)
+    if (oui.length() < 2) {
+        return false;
+    }
+
+    bool ok;
+    int firstByte = oui.left(2).toInt(&ok, 16);
+
+    if (!ok) {
+        return false;
+    }
+
+    // Bit 1 (second bit from right) indicates local/universal
+    // 0 = Universally Administered (UAA), 1 = Locally Administered (LAA)
+    return (firstByte & 0x02) != 0;
 }
 
 bool MacVendorLookup::loadOuiDatabase(const QString& filepath)
