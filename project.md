@@ -8,7 +8,12 @@ Cross-platform desktop application developed in C++ with Qt for LAN scanning, mo
 ### Network Discovery
 - **IP Range Scanning**: CIDR notation support (e.g., 192.168.1.0/24)
 - **Device Detection**: Automatic hostname and MAC address resolution
-- **Vendor Identification**: IEEE OUI database integration
+- **Vendor Identification**: IEEE OUI database with 38,169+ manufacturers
+  - Automatic MAC vendor lookup from IEEE registry
+  - Locally Administered Address (LAA) detection for VMs/containers
+  - Built-in fallback database for offline operation
+  - Manual update capability via included script
+- **Local Interface Detection**: MAC address resolution for host machine
 - **Port Scanning**: Quick scan for common services or custom port ranges
 
 ### Performance Metrics
@@ -37,6 +42,7 @@ Cross-platform desktop application developed in C++ with Qt for LAN scanning, mo
 - **Build System**: CMake 3.16+
 - **Compiler**: MinGW GCC 13.1.0 (Development), MSVC 2022 (Release)
 - **UI Design**: Qt Designer (.ui files)
+- **Database**: SQLite (device persistence), IEEE OUI (vendor lookup)
 
 ### Optional Libraries
 - **libpcap/WinPcap**: Advanced packet capture capabilities
