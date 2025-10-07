@@ -1,11 +1,11 @@
 # LanScan - Development Progress
 
 ## Current Status
-- **Active Phase**: Phase 5 - UI Foundation & Views ✅ **COMPLETED**
-- **Next Phase**: Phase 6 - Charts & Visualization
+- **Active Phase**: Phase 6 - Charts & Visualization 🔄 **IN PROGRESS**
+- **Next Phase**: Phase 7 - Advanced Diagnostics
 - **Timeline**: Week 12
-- **Next Milestone**: QtCharts integration and metrics visualization
-- **Last Updated**: 2025-10-04
+- **Next Milestone**: Chart widgets implementation (LatencyChart, PacketLossChart, JitterChart)
+- **Last Updated**: 2025-10-07
 
 ## Phase Progress Overview
 
@@ -50,7 +50,10 @@
 ### Core Development (4-6)
 - [x] **Phase 4**: Application Layer & Controllers ✅ **(3/3 modules completed - 100%)**
 - [x] **Phase 5**: UI Foundation & Views ✅ **(5/5 modules completed - 100%)**
-- [ ] **Phase 6**: Charts & Visualization *(0/3 modules completed)*
+- [>] **Phase 6**: Charts & Visualization 🔄 **(1/3 modules completed - 33%)**
+  - ✅ QtCharts Integration (ChartViewModel base class)
+  - ⏳ Chart Widgets (LatencyChart, PacketLossChart, JitterChart)
+  - ⏳ Metrics Widget (MetricsWidget, MetricsViewModel)
 
 ### Advanced Features (7-9)
 - [ ] **Phase 7**: Advanced Diagnostics *(0/4 modules completed)*
@@ -202,7 +205,15 @@
 - [x] Integration tests for PingService and PortScanner
 - [x] Fixed Logger API calls and IMetricsCalculator interface implementation
 
-## Recent Completed Items (Phase 5)
+## Recent Completed Items (Phase 6.1 - QtCharts Integration)
+- [x] QtCharts integration in CMakeLists.txt (Qt6::Charts)
+- [x] ChartViewModel base class (abstract base for all chart ViewModels)
+- [x] ChartViewModel features: max data points management, data pruning helper
+- [x] ChartViewModelTest with 10 unit tests (all passing)
+- [x] Updated CMakeLists.txt with Phase 6 files
+- [x] Application builds successfully with QtCharts support
+
+## Previous Completed Items (Phase 5)
 - [x] Implemented complete UI foundation with MVVM pattern
 - [x] Created 16 new source files + 3 UI files (19 files total)
 - [x] DeviceTableViewModel with QAbstractTableModel
@@ -215,7 +226,7 @@
 - [x] Dependency injection setup in main.cpp
 - [x] All API mismatches resolved
 - [x] Application builds successfully (LanScan.exe - 34 MB)
-- [x] Git tag v0.5.0-phase5 ready to be created
+- [x] Git tag v0.5.0-phase5 created
 
 ## Previous Completed Items (Phase 2)
 - [x] Implemented complete diagnostics and metrics system
@@ -264,31 +275,32 @@
 - **[Development Guide](docs/development-guide.md)**: Setup and contribution guidelines
 
 ## Progress Metrics
-- **Total Phases**: 12 (6 completed, 0 active, 6 pending)
-- **Overall Progress**: Phase 0-5 complete (50% of total project)
+- **Total Phases**: 12 (5 completed, 1 active, 6 pending)
+- **Overall Progress**: Phase 0-5 complete + Phase 6 (33%) → ~54% of total project
 - **Phase 0 Completion**: 100% ✅ (4/4 modules, 5/5 tests)
 - **Phase 1 Completion**: 100% ✅ (4/4 modules, 10/10 tests)
 - **Phase 2 Completion**: 100% ✅ (4/4 modules, 15/15 tests)
 - **Phase 3 Completion**: 100% ✅ (3/3 modules, 19/19 tests)
 - **Phase 4 Completion**: 100% ✅ (3/3 modules, 15/19 tests passing)
 - **Phase 5 Completion**: 100% ✅ (5/5 modules, UI functional)
-- **Current Test Coverage**: 79% (15/19 tests passing, 4 pre-existing failures)
+- **Phase 6 Completion**: 33% 🔄 (1/3 modules, ChartViewModel + tests)
+- **Current Test Coverage**: 80% (16/20 tests passing, 4 pre-existing failures)
 - **Estimated Total Timeline**: 20 weeks to v1.0.0 release
 - **Code Coverage Target**: 85% minimum for all phases
 
-## Build Statistics (Phase 0-5)
-- **Files Created**: 158 total (Phase 0: 31, Phase 1: 28, Phase 2: 28, Phase 3: 32, Phase 4: 20, Phase 5: 19)
-- **Lines of Code**: ~14,000+ lines
-- **Test Files**: 19 (15 passing, 4 pre-existing failures)
+## Build Statistics (Phase 0-6.1)
+- **Files Created**: 161 total (Phase 0: 31, Phase 1: 28, Phase 2: 28, Phase 3: 32, Phase 4: 20, Phase 5: 19, Phase 6.1: 3)
+- **Lines of Code**: ~14,300+ lines
+- **Test Files**: 20 (16 passing, 4 pre-existing failures)
 - **Executable Size**: 34 MB (Debug build)
-- **Git Tags**: v0.1.0-phase1, v0.2.0-phase2, v0.3.0-phase3, v0.4.0-phase4, v0.5.0-phase5 (ready)
+- **Git Tags**: v0.1.0-phase1, v0.2.0-phase2, v0.3.0-phase3, v0.4.0-phase4, v0.5.0-phase5
 - **Build Time**: ~35-40 seconds (Debug, 12 cores)
 
 ---
 
-**Last Updated**: 2025-10-04
+**Last Updated**: 2025-10-07
 **Next Review**: Weekly (every Monday)
-**Current Target**: Begin Phase 6 - Charts & Visualization
+**Current Target**: Continue Phase 6.2 - Chart Widgets Implementation
 
 ---
 

@@ -144,6 +144,7 @@ set(MANAGER_SOURCES
 set(VIEWMODEL_SOURCES
     src/viewmodels/DeviceTableViewModel.cpp
     src/viewmodels/ScanConfigViewModel.cpp
+    src/viewmodels/ChartViewModel.cpp
 )
 
 # View sources (Phase 5)
@@ -183,6 +184,7 @@ set(HEADERS
     include/utils/ProgressTracker.h
     include/viewmodels/DeviceTableViewModel.h
     include/viewmodels/ScanConfigViewModel.h
+    include/viewmodels/ChartViewModel.h
     include/views/MainWindow.h
     include/views/DeviceTableWidget.h
     include/views/ScanConfigDialog.h

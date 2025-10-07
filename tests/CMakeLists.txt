@@ -182,3 +182,18 @@ add_executable(MacVendorLookupTest
 )
 target_link_libraries(MacVendorLookupTest PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME MacVendorLookupTest COMMAND MacVendorLookupTest)
+
+# Phase 6: Charts & Visualization tests
+add_executable(ChartViewModelTest
+    ChartViewModelTest.cpp
+    ${CMAKE_SOURCE_DIR}/include/viewmodels/ChartViewModel.h
+    ${CMAKE_SOURCE_DIR}/src/viewmodels/ChartViewModel.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(ChartViewModelTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/viewmodels
+    ${CMAKE_SOURCE_DIR}/include/controllers
+)
+target_link_libraries(ChartViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME ChartViewModelTest COMMAND ChartViewModelTest)

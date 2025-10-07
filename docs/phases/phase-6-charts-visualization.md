@@ -51,9 +51,29 @@ protected:
 ```
 
 ### Tasks
-- [ ] Setup QtCharts in CMakeLists.txt
-- [ ] Implement base ChartViewModel
-- [ ] Test QtCharts integration
+- [x] Setup QtCharts in CMakeLists.txt ✅
+- [x] Implement base ChartViewModel ✅
+- [x] Test QtCharts integration ✅
+
+### Implementation Details (Completed 2025-10-07)
+
+**Files Created:**
+- `include/viewmodels/ChartViewModel.h` - Abstract base class for chart ViewModels
+- `src/viewmodels/ChartViewModel.cpp` - Implementation with max data points management
+- `tests/ChartViewModelTest.cpp` - Unit tests (10 tests, all passing)
+
+**Features Implemented:**
+- Abstract base class with pure virtual methods: `updateChart()` and `clearChart()`
+- Max data points management (default: 60, range: 1-10000)
+- Template helper method `pruneDataList()` for data management
+- Qt signals: `chartDataUpdated()` and `chartCleared()`
+- Validation and logging for configuration parameters
+
+**Test Results:**
+```
+Test #21: ChartViewModelTest ............... Passed 0.02 sec
+Tests: 10/10 passing (100%)
+```
 
 ---
 
@@ -706,17 +726,22 @@ void MetricsViewModel::onMetricsCollected(const QString& deviceId, const Network
 ## Deliverable
 
 **Phase 6 Completion Criteria**:
-- ✅ QtCharts integrated into project
-- ✅ LatencyChart displaying real-time data (line series)
-- ✅ PacketLossChart displaying data (bar series)
-- ✅ JitterChart displaying data (spline series)
-- ✅ Charts auto-scaling axes dynamically
-- ✅ Real-time updates working (1 second interval)
-- ✅ Data pruning functional (max 60 points)
-- ✅ MetricsWidget integrated into MainWindow
-- ✅ Summary panel showing current metrics
-- ✅ Chart performance optimized
-- ✅ No memory leaks during long monitoring sessions
+- ✅ QtCharts integrated into project (COMPLETED 2025-10-07)
+- [ ] LatencyChart displaying real-time data (line series)
+- [ ] PacketLossChart displaying data (bar series)
+- [ ] JitterChart displaying data (spline series)
+- [ ] Charts auto-scaling axes dynamically
+- [ ] Real-time updates working (1 second interval)
+- [ ] Data pruning functional (max 60 points)
+- [ ] MetricsWidget integrated into MainWindow
+- [ ] Summary panel showing current metrics
+- [ ] Chart performance optimized
+- [ ] No memory leaks during long monitoring sessions
+
+**Current Progress**: 1/3 modules completed (33%)
+- ✅ Module 6.1: QtCharts Integration
+- ⏳ Module 6.2: Chart Widgets
+- ⏳ Module 6.3: Metrics Widget
 
 ---
 
