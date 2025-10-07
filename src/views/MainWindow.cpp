@@ -2,8 +2,10 @@
 #include "ui_mainwindow.h"
 #include "views/DeviceTableWidget.h"
 #include "views/ScanConfigDialog.h"
+#include "views/MetricsWidget.h"
 #include "viewmodels/DeviceTableViewModel.h"
 #include "viewmodels/ScanConfigViewModel.h"
+#include "viewmodels/MetricsViewModel.h"
 #include "controllers/ScanController.h"
 #include "controllers/MetricsController.h"
 #include "controllers/ExportController.h"
@@ -13,6 +15,7 @@
 #include <QFileDialog>
 #include <QProgressBar>
 #include <QLabel>
+#include <QDockWidget>
 
 MainWindow::MainWindow(
     ScanController* scanController,
@@ -26,11 +29,15 @@ MainWindow::MainWindow(
     , scanController(scanController)
     , metricsController(metricsController)
     , exportController(exportController)
+    , deviceRepository(deviceRepository)
     , deviceTableViewModel(new DeviceTableViewModel(deviceRepository, this))
     , deviceTable(nullptr)
     , progressBar(nullptr)
     , statusLabel(nullptr)
     , deviceCountLabel(nullptr)
+    , metricsWidget(nullptr)
+    , metricsViewModel(nullptr)
+    , metricsDock(nullptr)
 {
     ui->setupUi(this);
 
@@ -38,6 +45,7 @@ MainWindow::MainWindow(
     setupToolBar();
     setupStatusBar();
     setupDeviceTable();
+    setupMetricsWidget();
     setupConnections();
 
     // Load initial devices
@@ -115,6 +123,26 @@ void MainWindow::setupDeviceTable() {
     }
 }
 
+void MainWindow::setupMetricsWidget() {
+    // Create MetricsViewModel
+    metricsViewModel = new MetricsViewModel(metricsController, deviceRepository, this);
+
+    // Create MetricsWidget
+    metricsWidget = new MetricsWidget(metricsViewModel, this);
+
+    // Create dock widget
+    metricsDock = new QDockWidget(tr("Device Metrics"), this);
+    metricsDock->setWidget(metricsWidget);
+    metricsDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+
+    addDockWidget(Qt::RightDockWidgetArea, metricsDock);
+
+    // Initially hidden
+    metricsDock->hide();
+
+    Logger::info("MetricsWidget setup completed");
+}
+
 void MainWindow::setupConnections() {
     // ScanController signals
     connect(scanController, &ScanController::scanStatusChanged,
@@ -127,6 +155,8 @@ void MainWindow::setupConnections() {
     // DeviceTableWidget signals
     connect(deviceTable, &DeviceTableWidget::deviceDoubleClicked,
             this, &MainWindow::onDeviceDoubleClicked);
+    connect(deviceTable, &DeviceTableWidget::pingDeviceRequested,
+            this, &MainWindow::onPingDevice);
 
     // DeviceTableViewModel signals
     connect(deviceTableViewModel, &DeviceTableViewModel::deviceCountChanged,
@@ -240,7 +270,7 @@ void MainWindow::onScanProgressUpdated(int current, int total, double percentage
 }
 
 void MainWindow::onDeviceDoubleClicked(const Device& device) {
-    // Show device details dialog (Phase 6)
+    // Show device details dialog (Phase 7)
     QString details = tr("Device Details:\n\n"
                         "IP: %1\n"
                         "Hostname: %2\n"
@@ -254,6 +284,28 @@ void MainWindow::onDeviceDoubleClicked(const Device& device) {
                         .arg(device.isOnline() ? "Online" : "Offline");
 
     QMessageBox::information(this, tr("Device Details"), details);
+}
+
+void MainWindow::onPingDevice(const Device& device) {
+    if (device.getIp().isEmpty()) {
+        Logger::warn("Cannot ping device: empty IP address");
+        return;
+    }
+
+    // Show metrics dock
+    metricsDock->show();
+    metricsDock->raise();
+
+    // Set device in MetricsWidget
+    QList<Device> devices = {device};
+    metricsWidget->setDevices(devices);
+    metricsWidget->setDevice(device);
+
+    // Auto-start monitoring with 1 second interval
+    metricsWidget->startMonitoring(1000);
+
+    updateStatusMessage(tr("Monitoring device: %1").arg(device.getIp()));
+    Logger::info("Started monitoring device: " + device.getIp());
 }
 
 void MainWindow::updateStatusMessage(const QString& message) {

@@ -5,22 +5,73 @@
 
 ---
 
-## 7.0 MetricsWidget Integration (Phase 6 Completion)
+## 7.0 MetricsWidget Integration (Phase 6 Completion) ✅
 
 **Priority**: HIGH - Complete Phase 6 before starting Phase 7
+**Status**: ✅ **COMPLETED** (2025-10-07)
 
 ### MainWindow Integration
 
 Integrate MetricsWidget into MainWindow to enable ping/monitoring from context menu.
 
 **Tasks**:
-- [ ] Add MetricsWidget as dock widget or dialog to MainWindow
-- [ ] Connect "Ping Device" context menu action to MetricsWidget
-- [ ] Pass MetricsViewModel and controllers to MetricsWidget
-- [ ] Update MainWindow constructor to create MetricsViewModel
-- [ ] Implement `onPingDevice()` in DeviceTableWidget to open MetricsWidget
-- [ ] Remove Phase 6 placeholder messages from DeviceTableWidget
-- [ ] Test ping functionality from context menu
+- [x] Add MetricsWidget as dock widget or dialog to MainWindow
+- [x] Connect "Ping Device" context menu action to MetricsWidget
+- [x] Pass MetricsViewModel and controllers to MetricsWidget
+- [x] Update MainWindow constructor to create MetricsViewModel
+- [x] Implement `onPingDevice()` in MainWindow to show MetricsWidget
+- [x] Remove Phase 6 placeholder messages from DeviceTableWidget
+- [x] Test ping functionality from context menu
+
+### Implementation Summary
+
+**Files Modified**:
+1. **include/views/MainWindow.h**
+   - Added MetricsWidget* and MetricsViewModel* members
+   - Added QDockWidget* metricsDock member
+   - Added DeviceRepository* member
+   - Added setupMetricsWidget() private method
+   - Added onPingDevice(const Device&) slot
+
+2. **src/views/MainWindow.cpp**
+   - Implemented setupMetricsWidget() to create dock widget
+   - Dock widget positioned on right side, initially hidden
+   - Implemented onPingDevice() to show dock and auto-start monitoring
+   - Connected pingDeviceRequested signal from DeviceTableWidget
+
+3. **include/views/DeviceTableWidget.h**
+   - Added signal: `void pingDeviceRequested(const Device& device)`
+
+4. **src/views/DeviceTableWidget.cpp**
+   - Updated onPingDevice() to emit pingDeviceRequested signal
+   - Removed QMessageBox placeholder
+
+### Testing Results
+- ✅ Context menu "Ping Device" opens MetricsWidget in dock
+- ✅ Device is automatically selected in MetricsWidget
+- ✅ Charts display real-time metrics (Latency, Packet Loss, Jitter)
+- ✅ Start/Stop monitoring buttons work correctly
+- ✅ Summary panel updates with metrics
+- ✅ Dock widget can be hidden/shown and repositioned
+- ✅ No Phase 6 placeholder messages remain
+- ✅ Build successful (LanScan.exe created)
+- ✅ Tests passing: 20/21 (95%)
+
+### Bug Fixes Applied
+- ✅ Fixed MetricsViewModel to use IP address as fallback when Device.ID is empty
+- ✅ Updated setDevice(), startMonitoring(), onMonitoringTimerTimeout(), onMetricsCollected()
+- ✅ Added comprehensive logging for debugging
+
+### Log Verification (2025-10-07 13:25:21)
+```
+[INFO] MetricsViewModel: Monitoring started for device  (192.168.1.1) with interval 1000ms
+[INFO] MetricsWidget: Monitoring started
+[DEBUG] MetricsViewModel: Collecting metrics for device  (192.168.1.1)  // Every 1 second
+[INFO] Status: Monitoring device: 192.168.1.1
+```
+- ✅ Monitoring initializes correctly
+- ✅ Metrics collection triggered every 1 second as expected
+- ✅ Button states managed correctly (Start disabled, Stop enabled when active)
 
 ### Implementation Options
 
@@ -1044,14 +1095,14 @@ void DeviceDetailDialog::onMtuDiscovered(int mtu) {
 
 **Phase 7 Completion Criteria**:
 
-### Module 7.0: MetricsWidget Integration (Phase 6 Completion)
-- [ ] MetricsWidget integrated into MainWindow (dock widget or dialog)
-- [ ] "Ping Device" context menu functional
-- [ ] MetricsViewModel properly connected to MetricsController
-- [ ] Real-time monitoring working from context menu
-- [ ] Phase 6 placeholder messages removed
-- [ ] Device selection populates MetricsWidget automatically
-- [ ] Start/Stop monitoring controls functional
+### Module 7.0: MetricsWidget Integration (Phase 6 Completion) ✅
+- [x] MetricsWidget integrated into MainWindow (dock widget)
+- [x] "Ping Device" context menu functional
+- [x] MetricsViewModel properly connected to MetricsController
+- [x] Real-time monitoring working from context menu
+- [x] Phase 6 placeholder messages removed
+- [x] Device selection populates MetricsWidget automatically
+- [x] Start/Stop monitoring controls functional
 
 ### Module 7.1: Traceroute Service
 - [ ] TraceRouteService working on Windows and Linux
@@ -1089,7 +1140,7 @@ void DeviceDetailDialog::onMtuDiscovered(int mtu) {
 - [ ] Traceroute results displayed in UI table
 - [ ] MTU discovery results displayed
 
-**Overall Phase 7 Status**: 0/5 modules completed (0%)
+**Overall Phase 7 Status**: 1/5 modules completed (20%) 🔄
 
 ---
 

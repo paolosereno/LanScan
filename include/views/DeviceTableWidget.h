@@ -33,6 +33,7 @@ signals:
     void deviceSelected(const Device& device);
     void deviceDoubleClicked(const Device& device);
     void contextMenuRequested(const Device& device, const QPoint& pos);
+    void pingDeviceRequested(const Device& device);
 
 private slots:
     void onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);

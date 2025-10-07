@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QProgressBar>
 #include <QLabel>
+#include <QDockWidget>
 #include "../models/Device.h"
 
 class ScanController;
@@ -12,6 +13,8 @@ class ExportController;
 class DeviceTableWidget;
 class DeviceTableViewModel;
 class DeviceRepository;
+class MetricsWidget;
+class MetricsViewModel;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -55,6 +58,7 @@ private slots:
 
     // Device table signals
     void onDeviceDoubleClicked(const Device& device);
+    void onPingDevice(const Device& device);
 
 private:
     Ui::MainWindow* ui;
@@ -64,6 +68,9 @@ private:
     MetricsController* metricsController;
     ExportController* exportController;
 
+    // Repository
+    DeviceRepository* deviceRepository;
+
     // Widgets
     DeviceTableWidget* deviceTable;
     DeviceTableViewModel* deviceTableViewModel;
@@ -71,11 +78,17 @@ private:
     QLabel* statusLabel;
     QLabel* deviceCountLabel;
 
+    // Metrics widgets
+    MetricsWidget* metricsWidget;
+    MetricsViewModel* metricsViewModel;
+    QDockWidget* metricsDock;
+
     void setupMenuBar();
     void setupToolBar();
     void setupStatusBar();
     void setupConnections();
     void setupDeviceTable();
+    void setupMetricsWidget();
     void updateStatusMessage(const QString& message);
 };
 

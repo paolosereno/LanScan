@@ -91,8 +91,14 @@ void MetricsWidget::setupConnections() {
 
 void MetricsWidget::setDevice(const Device& device) {
     if (!viewModel) {
+        Logger::error("MetricsWidget::setDevice: viewModel is null");
         return;
     }
+
+    Logger::debug(QString("MetricsWidget::setDevice called for %1 (%2), ID: %3")
+                      .arg(device.hostname().isEmpty() ? "Unknown" : device.hostname())
+                      .arg(device.ip())
+                      .arg(device.getId().isEmpty() ? "empty" : device.getId()));
 
     // Clear charts when device changes
     clearCharts();
@@ -106,9 +112,11 @@ void MetricsWidget::setDevice(const Device& device) {
 
 void MetricsWidget::startMonitoring(int intervalMs) {
     if (!viewModel) {
+        Logger::error("MetricsWidget::startMonitoring: viewModel is null");
         return;
     }
 
+    Logger::debug(QString("MetricsWidget::startMonitoring called with interval %1ms").arg(intervalMs));
     currentMonitoringInterval = intervalMs;
     viewModel->startMonitoring(intervalMs);
 }

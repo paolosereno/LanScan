@@ -163,9 +163,8 @@ void DeviceTableWidget::onPingDevice() {
         return;
     }
 
-    // Placeholder - will be implemented with MetricsController in Phase 6
-    QMessageBox::information(this, tr("Ping Device"),
-        tr("Pinging device %1...\n\n(Full implementation in Phase 6)").arg(device.getIp()));
+    // Emit signal to MainWindow to show MetricsWidget
+    emit pingDeviceRequested(device);
 }
 
 void DeviceTableWidget::onShowDetails() {
