@@ -1,6 +1,6 @@
 # Phase 7: Advanced Diagnostics
 
-**Timeline**: Week 13-14
+**Timeline**: Week 13-14 (Updated 2025-10-07)
 **Objective**: Implement advanced diagnostic tools (traceroute, MTU discovery, bandwidth testing, continuous monitoring)
 
 ---
@@ -72,6 +72,33 @@ Integrate MetricsWidget into MainWindow to enable ping/monitoring from context m
 - ✅ Monitoring initializes correctly
 - ✅ Metrics collection triggered every 1 second as expected
 - ✅ Button states managed correctly (Start disabled, Stop enabled when active)
+
+### Recent Improvements (2025-10-07)
+
+**MetricsController Enhancements**:
+- ✅ Added `currentMonitoringDevice` tracking for proper device context
+- ✅ Enhanced `onMetricsUpdated()` to emit `metricsCollected` signal with device ID
+- ✅ Improved cleanup logic to stop collection only for current device
+- ✅ Added comprehensive logging for device monitoring state
+
+**PingService Multi-Language Support**:
+- ✅ Enhanced Windows ping output parsing for internationalization
+- ✅ Added support for Italian ("Risposta da", "durata", "byte")
+- ✅ Added support for German ("Antwort von", "Zeit", "Bytes")
+- ✅ Added support for French ("Réponse de", "temps", "octets")
+- ✅ Added support for Spanish ("Respuesta desde", "tiempo", "bytes")
+- ✅ Improved error message detection for timeout/unreachable states
+
+**Code Changes**:
+1. **include/controllers/MetricsController.h**
+   - Added `QString currentMonitoringDevice` member
+2. **src/controllers/MetricsController.cpp**
+   - Enhanced `onMetricsUpdated()` with device context emission
+   - Improved `collectMetricsForDevice()` with device tracking
+   - Updated `cleanupTimer()` with proper device cleanup
+3. **src/network/diagnostics/PingService.cpp**
+   - Enhanced `parseWindowsPing()` with multi-language regex patterns
+   - Added comprehensive error keyword detection
 
 ### Implementation Options
 
@@ -1103,6 +1130,10 @@ void DeviceDetailDialog::onMtuDiscovered(int mtu) {
 - [x] Phase 6 placeholder messages removed
 - [x] Device selection populates MetricsWidget automatically
 - [x] Start/Stop monitoring controls functional
+- [x] Enhanced MetricsController with currentMonitoringDevice tracking
+- [x] Improved metrics collection with device context emission
+- [x] PingService multi-language support (Italian, German, French, Spanish)
+- [x] Enhanced error detection for timeout/unreachable states
 
 ### Module 7.1: Traceroute Service
 - [ ] TraceRouteService working on Windows and Linux

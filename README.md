@@ -79,13 +79,22 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Three chart tabs for comprehensive visualization
 - ✅ Thread-safe real-time updates via Qt signals
 
+**Advanced Diagnostics** (Phase 7 - In Progress)
+- ✅ MetricsWidget integration into MainWindow with dock widget
+- ✅ Enhanced MetricsController with proper device tracking
+- ✅ Improved metrics collection with device context emission
+- ✅ Multi-language ping parsing (Italian, German, French, Spanish)
+- ✅ Enhanced error detection for timeout/unreachable states
+- 🚧 Traceroute service implementation (in progress)
+
 ### 🚧 Planned (Phase 7+)
-- Advanced diagnostics (traceroute, MTU discovery, bandwidth test)
+- Advanced diagnostics (MTU discovery, bandwidth test, DNS diagnostics)
 - UI polish with dark/light themes
 - Historical data tracking with trend analysis
 - Network topology visualization
 - Wake-on-LAN support
 - Chart export functionality
+- Monitoring service with alerts
 
 ## Technology Stack
 
@@ -194,12 +203,18 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 6 - Charts & Visualization ✅ **COMPLETED**
-**Next Phase**: Phase 7 - Advanced Diagnostics
-**Progress**: 58% (7/12 phases complete)
+**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS**
+**Next Phase**: Phase 8 - Advanced Features
+**Progress**: 63% (6 complete + Phase 7 20%)
 **Latest Release**: [v0.6.0-phase6](https://github.com/paolosereno/LanScan/releases/tag/v0.6.0-phase6) (pending)
 
 ### Recent Updates
+- **2025-10-07**: Phase 7.0 progress - Advanced diagnostics improvements
+  - Enhanced MetricsController with currentMonitoringDevice tracking
+  - Improved onMetricsUpdated to emit metricsCollected signal with device context
+  - Added proper cleanup logic to stop collection only for current device
+  - Enhanced PingService with multi-language support (Italian, German, French, Spanish)
+  - Improved error message detection for timeout and unreachable states in ping parsing
 - **2025-10-07**: Phase 6 completed - QtCharts integration with real-time metrics visualization
   - Implemented ChartViewModel base class with template helper methods
   - Created 3 chart widgets: LatencyChart (line), PacketLossChart (bar), JitterChart (spline)
@@ -217,9 +232,9 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 175 total (Phase 6: +17 files)
-- **Lines of Code**: ~16,700+ (+1,600 in Phase 6)
-- **Test Coverage**: 21/21 tests passing (100% - ChartViewModelTest added)
+- **Files Created**: 179 total (Phase 7.0: +4 modified files)
+- **Lines of Code**: ~17,000+ (+300 in Phase 7.0 improvements)
+- **Test Coverage**: 21/21 tests passing (100%)
 - **Build Time**: ~40-45 seconds (Release, 12 cores)
 - **Executable Size**: 39 MB (Release build)
 

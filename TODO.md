@@ -5,7 +5,7 @@
 - **Current Module**: 7.1 - Traceroute Service
 - **Timeline**: Week 12-13
 - **Next Milestone**: Traceroute implementation
-- **Last Updated**: 2025-10-07
+- **Last Updated**: 2025-10-07 (Updated with MetricsController and PingService improvements)
 
 ## Phase Progress Overview
 
@@ -346,6 +346,11 @@
 - [x] Fixed MetricsViewModel to use IP as fallback when Device.ID is empty
 - [x] Verified monitoring works correctly via log analysis (metrics collected every 1 second)
 - [x] Buttons state correctly managed (Start disabled, Stop enabled when monitoring active)
+- [x] Enhanced MetricsController device tracking with currentMonitoringDevice
+- [x] Improved onMetricsUpdated to emit metricsCollected signal with device context
+- [x] Added proper cleanup logic to stop collection only for current device
+- [x] Enhanced PingService with multi-language support (Italian, German, French, Spanish)
+- [x] Improved error message detection for timeout and unreachable states in ping parsing
 
 ### 7.1 Traceroute Service (In Progress)
 - [ ] TraceRouteService.h/cpp - Traceroute execution and parsing
@@ -364,7 +369,7 @@
 
 ---
 
-**Last Updated**: 2025-10-07
+**Last Updated**: 2025-10-07 (Updated with MetricsController and PingService improvements)
 **Next Review**: Weekly (every Monday)
 **Current Target**: Phase 7.1 - Traceroute Service Implementation
 
