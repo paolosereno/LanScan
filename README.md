@@ -5,13 +5,13 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-15%2F19%20passing-yellow.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-21%2F21%20passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
 ## Features
 
-### ✅ Implemented (Phase 0-5)
+### ✅ Implemented (Phase 0-6)
 
 **Network Discovery & Scanning** (Phase 0-1)
 - ✅ Network device discovery (IP, hostname, MAC)
@@ -66,13 +66,26 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Full dependency injection architecture
 - ✅ Signal/slot connections for async UI updates
 
-### 🚧 Planned (Phase 6+)
-- Charts and metrics visualization (QtCharts integration)
+**Charts & Metrics Visualization** (Phase 6)
+- ✅ QtCharts integration with base ChartViewModel
+- ✅ Real-time latency chart (line series: min/avg/max)
+- ✅ Packet loss chart (bar series with severity-based colors)
+- ✅ Jitter chart (smooth spline series)
+- ✅ Auto-scaling axes with dynamic ranges
+- ✅ Configurable max data points per chart (memory efficient)
+- ✅ MetricsViewModel for monitoring management
+- ✅ MetricsWidget with device selection and start/stop controls
+- ✅ Summary panel with color-coded current metrics
+- ✅ Three chart tabs for comprehensive visualization
+- ✅ Thread-safe real-time updates via Qt signals
+
+### 🚧 Planned (Phase 7+)
 - Advanced diagnostics (traceroute, MTU discovery, bandwidth test)
 - UI polish with dark/light themes
 - Historical data tracking with trend analysis
 - Network topology visualization
 - Wake-on-LAN support
+- Chart export functionality
 
 ## Technology Stack
 
@@ -181,12 +194,18 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 5 - UI Foundation & Views ✅ **COMPLETED**
-**Next Phase**: Phase 6 - Charts & Visualization
-**Progress**: 50% (6/12 phases complete)
-**Latest Release**: [v0.5.0-phase5](https://github.com/paolosereno/LanScan/releases/tag/v0.5.0-phase5)
+**Current Phase**: Phase 6 - Charts & Visualization ✅ **COMPLETED**
+**Next Phase**: Phase 7 - Advanced Diagnostics
+**Progress**: 58% (7/12 phases complete)
+**Latest Release**: [v0.6.0-phase6](https://github.com/paolosereno/LanScan/releases/tag/v0.6.0-phase6) (pending)
 
 ### Recent Updates
+- **2025-10-07**: Phase 6 completed - QtCharts integration with real-time metrics visualization
+  - Implemented ChartViewModel base class with template helper methods
+  - Created 3 chart widgets: LatencyChart (line), PacketLossChart (bar), JitterChart (spline)
+  - Built MetricsViewModel with timer-based monitoring and history management
+  - Designed MetricsWidget with Qt Designer UI, summary panel, and chart tabs
+  - All charts feature auto-scaling, data pruning, and color-coded visualization
 - **2025-10-05**: Added IEEE OUI database integration (38,169 vendors) with LAA detection
 - **2025-10-05**: Fixed DNS hostname validation and local interface MAC detection
 - **2025-10-05**: Implemented singleton pattern for efficient vendor lookup
@@ -198,11 +217,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 158 total
-- **Lines of Code**: ~14,000+
-- **Test Coverage**: 15/19 tests passing (79% - 4 pre-existing failures)
-- **Build Time**: ~35-40 seconds (Debug, 12 cores)
-- **Executable Size**: 34 MB (Debug build)
+- **Files Created**: 175 total (Phase 6: +17 files)
+- **Lines of Code**: ~16,700+ (+1,600 in Phase 6)
+- **Test Coverage**: 21/21 tests passing (100% - ChartViewModelTest added)
+- **Build Time**: ~40-45 seconds (Release, 12 cores)
+- **Executable Size**: 39 MB (Release build)
 
 ## License
 

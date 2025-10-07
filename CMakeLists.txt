@@ -147,6 +147,7 @@ set(VIEWMODEL_SOURCES
     src/viewmodels/DeviceTableViewModel.cpp
     src/viewmodels/ScanConfigViewModel.cpp
     src/viewmodels/ChartViewModel.cpp
+    src/viewmodels/MetricsViewModel.cpp
 )
 
 # Chart sources (Phase 6)
@@ -156,11 +157,12 @@ set(CHART_SOURCES
     src/charts/JitterChart.cpp
 )
 
-# View sources (Phase 5)
+# View sources (Phase 5-6)
 set(VIEW_SOURCES
     src/views/MainWindow.cpp
     src/views/DeviceTableWidget.cpp
     src/views/ScanConfigDialog.cpp
+    src/views/MetricsWidget.cpp
 )
 
 # Delegate sources (Phase 5)
@@ -194,21 +196,24 @@ set(HEADERS
     include/viewmodels/DeviceTableViewModel.h
     include/viewmodels/ScanConfigViewModel.h
     include/viewmodels/ChartViewModel.h
+    include/viewmodels/MetricsViewModel.h
     include/charts/LatencyChart.h
     include/charts/PacketLossChart.h
     include/charts/JitterChart.h
     include/views/MainWindow.h
     include/views/DeviceTableWidget.h
     include/views/ScanConfigDialog.h
+    include/views/MetricsWidget.h
     include/delegates/StatusDelegate.h
     include/delegates/QualityScoreDelegate.h
 )
 
-# UI files (Phase 5)
+# UI files (Phase 5-6)
 set(UI_SOURCES
     ui/mainwindow.ui
     ui/scanconfigdialog.ui
     ui/devicetablewidget.ui
+    ui/metricswidget.ui
 )
 
 # Set AUTOUIC search paths for UI files
