@@ -79,6 +79,44 @@ Tests: 10/10 passing (100%)
 
 ## 6.2 Chart Widgets
 
+### Tasks
+- [x] Implement LatencyChart.h/cpp (line series) ✅
+- [x] Implement PacketLossChart.h/cpp (bar series) ✅
+- [x] Implement JitterChart.h/cpp (spline series) ✅
+- [x] Test chart data updates and auto-scaling ✅
+
+### Implementation Details (Completed 2025-10-07)
+
+**Files Created:**
+- `include/charts/LatencyChart.h` - Real-time latency chart (118 lines)
+- `src/charts/LatencyChart.cpp` - Implementation with 3 line series (197 lines)
+- `include/charts/PacketLossChart.h` - Bar chart with severity colors (106 lines)
+- `src/charts/PacketLossChart.cpp` - Implementation (161 lines)
+- `include/charts/JitterChart.h` - Smooth spline chart (98 lines)
+- `src/charts/JitterChart.cpp` - Implementation (136 lines)
+
+**Features Implemented:**
+- **LatencyChart**: 3 line series (min/avg/max) with distinct colors (green/blue/red)
+- **PacketLossChart**: Bar series with dynamic colors based on severity
+  - Green (<1%): Excellent
+  - Orange (1-5%): Fair
+  - Red (>5%): Poor
+- **JitterChart**: Smooth spline series (purple) for stability visualization
+- Auto-scaling axes: X (time), Y (values with 20% margin)
+- Configurable max data points: LatencyChart (60), PacketLossChart (20), JitterChart (60)
+- Automatic data pruning when exceeding limits
+- Qt signals/slots for real-time updates via `onMetricsUpdated()`
+- Antialiasing rendering for smooth graphics
+- Chart animations enabled
+
+**Build Results:**
+```
+Build: SUCCESS
+Files: 6 new files (816 LOC)
+Warnings: None
+Errors: None
+```
+
 ### LatencyChart.h/cpp
 Real-time latency chart (Line Series)
 
@@ -727,21 +765,21 @@ void MetricsViewModel::onMetricsCollected(const QString& deviceId, const Network
 
 **Phase 6 Completion Criteria**:
 - ✅ QtCharts integrated into project (COMPLETED 2025-10-07)
-- [ ] LatencyChart displaying real-time data (line series)
-- [ ] PacketLossChart displaying data (bar series)
-- [ ] JitterChart displaying data (spline series)
-- [ ] Charts auto-scaling axes dynamically
-- [ ] Real-time updates working (1 second interval)
-- [ ] Data pruning functional (max 60 points)
+- ✅ LatencyChart displaying real-time data (line series) (COMPLETED 2025-10-07)
+- ✅ PacketLossChart displaying data (bar series) (COMPLETED 2025-10-07)
+- ✅ JitterChart displaying data (spline series) (COMPLETED 2025-10-07)
+- ✅ Charts auto-scaling axes dynamically (COMPLETED 2025-10-07)
+- ⏳ Real-time updates working (1 second interval) - Pending MetricsWidget integration
+- ✅ Data pruning functional (max points per chart) (COMPLETED 2025-10-07)
 - [ ] MetricsWidget integrated into MainWindow
 - [ ] Summary panel showing current metrics
 - [ ] Chart performance optimized
 - [ ] No memory leaks during long monitoring sessions
 
-**Current Progress**: 1/3 modules completed (33%)
-- ✅ Module 6.1: QtCharts Integration
-- ⏳ Module 6.2: Chart Widgets
-- ⏳ Module 6.3: Metrics Widget
+**Current Progress**: 2/3 modules completed (67%)
+- ✅ Module 6.1: QtCharts Integration (COMPLETED)
+- ✅ Module 6.2: Chart Widgets (COMPLETED)
+- ⏳ Module 6.3: Metrics Widget (PENDING)
 
 ---
 

@@ -41,6 +41,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/viewmodels
     ${CMAKE_SOURCE_DIR}/include/views
     ${CMAKE_SOURCE_DIR}/include/delegates
+    ${CMAKE_SOURCE_DIR}/include/charts
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${CMAKE_SOURCE_DIR}/src/utils
@@ -53,6 +54,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/viewmodels
     ${CMAKE_SOURCE_DIR}/src/views
     ${CMAKE_SOURCE_DIR}/src/delegates
+    ${CMAKE_SOURCE_DIR}/src/charts
     ${CMAKE_SOURCE_DIR}/src/persistence
     ${CMAKE_SOURCE_DIR}/src/ui
     ${CMAKE_SOURCE_DIR}/src/core
@@ -140,11 +142,18 @@ set(MANAGER_SOURCES
     src/managers/FavoritesManager.cpp
 )
 
-# ViewModel sources (Phase 5)
+# ViewModel sources (Phase 5-6)
 set(VIEWMODEL_SOURCES
     src/viewmodels/DeviceTableViewModel.cpp
     src/viewmodels/ScanConfigViewModel.cpp
     src/viewmodels/ChartViewModel.cpp
+)
+
+# Chart sources (Phase 6)
+set(CHART_SOURCES
+    src/charts/LatencyChart.cpp
+    src/charts/PacketLossChart.cpp
+    src/charts/JitterChart.cpp
 )
 
 # View sources (Phase 5)
@@ -185,6 +194,9 @@ set(HEADERS
     include/viewmodels/DeviceTableViewModel.h
     include/viewmodels/ScanConfigViewModel.h
     include/viewmodels/ChartViewModel.h
+    include/charts/LatencyChart.h
+    include/charts/PacketLossChart.h
+    include/charts/JitterChart.h
     include/views/MainWindow.h
     include/views/DeviceTableWidget.h
     include/views/ScanConfigDialog.h
@@ -217,6 +229,7 @@ add_executable(${PROJECT_NAME}
     ${VIEWMODEL_SOURCES}
     ${VIEW_SOURCES}
     ${DELEGATE_SOURCES}
+    ${CHART_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
 )

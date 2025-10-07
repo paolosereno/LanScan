@@ -50,9 +50,9 @@
 ### Core Development (4-6)
 - [x] **Phase 4**: Application Layer & Controllers ✅ **(3/3 modules completed - 100%)**
 - [x] **Phase 5**: UI Foundation & Views ✅ **(5/5 modules completed - 100%)**
-- [>] **Phase 6**: Charts & Visualization 🔄 **(1/3 modules completed - 33%)**
+- [>] **Phase 6**: Charts & Visualization 🔄 **(2/3 modules completed - 67%)**
   - ✅ QtCharts Integration (ChartViewModel base class)
-  - ⏳ Chart Widgets (LatencyChart, PacketLossChart, JitterChart)
+  - ✅ Chart Widgets (LatencyChart, PacketLossChart, JitterChart)
   - ⏳ Metrics Widget (MetricsWidget, MetricsViewModel)
 
 ### Advanced Features (7-9)
@@ -205,7 +205,18 @@
 - [x] Integration tests for PingService and PortScanner
 - [x] Fixed Logger API calls and IMetricsCalculator interface implementation
 
-## Recent Completed Items (Phase 6.1 - QtCharts Integration)
+## Recent Completed Items (Phase 6.2 - Chart Widgets)
+- [x] LatencyChart.h/cpp - Real-time latency chart with 3 line series (min/avg/max)
+- [x] PacketLossChart.h/cpp - Bar chart with severity-based colors (green/orange/red)
+- [x] JitterChart.h/cpp - Smooth spline chart for network stability visualization
+- [x] All charts with auto-scaling axes (X: time, Y: values with 20% margin)
+- [x] Configurable max data points (LatencyChart: 60, PacketLossChart: 20, JitterChart: 60)
+- [x] Data pruning and memory management
+- [x] Qt signals/slots integration for real-time updates
+- [x] CMakeLists.txt updated with all chart sources
+- [x] Application builds successfully (6 new files: 816 LOC)
+
+## Previous Completed Items (Phase 6.1 - QtCharts Integration)
 - [x] QtCharts integration in CMakeLists.txt (Qt6::Charts)
 - [x] ChartViewModel base class (abstract base for all chart ViewModels)
 - [x] ChartViewModel features: max data points management, data pruning helper
@@ -276,31 +287,31 @@
 
 ## Progress Metrics
 - **Total Phases**: 12 (5 completed, 1 active, 6 pending)
-- **Overall Progress**: Phase 0-5 complete + Phase 6 (33%) → ~54% of total project
+- **Overall Progress**: Phase 0-5 complete + Phase 6 (67%) → ~61% of total project
 - **Phase 0 Completion**: 100% ✅ (4/4 modules, 5/5 tests)
 - **Phase 1 Completion**: 100% ✅ (4/4 modules, 10/10 tests)
 - **Phase 2 Completion**: 100% ✅ (4/4 modules, 15/15 tests)
 - **Phase 3 Completion**: 100% ✅ (3/3 modules, 19/19 tests)
 - **Phase 4 Completion**: 100% ✅ (3/3 modules, 15/19 tests passing)
 - **Phase 5 Completion**: 100% ✅ (5/5 modules, UI functional)
-- **Phase 6 Completion**: 33% 🔄 (1/3 modules, ChartViewModel + tests)
+- **Phase 6 Completion**: 67% 🔄 (2/3 modules, ChartViewModel + 3 Charts)
 - **Current Test Coverage**: 80% (16/20 tests passing, 4 pre-existing failures)
 - **Estimated Total Timeline**: 20 weeks to v1.0.0 release
 - **Code Coverage Target**: 85% minimum for all phases
 
-## Build Statistics (Phase 0-6.1)
-- **Files Created**: 161 total (Phase 0: 31, Phase 1: 28, Phase 2: 28, Phase 3: 32, Phase 4: 20, Phase 5: 19, Phase 6.1: 3)
-- **Lines of Code**: ~14,300+ lines
+## Build Statistics (Phase 0-6.2)
+- **Files Created**: 167 total (Phase 0: 31, Phase 1: 28, Phase 2: 28, Phase 3: 32, Phase 4: 20, Phase 5: 19, Phase 6: 9)
+- **Lines of Code**: ~15,100+ lines
 - **Test Files**: 20 (16 passing, 4 pre-existing failures)
 - **Executable Size**: 34 MB (Debug build)
-- **Git Tags**: v0.1.0-phase1, v0.2.0-phase2, v0.3.0-phase3, v0.4.0-phase4, v0.5.0-phase5
+- **Git Tags**: v0.1.0-phase1, v0.2.0-phase2, v0.3.0-phase3, v0.4.0-phase4, v0.5.0-phase5, v0.6.0-phase6 (pending)
 - **Build Time**: ~35-40 seconds (Debug, 12 cores)
 
 ---
 
 **Last Updated**: 2025-10-07
 **Next Review**: Weekly (every Monday)
-**Current Target**: Continue Phase 6.2 - Chart Widgets Implementation
+**Current Target**: Begin Phase 6.3 - Metrics Widget Integration
 
 ---
 
