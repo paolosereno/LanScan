@@ -107,14 +107,27 @@ int MetricsController::getMonitoredDeviceCount() const {
 
 void MetricsController::onMetricsUpdated(const NetworkMetrics& metrics) {
     // This slot is called when aggregator updates metrics
-    // We can emit it to UI or save to repository
-    Logger::debug("Metrics updated for device");
+    // Emit with the current monitoring device ID
+    if (!currentMonitoringDevice.isEmpty()) {
+        Logger::debug(QString("Metrics updated for device %1").arg(currentMonitoringDevice));
+        emit metricsCollected(currentMonitoringDevice, metrics);
+
+        // Optionally save to repository
+        saveMetrics(currentMonitoringDevice, metrics);
+    } else {
+        Logger::warn("Metrics updated but no current monitoring device set");
+    }
 }
 
 void MetricsController::collectMetricsForDevice(const QString& deviceId) {
     try {
+        // Set current monitoring device
+        currentMonitoringDevice = deviceId;
+
         // Start collecting metrics using aggregator
         aggregator->startContinuousCollection(deviceId);
+
+        Logger::debug(QString("Started metrics collection for device %1").arg(deviceId));
 
         // Note: Metrics will be emitted via metricsUpdated signal
         // We'll handle saving in the onMetricsUpdated slot if needed
@@ -146,9 +159,11 @@ void MetricsController::cleanupTimer(const QString& deviceId) {
         timer->deleteLater();
     }
 
-    // Stop aggregator collection
-    if (aggregator && aggregator->isCollecting()) {
+    // Stop aggregator collection if this is the current device
+    if (aggregator && aggregator->isCollecting() && currentMonitoringDevice == deviceId) {
         aggregator->stopContinuousCollection();
+        currentMonitoringDevice.clear();
+        Logger::debug(QString("Stopped metrics collection for device %1").arg(deviceId));
     }
 }
 

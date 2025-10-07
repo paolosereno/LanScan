@@ -192,20 +192,59 @@ QVector<PingService::PingResult> PingService::parsePingOutput(const QString& out
 PingService::PingResult PingService::parseWindowsPing(const QString& line) {
     PingResult result;
 
-    // Parse: "Reply from 192.168.1.1: bytes=32 time=5ms TTL=64"
-    // Or: "Reply from 192.168.1.1: bytes=32 time<1ms TTL=64"
-    QRegularExpression regex(R"(Reply from .+: bytes=(\d+) time[=<](\d+)ms TTL=(\d+))");
-    QRegularExpressionMatch match = regex.match(line);
+    // Define multi-language regex patterns for internationalization
+    // Pattern structure: (reply_keyword) from IP: (bytes_keyword)=(value) (time_keyword)[=<](value)ms TTL=(value)
 
-    if (match.hasMatch()) {
-        result.bytes = match.captured(1).toInt();
-        result.latency = match.captured(2).toDouble();
-        result.ttl = match.captured(3).toInt();
-        result.success = true;
-    } else if (line.contains("Request timed out", Qt::CaseInsensitive) ||
-               line.contains("Destination host unreachable", Qt::CaseInsensitive)) {
-        result.success = false;
-        result.errorMessage = line.trimmed();
+    QVector<QRegularExpression> patterns = {
+        // English: "Reply from 192.168.1.1: bytes=32 time=5ms TTL=64"
+        QRegularExpression(R"(Reply from .+: bytes=(\d+) time[=<](\d+)ms TTL=(\d+))"),
+
+        // Italian: "Risposta da 192.168.1.1: byte=32 durata<1ms TTL=64"
+        QRegularExpression(R"(Risposta da .+: byte[s]?=(\d+) durata[=<](\d+)ms TTL=(\d+))"),
+
+        // German: "Antwort von 192.168.1.1: Bytes=32 Zeit<1ms TTL=64"
+        QRegularExpression(R"(Antwort von .+: Bytes=(\d+) Zeit[=<](\d+)ms TTL=(\d+))"),
+
+        // French: "Réponse de 192.168.1.1: octets=32 temps<1ms TTL=64"
+        QRegularExpression(R"(R[ée]ponse de .+: octets=(\d+) temps[=<](\d+)ms TTL=(\d+))"),
+
+        // Spanish: "Respuesta desde 192.168.1.1: bytes=32 tiempo<1ms TTL=64"
+        QRegularExpression(R"(Respuesta desde .+: bytes=(\d+) tiempo[=<](\d+)ms TTL=(\d+))")
+    };
+
+    // Try each pattern
+    for (const QRegularExpression& regex : patterns) {
+        QRegularExpressionMatch match = regex.match(line);
+        if (match.hasMatch()) {
+            result.bytes = match.captured(1).toInt();
+            result.latency = match.captured(2).toDouble();
+            result.ttl = match.captured(3).toInt();
+            result.success = true;
+            return result;
+        }
+    }
+
+    // Check for error messages in multiple languages
+    QStringList timeoutKeywords = {"Request timed out", "Richiesta scaduta", "Zeitüberschreitung",
+                                    "Délai d'attente", "Tiempo de espera agotado"};
+    QStringList unreachableKeywords = {"Destination host unreachable", "Host di destinazione non raggiungibile",
+                                        "Zielhost nicht erreichbar", "Hôte de destination inaccessible",
+                                        "Host de destino inaccesible"};
+
+    for (const QString& keyword : timeoutKeywords) {
+        if (line.contains(keyword, Qt::CaseInsensitive)) {
+            result.success = false;
+            result.errorMessage = line.trimmed();
+            return result;
+        }
+    }
+
+    for (const QString& keyword : unreachableKeywords) {
+        if (line.contains(keyword, Qt::CaseInsensitive)) {
+            result.success = false;
+            result.errorMessage = line.trimmed();
+            return result;
+        }
     }
 
     return result;

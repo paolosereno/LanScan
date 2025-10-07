@@ -113,6 +113,7 @@ private:
     DeviceRepository* repository;
 
     QMap<QString, QTimer*> monitoringTimers;
+    QString currentMonitoringDevice;  // Track currently monitored device
     int defaultInterval;
 
     void setupTimer(const QString& deviceId, int intervalMs);
