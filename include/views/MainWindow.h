@@ -15,6 +15,12 @@ class DeviceTableViewModel;
 class DeviceRepository;
 class MetricsWidget;
 class MetricsViewModel;
+class MonitoringService;
+class HistoryService;
+class TraceRouteService;
+class MtuDiscovery;
+class BandwidthTester;
+class DnsDiagnostics;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,6 +41,12 @@ public:
         MetricsController* metricsController,
         ExportController* exportController,
         DeviceRepository* deviceRepository,
+        MonitoringService* monitoringService,
+        HistoryService* historyService,
+        TraceRouteService* tracerouteService,
+        MtuDiscovery* mtuDiscovery,
+        BandwidthTester* bandwidthTester,
+        DnsDiagnostics* dnsDiagnostics,
         QWidget* parent = nullptr
     );
     ~MainWindow();
@@ -59,6 +71,7 @@ private slots:
     // Device table signals
     void onDeviceDoubleClicked(const Device& device);
     void onPingDevice(const Device& device);
+    void onShowDeviceDetails(const Device& device);
 
 private:
     Ui::MainWindow* ui;
@@ -70,6 +83,14 @@ private:
 
     // Repository
     DeviceRepository* deviceRepository;
+
+    // Services
+    MonitoringService* monitoringService;
+    HistoryService* historyService;
+    TraceRouteService* tracerouteService;
+    MtuDiscovery* mtuDiscovery;
+    BandwidthTester* bandwidthTester;
+    DnsDiagnostics* dnsDiagnostics;
 
     // Widgets
     DeviceTableWidget* deviceTable;

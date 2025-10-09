@@ -182,6 +182,7 @@ set(VIEW_SOURCES
     src/views/DeviceTableWidget.cpp
     src/views/ScanConfigDialog.cpp
     src/views/MetricsWidget.cpp
+    src/views/DeviceDetailDialog.cpp
 )
 
 # Delegate sources (Phase 5)
@@ -223,6 +224,7 @@ set(HEADERS
     include/views/DeviceTableWidget.h
     include/views/ScanConfigDialog.h
     include/views/MetricsWidget.h
+    include/views/DeviceDetailDialog.h
     include/delegates/StatusDelegate.h
     include/delegates/QualityScoreDelegate.h
     include/diagnostics/TraceRouteService.h
@@ -234,12 +236,13 @@ set(HEADERS
     include/services/MonitoringService.h
 )
 
-# UI files (Phase 5-6)
+# UI files (Phase 5-7)
 set(UI_SOURCES
     ui/mainwindow.ui
     ui/scanconfigdialog.ui
     ui/devicetablewidget.ui
     ui/metricswidget.ui
+    ui/devicedetaildialog.ui
 )
 
 # Set AUTOUIC search paths for UI files

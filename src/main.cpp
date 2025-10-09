@@ -17,6 +17,13 @@
 #include "../network/diagnostics/PingService.h"
 #include "../export/CsvExporter.h"
 #include "../export/JsonExporter.h"
+#include "../services/AlertService.h"
+#include "../services/HistoryService.h"
+#include "../services/MonitoringService.h"
+#include "../diagnostics/TraceRouteService.h"
+#include "../diagnostics/MtuDiscovery.h"
+#include "../diagnostics/BandwidthTester.h"
+#include "../diagnostics/DnsDiagnostics.h"
 #include "../utils/Logger.h"
 
 int main(int argc, char *argv[])
@@ -89,13 +96,38 @@ int main(int argc, char *argv[])
 
     ExportController* exportCtrl = new ExportController(deviceRepo);
 
+    // ========== Phase 7 Services Setup ==========
+
+    // Monitoring Services
+    AlertService* alertService = new AlertService();
+    HistoryService* historyService = new HistoryService(db);
+    historyService->initialize();  // Create database tables
+
+    MonitoringService* monitoringService = new MonitoringService(
+        metricsCtrl,
+        alertService,
+        historyService
+    );
+
+    // Diagnostic Services
+    TraceRouteService* tracerouteService = new TraceRouteService();
+    MtuDiscovery* mtuDiscovery = new MtuDiscovery();
+    BandwidthTester* bandwidthTester = new BandwidthTester();
+    DnsDiagnostics* dnsDiagnostics = new DnsDiagnostics();
+
     // ========== Main Window Setup ==========
 
     MainWindow mainWindow(
         scanCtrl,
         metricsCtrl,
         exportCtrl,
-        deviceRepo
+        deviceRepo,
+        monitoringService,
+        historyService,
+        tracerouteService,
+        mtuDiscovery,
+        bandwidthTester,
+        dnsDiagnostics
     );
 
     mainWindow.show();
@@ -105,6 +137,13 @@ int main(int argc, char *argv[])
     int result = app.exec();
 
     // Cleanup
+    delete dnsDiagnostics;
+    delete bandwidthTester;
+    delete mtuDiscovery;
+    delete tracerouteService;
+    delete monitoringService;
+    delete historyService;
+    delete alertService;
     delete exportCtrl;
     delete jsonExporter;
     delete csvExporter;

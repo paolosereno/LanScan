@@ -3,6 +3,7 @@
 #include "views/DeviceTableWidget.h"
 #include "views/ScanConfigDialog.h"
 #include "views/MetricsWidget.h"
+#include "views/DeviceDetailDialog.h"
 #include "viewmodels/DeviceTableViewModel.h"
 #include "viewmodels/ScanConfigViewModel.h"
 #include "viewmodels/MetricsViewModel.h"
@@ -10,6 +11,12 @@
 #include "controllers/MetricsController.h"
 #include "controllers/ExportController.h"
 #include "database/DeviceRepository.h"
+#include "services/MonitoringService.h"
+#include "services/HistoryService.h"
+#include "diagnostics/TraceRouteService.h"
+#include "diagnostics/MtuDiscovery.h"
+#include "diagnostics/BandwidthTester.h"
+#include "diagnostics/DnsDiagnostics.h"
 #include "../utils/Logger.h"
 #include <QMessageBox>
 #include <QFileDialog>
@@ -22,6 +29,12 @@ MainWindow::MainWindow(
     MetricsController* metricsController,
     ExportController* exportController,
     DeviceRepository* deviceRepository,
+    MonitoringService* monitoringService,
+    HistoryService* historyService,
+    TraceRouteService* tracerouteService,
+    MtuDiscovery* mtuDiscovery,
+    BandwidthTester* bandwidthTester,
+    DnsDiagnostics* dnsDiagnostics,
     QWidget* parent
 )
     : QMainWindow(parent)
@@ -30,6 +43,12 @@ MainWindow::MainWindow(
     , metricsController(metricsController)
     , exportController(exportController)
     , deviceRepository(deviceRepository)
+    , monitoringService(monitoringService)
+    , historyService(historyService)
+    , tracerouteService(tracerouteService)
+    , mtuDiscovery(mtuDiscovery)
+    , bandwidthTester(bandwidthTester)
+    , dnsDiagnostics(dnsDiagnostics)
     , deviceTableViewModel(new DeviceTableViewModel(deviceRepository, this))
     , deviceTable(nullptr)
     , progressBar(nullptr)
@@ -154,7 +173,7 @@ void MainWindow::setupConnections() {
 
     // DeviceTableWidget signals
     connect(deviceTable, &DeviceTableWidget::deviceDoubleClicked,
-            this, &MainWindow::onDeviceDoubleClicked);
+            this, &MainWindow::onShowDeviceDetails);
     connect(deviceTable, &DeviceTableWidget::pingDeviceRequested,
             this, &MainWindow::onPingDevice);
 
@@ -270,20 +289,29 @@ void MainWindow::onScanProgressUpdated(int current, int total, double percentage
 }
 
 void MainWindow::onDeviceDoubleClicked(const Device& device) {
-    // Show device details dialog (Phase 7)
-    QString details = tr("Device Details:\n\n"
-                        "IP: %1\n"
-                        "Hostname: %2\n"
-                        "MAC: %3\n"
-                        "Vendor: %4\n"
-                        "Status: %5")
-                        .arg(device.getIp())
-                        .arg(device.getHostname())
-                        .arg(device.getMacAddress())
-                        .arg(device.getVendor())
-                        .arg(device.isOnline() ? "Online" : "Offline");
+    // Deprecated - now using onShowDeviceDetails
+    onShowDeviceDetails(device);
+}
 
-    QMessageBox::information(this, tr("Device Details"), details);
+void MainWindow::onShowDeviceDetails(const Device& device) {
+    Logger::info(QString("MainWindow: Opening device details for %1").arg(device.getIp()));
+
+    // Create DeviceDetailDialog with all services
+    DeviceDetailDialog* dialog = new DeviceDetailDialog(
+        device,
+        metricsController,
+        monitoringService,
+        historyService,
+        tracerouteService,
+        mtuDiscovery,
+        bandwidthTester,
+        dnsDiagnostics,
+        this
+    );
+
+    // Show modal dialog
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->exec();
 }
 
 void MainWindow::onPingDevice(const Device& device) {
