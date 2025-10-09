@@ -5,7 +5,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-25%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-28%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -113,16 +113,24 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Query time measurement with QElapsedTimer
   - Structured DnsRecord result type with TTL and priority
   - 15 unit tests (100% passing)
+- ✅ **Monitoring service with alerts and history** (Phase 7.3)
+  - Alert management with severity levels (Info, Warning, Critical)
+  - Alert types: HighLatency, PacketLoss, HighJitter, DeviceOffline/Online
+  - Historical metrics and events persistence in SQLite
+  - Continuous device monitoring with configurable intervals
+  - Threshold-based alert generation (latency, packet loss, jitter)
+  - Device status change detection (online/offline transitions)
+  - Alert acknowledgment and filtering
+  - Automatic data pruning (LRU for alerts, time-based for history)
+  - 32 unit tests across 3 test suites (AlertService, HistoryService, MonitoringService)
 
 ### 🚧 Planned (Phase 7+)
-- Monitoring service with continuous tracking and alerts
-- Device detail dialog with integrated diagnostics
-- UI polish with dark/light themes
-- Historical data tracking with trend analysis
-- Network topology visualization
-- Wake-on-LAN support
-- Chart export functionality
-- Monitoring service with alerts
+- Device detail dialog with integrated diagnostics (Phase 7.4)
+- UI polish with dark/light themes (Phase 7.5)
+- Network topology visualization (Phase 8)
+- Wake-on-LAN support (Phase 9)
+- Chart export functionality (Phase 10)
+- Advanced security scanning (Phase 11)
 
 ## Technology Stack
 
@@ -231,12 +239,22 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS** (3/5 modules - 60%)
+**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS** (4/5 modules - 80%)
 **Next Phase**: Phase 8 - Advanced Features
-**Progress**: 70% (6 complete + Phase 7 60%)
-**Latest Release**: [v0.7.2-phase7.2](https://github.com/paolosereno/LanScan/releases/tag/v0.7.2-phase7.2)
+**Progress**: 76% (6 complete + Phase 7 80%)
+**Latest Release**: [v0.7.3-phase7.3](https://github.com/paolosereno/LanScan/releases/tag/v0.7.3-phase7.3)
 
 ### Recent Updates
+- **2025-10-09**: Phase 7.3 completed - Monitoring Service with Alerts and History
+  - Implemented Alert model with severity levels (Info, Warning, Critical) and types
+  - Created AlertService for alert management with acknowledgment and filtering
+  - Built HistoryService for metrics and events persistence in SQLite
+  - Designed MonitoringService for continuous device monitoring with threshold-based alerts
+  - Device status change detection (online/offline transitions) with automatic alerts
+  - Configurable monitoring intervals and alert thresholds per device
+  - Automatic data pruning: LRU for alerts (max 1000), time-based for history (30 days default)
+  - 32 unit tests created across 3 test suites (AlertService, HistoryService, MonitoringService)
+  - 8 new files: ~1,500 lines of code
 - **2025-10-09**: Phase 7.2 completed - Advanced Diagnostics (MTU, Bandwidth, DNS)
   - Implemented MtuDiscovery with binary search algorithm (576-9000 bytes)
   - Cross-platform ping with Don't Fragment flag for MTU discovery
@@ -278,11 +296,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 193 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new, Phase 7.2: 9 new)
-- **Lines of Code**: ~20,700+ lines (Phase 7.2 added 2,671 LOC)
-- **Test Coverage**: 25 tests total (Phase 7.2 added 3 test suites with 36 unit tests)
+- **Files Created**: 201 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new, Phase 7.2: 9 new, Phase 7.3: 8 new)
+- **Lines of Code**: ~22,200+ lines (Phase 7.3 added ~1,500 LOC)
+- **Test Coverage**: 28 tests total (Phase 7.3 added 3 test suites with 32 unit tests)
 - **Build Time**: ~45-50 seconds (Debug, 12 cores)
-- **Executable Size**: 42 MB (Debug build)
+- **Executable Size**: 45 MB (Debug build)
 
 ## License
 

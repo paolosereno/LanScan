@@ -810,58 +810,123 @@ Phase 7.2 is complete! Ready to proceed with:
 
 ---
 
-## 7.3 Monitoring Service
+## 7.3 Monitoring Service ✅
 
-### MonitoringService.h/cpp
-Continuous monitoring service
+**Status**: ✅ **COMPLETED** (2025-10-09)
+
+### Implementation Summary
+
+Successfully implemented comprehensive monitoring system with alert management and historical data persistence.
+
+**Files Created** (8 files, ~1,500 LOC):
+1. **include/models/Alert.h** (140 lines)
+   - AlertSeverity enum (Info, Warning, Critical)
+   - AlertType enum (HighLatency, PacketLoss, HighJitter, DeviceOffline, DeviceOnline)
+   - Alert model with severity colors and string conversion
+   - Equality and inequality operators
+   - Q_DECLARE_METATYPE for Qt signals/slots
+
+2. **src/models/Alert.cpp** (147 lines)
+   - Complete Alert implementation
+   - Severity color mapping (Blue/Orange/Red)
+   - Type and severity to string conversion
+   - Pretty-printing toString() method
+
+3. **include/services/AlertService.h** (200 lines)
+   - QObject-based service with Qt signals
+   - Alert creation, acknowledgment, filtering
+   - Count tracking (total and unacknowledged)
+   - Automatic pruning with max alerts limit (1000)
+   - Query methods by device, severity, type
+
+4. **src/services/AlertService.cpp** (236 lines)
+   - Alert management with UUID generation
+   - Acknowledgment (single and batch)
+   - Clear alerts (all or by device)
+   - Configurable max alerts with LRU pruning
+   - Real-time signal emission
+
+5. **include/services/HistoryService.h** (190 lines)
+   - SQLite integration with DatabaseManager
+   - Metrics history table management
+   - Events history table management
+   - Time-based queries (start/end datetime)
+   - Automatic data pruning (configurable retention)
+   - HistoryEvent struct
+
+6. **src/services/HistoryService.cpp** (470 lines)
+   - Database schema creation (metrics_history, events_history)
+   - Metrics storage (latency, jitter, packet loss, quality score)
+   - Event storage (device events and status changes)
+   - Historical queries with filters
+   - Data pruning with configurable retention period
+   - Index creation for performance
+
+7. **include/services/MonitoringService.h** (220 lines)
+   - MonitoringConfig struct (intervals, thresholds, alert settings)
+   - Integration with MetricsController, AlertService, HistoryService
+   - Multi-device concurrent monitoring
+   - Per-device configuration management
+   - Device status tracking (online/offline)
+   - Threshold checking and alert generation
+
+8. **src/services/MonitoringService.cpp** (350 lines)
+   - Continuous monitoring orchestration
+   - Config management per device
+   - Automatic threshold checking
+   - Alert generation on threshold exceeds
+   - History storage integration
+   - Device status change detection
+   - Null-safe MetricsController handling
+
+### MonitoringService.h/cpp API
 
 ```cpp
 class MonitoringService : public QObject {
     Q_OBJECT
 
 public:
-    struct MonitoringConfig {
-        QString deviceId;
-        int intervalMs = 1000;      // Monitoring interval
-        bool enableAlerts = true;
-        double alertLatencyThreshold = 100.0;   // ms
-        double alertPacketLossThreshold = 5.0;  // %
-        double alertJitterThreshold = 30.0;     // ms
-    };
-
     MonitoringService(
-        MetricsAggregator* metricsAggregator,
+        MetricsController* metricsController,
         AlertService* alertService,
         HistoryService* historyService,
         QObject* parent = nullptr
     );
 
     void startMonitoring(const MonitoringConfig& config);
+    void startMonitoring(const QString& deviceId, int intervalMs = 1000);
     void stopMonitoring(const QString& deviceId);
     void stopAllMonitoring();
 
     bool isMonitoring(const QString& deviceId) const;
     QList<QString> getMonitoredDevices() const;
+    MonitoringConfig getConfig(const QString& deviceId) const;
+    void updateConfig(const MonitoringConfig& config);
+
+    void setAlertsEnabled(const QString& deviceId, bool enable);
+    void setHistoryEnabled(const QString& deviceId, bool enable);
 
 signals:
     void monitoringStarted(const QString& deviceId);
     void monitoringStopped(const QString& deviceId);
     void metricsCollected(const QString& deviceId, const NetworkMetrics& metrics);
     void alertTriggered(const QString& deviceId, const Alert& alert);
+    void deviceStatusChanged(const QString& deviceId, bool online);
 
 private:
-    MetricsAggregator* metricsAggregator;
-    AlertService* alertService;
-    HistoryService* historyService;
+    MetricsController* m_metricsController;
+    AlertService* m_alertService;
+    HistoryService* m_historyService;
 
-    QMap<QString, QTimer*> monitoringTimers;
-    QMap<QString, MonitoringConfig> monitoringConfigs;
+    QMap<QString, MonitoringConfig> m_monitoringConfigs;
+    QMap<QString, bool> m_lastDeviceStatus;
 
-    void collectMetrics(const QString& deviceId);
     void checkThresholds(const QString& deviceId, const NetworkMetrics& metrics);
-
-private slots:
-    void onTimerTimeout();
+    bool checkStatusChange(const QString& deviceId, bool currentStatus);
+    void generateStatusAlert(const QString& deviceId, bool online);
+    void storeMetrics(const QString& deviceId, const NetworkMetrics& metrics);
+    void storeEvent(const QString& deviceId, const QString& eventType,
+                   const QString& description);
 };
 ```
 

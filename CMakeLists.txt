@@ -74,6 +74,7 @@ set(MODEL_SOURCES
     src/models/PortInfo.cpp
     src/models/NetworkInterface.cpp
     src/models/TraceRouteHop.cpp
+    src/models/Alert.cpp
 )
 
 # Utils sources
@@ -153,6 +154,13 @@ set(MANAGER_SOURCES
     src/managers/FavoritesManager.cpp
 )
 
+# Service sources (Phase 7.3)
+set(SERVICE_SOURCES
+    src/services/AlertService.cpp
+    src/services/HistoryService.cpp
+    src/services/MonitoringService.cpp
+)
+
 # ViewModel sources (Phase 5-6)
 set(VIEWMODEL_SOURCES
     src/viewmodels/DeviceTableViewModel.cpp
@@ -221,6 +229,9 @@ set(HEADERS
     include/diagnostics/MtuDiscovery.h
     include/diagnostics/BandwidthTester.h
     include/diagnostics/DnsDiagnostics.h
+    include/services/AlertService.h
+    include/services/HistoryService.h
+    include/services/MonitoringService.h
 )
 
 # UI files (Phase 5-6)
@@ -247,6 +258,7 @@ add_executable(${PROJECT_NAME}
     ${COORDINATOR_SOURCES}
     ${CONTROLLER_SOURCES}
     ${MANAGER_SOURCES}
+    ${SERVICE_SOURCES}
     ${VIEWMODEL_SOURCES}
     ${VIEW_SOURCES}
     ${DELEGATE_SOURCES}

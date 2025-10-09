@@ -248,3 +248,56 @@ target_include_directories(DnsDiagnosticsTest PRIVATE
 )
 target_link_libraries(DnsDiagnosticsTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
 add_test(NAME DnsDiagnosticsTest COMMAND DnsDiagnosticsTest)
+
+# Phase 7.3: Monitoring Service tests
+add_executable(AlertServiceTest
+    AlertServiceTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/services/AlertService.cpp
+    ${CMAKE_SOURCE_DIR}/include/services/AlertService.h
+    ${CMAKE_SOURCE_DIR}/src/models/Alert.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(AlertServiceTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/services
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(AlertServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Gui)
+add_test(NAME AlertServiceTest COMMAND AlertServiceTest)
+
+add_executable(HistoryServiceTest
+    HistoryServiceTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/services/HistoryService.cpp
+    ${CMAKE_SOURCE_DIR}/include/services/HistoryService.h
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(HistoryServiceTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/services
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(HistoryServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql)
+add_test(NAME HistoryServiceTest COMMAND HistoryServiceTest)
+
+add_executable(MonitoringServiceTest
+    MonitoringServiceTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/services/MonitoringService.cpp
+    ${CMAKE_SOURCE_DIR}/include/services/MonitoringService.h
+    ${CMAKE_SOURCE_DIR}/src/services/AlertService.cpp
+    ${CMAKE_SOURCE_DIR}/include/services/AlertService.h
+    ${CMAKE_SOURCE_DIR}/src/services/HistoryService.cpp
+    ${CMAKE_SOURCE_DIR}/include/services/HistoryService.h
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Alert.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(MonitoringServiceTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/services
+    ${CMAKE_SOURCE_DIR}/include/controllers
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(MonitoringServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network Qt6::Sql Qt6::Gui)
+add_test(NAME MonitoringServiceTest COMMAND MonitoringServiceTest)
