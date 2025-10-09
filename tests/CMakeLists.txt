@@ -197,3 +197,18 @@ target_include_directories(ChartViewModelTest PRIVATE
 )
 target_link_libraries(ChartViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
 add_test(NAME ChartViewModelTest COMMAND ChartViewModelTest)
+
+# Phase 7: Advanced Diagnostics tests
+add_executable(TraceRouteServiceTest
+    TraceRouteServiceTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/TraceRouteService.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/TraceRouteService.h
+    ${CMAKE_SOURCE_DIR}/src/models/TraceRouteHop.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(TraceRouteServiceTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/diagnostics
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(TraceRouteServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME TraceRouteServiceTest COMMAND TraceRouteServiceTest)

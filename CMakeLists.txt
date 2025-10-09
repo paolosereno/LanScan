@@ -32,6 +32,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/utils
     ${CMAKE_SOURCE_DIR}/include/interfaces
     ${CMAKE_SOURCE_DIR}/include/network
+    ${CMAKE_SOURCE_DIR}/include/diagnostics
     ${CMAKE_SOURCE_DIR}/include/database
     ${CMAKE_SOURCE_DIR}/include/export
     ${CMAKE_SOURCE_DIR}/include/config
@@ -47,6 +48,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/utils
     ${CMAKE_SOURCE_DIR}/src/interfaces
     ${CMAKE_SOURCE_DIR}/src/network
+    ${CMAKE_SOURCE_DIR}/src/diagnostics
     ${CMAKE_SOURCE_DIR}/src/services
     ${CMAKE_SOURCE_DIR}/src/controllers
     ${CMAKE_SOURCE_DIR}/src/coordinators
@@ -71,6 +73,7 @@ set(MODEL_SOURCES
     src/models/NetworkMetrics.cpp
     src/models/PortInfo.cpp
     src/models/NetworkInterface.cpp
+    src/models/TraceRouteHop.cpp
 )
 
 # Utils sources
@@ -103,6 +106,11 @@ set(NETWORK_SOURCES
     src/network/diagnostics/QualityScoreCalculator.cpp
     src/network/diagnostics/MetricsAggregator.cpp
     src/network/diagnostics/PortScanner.cpp
+)
+
+# Diagnostics sources (Phase 7)
+set(DIAGNOSTICS_SOURCES
+    src/diagnostics/TraceRouteService.cpp
 )
 
 # Database sources
@@ -206,6 +214,7 @@ set(HEADERS
     include/views/MetricsWidget.h
     include/delegates/StatusDelegate.h
     include/delegates/QualityScoreDelegate.h
+    include/diagnostics/TraceRouteService.h
 )
 
 # UI files (Phase 5-6)
@@ -225,6 +234,7 @@ add_executable(${PROJECT_NAME}
     ${MODEL_SOURCES}
     ${UTILS_SOURCES}
     ${NETWORK_SOURCES}
+    ${DIAGNOSTICS_SOURCES}
     ${DATABASE_SOURCES}
     ${EXPORT_SOURCES}
     ${CONFIG_SOURCES}
