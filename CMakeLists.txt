@@ -259,6 +259,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Concurrent
 )
 
+# Copy OUI database to build directory for development
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/scripts/oui_database.txt
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/oui_database.txt
+    COMMENT "Copying OUI database to build directory"
+)
+
 # Enable testing
 enable_testing()
 
