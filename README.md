@@ -79,7 +79,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Three chart tabs for comprehensive visualization
 - ✅ Thread-safe real-time updates via Qt signals
 
-**Advanced Diagnostics** (Phase 7 - In Progress)
+**Advanced Diagnostics** (Phase 7 - ✅ Complete)
 - ✅ MetricsWidget integration into MainWindow with dock widget
 - ✅ Enhanced MetricsController with proper device tracking
 - ✅ Improved metrics collection with device context emission
@@ -123,14 +123,23 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Alert acknowledgment and filtering
   - Automatic data pruning (LRU for alerts, time-based for history)
   - 32 unit tests across 3 test suites (AlertService, HistoryService, MonitoringService)
+- ✅ **Device Detail Dialog with integrated diagnostics** (Phase 7.4)
+  - Five-tab interface (Overview, Ports, Metrics, History, Diagnostics)
+  - Integrated MetricsWidget for real-time monitoring
+  - Historical events with time range filtering (Last Hour/6H/24H/7D/30D)
+  - All Phase 7 diagnostic tools integrated (Traceroute, MTU, Bandwidth, DNS)
+  - Double-click and context menu support for opening dialog
+  - 3 new files: ~1,200 LOC
 
-### 🚧 Planned (Phase 7+)
-- Device detail dialog with integrated diagnostics (Phase 7.4)
-- UI polish with dark/light themes (Phase 7.5)
-- Network topology visualization (Phase 8)
-- Wake-on-LAN support (Phase 9)
-- Chart export functionality (Phase 10)
-- Advanced security scanning (Phase 11)
+### 🚧 Planned (Phase 8+)
+- Wake-on-LAN support (Phase 8.1)
+- Advanced export functionality (Phase 8.2)
+- Scan profiles and favorites integration (Phase 8.3)
+- Settings dialog with preferences (Phase 8.4)
+- UI polish with dark/light themes (Phase 9)
+- Network topology visualization (Phase 10)
+- Chart export functionality (Phase 11)
+- Advanced security scanning (Phase 12)
 
 ## Technology Stack
 
@@ -239,12 +248,21 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS** (4/5 modules - 80%)
-**Next Phase**: Phase 8 - Advanced Features
-**Progress**: 76% (6 complete + Phase 7 80%)
-**Latest Release**: [v0.7.3-phase7.3](https://github.com/paolosereno/LanScan/releases/tag/v0.7.3-phase7.3)
+**Current Phase**: Phase 8 - Advanced Features 🚧 **IN PROGRESS** (0/4 modules - 0%)
+**Next Phase**: Phase 9 - UI Polish & Theming
+**Progress**: 83% (7 complete phases of ~12 total)
+**Latest Release**: [v0.7.4-phase7.4](https://github.com/paolosereno/LanScan/releases/tag/v0.7.4-phase7.4)
 
 ### Recent Updates
+- **2025-10-09**: Phase 7.4 completed - Device Detail Dialog
+  - Comprehensive five-tab interface for device information (Overview, Ports, Metrics, History, Diagnostics)
+  - Overview tab with device details, Ports tab with open ports list
+  - Metrics tab with integrated MetricsWidget for real-time monitoring
+  - History tab with historical events and time range filtering (Last Hour/6H/24H/7D/30D)
+  - Diagnostics tab with all Phase 7 tools (Traceroute, MTU, Bandwidth, DNS)
+  - Double-click and context menu support for opening dialog
+  - Signal/slot connections for all diagnostic services with real-time updates
+  - 3 new files: ~1,200 LOC (DeviceDetailDialog.h/cpp, devicedetaildialog.ui)
 - **2025-10-09**: Phase 7.3 completed - Monitoring Service with Alerts and History
   - Implemented Alert model with severity levels (Info, Warning, Critical) and types
   - Created AlertService for alert management with acknowledgment and filtering
@@ -296,11 +314,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 201 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new, Phase 7.2: 9 new, Phase 7.3: 8 new)
-- **Lines of Code**: ~22,200+ lines (Phase 7.3 added ~1,500 LOC)
-- **Test Coverage**: 28 tests total (Phase 7.3 added 3 test suites with 32 unit tests)
-- **Build Time**: ~45-50 seconds (Debug, 12 cores)
-- **Executable Size**: 45 MB (Debug build)
+- **Files Created**: 214 total (Phase 7 completed: 25 new files total)
+- **Lines of Code**: ~23,400+ lines (Phase 7.4 added final ~1,200 LOC)
+- **Test Coverage**: 60+ tests across all test suites (Phase 7 added comprehensive diagnostic tests)
+- **Build Time**: ~50-55 seconds (Debug, 12 cores)
+- **Executable Size**: 48 MB (Debug build with all Phase 7 features)
 
 ## License
 
