@@ -4,6 +4,8 @@
 #include "../interfaces/IExporter.h"
 #include "../export/CsvExporter.h"
 #include "../export/JsonExporter.h"
+#include "../export/XmlExporter.h"
+#include "../export/HtmlReportGenerator.h"
 #include "../utils/Logger.h"
 
 #include <QFile>
@@ -161,12 +163,13 @@ void ExportController::initializeExporters() {
     // Initialize JSON exporter
     exporters[JSON] = new JsonExporter();
 
-    // Note: XML and HTML exporters are not implemented yet
-    // They can be added in future phases
-    exporters[XML] = nullptr;
-    exporters[HTML] = nullptr;
+    // Initialize XML exporter (Phase 8.2)
+    exporters[XML] = new XmlExporter();
 
-    Logger::debug("Exporters initialized: CSV, JSON");
+    // Initialize HTML report generator (Phase 8.2)
+    exporters[HTML] = new HtmlReportGenerator();
+
+    Logger::debug("Exporters initialized: CSV, JSON, XML, HTML");
 }
 
 void ExportController::cleanupExporters() {

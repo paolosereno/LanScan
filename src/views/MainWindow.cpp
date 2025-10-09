@@ -210,12 +210,21 @@ void MainWindow::onExportTriggered() {
         this,
         tr("Export Devices"),
         QString(),
-        tr("CSV Files (*.csv);;JSON Files (*.json)")
+        tr("CSV Files (*.csv);;JSON Files (*.json);;XML Files (*.xml);;HTML Report (*.html)")
     );
 
     if (!fileName.isEmpty()) {
-        ExportController::ExportFormat format = fileName.endsWith(".json") ?
-            ExportController::JSON : ExportController::CSV;
+        ExportController::ExportFormat format;
+
+        if (fileName.endsWith(".json")) {
+            format = ExportController::JSON;
+        } else if (fileName.endsWith(".xml")) {
+            format = ExportController::XML;
+        } else if (fileName.endsWith(".html")) {
+            format = ExportController::HTML;
+        } else {
+            format = ExportController::CSV;
+        }
 
         exportController->exportDevices(format, fileName);
         updateStatusMessage(tr("Exported to %1").arg(fileName));

@@ -5,7 +5,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-28%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-31%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -41,8 +41,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ SQLite database with full schema (devices, ports, metrics)
 - ✅ Repository pattern with CRUD operations
 - ✅ In-memory LRU cache for performance
-- ✅ CSV export functionality
-- ✅ JSON export functionality
+- ✅ Multi-format export: CSV, JSON, XML, HTML
 - ✅ Cross-platform settings management (QSettings)
 - ✅ Configuration validation
 
@@ -153,15 +152,44 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Signal emission tests
   - MAC address validation tests
 
-### 🚧 Planned (Phase 8+)
-- Advanced export functionality (XML/HTML) (Phase 8.2)
+**Advanced Export Formats** (Phase 8.2 - ✅ Complete)
+- ✅ **XML Export with QXmlStreamWriter**
+  - Structured XML hierarchy (LanScanExport > Devices > Device)
+  - Device metadata as XML attributes
+  - Detailed metrics with unit specifications (ms, %)
+  - Port information with protocol, service, and state
+  - Auto-formatted output with 2-space indentation
+  - UTF-8 encoding support
+- ✅ **HTML Report Generator**
+  - Professional HTML5 structure with embedded CSS
+  - Responsive design with CSS Grid layout
+  - Modern UI with gradient summary cards
+  - Color-coded quality indicators (Excellent/Good/Fair/Poor/Bad)
+  - Status badges with Online/Offline states
+  - Hover effects and interactive table
+  - Mobile-friendly responsive layout
+  - Self-contained reports (no external dependencies)
+- ✅ **Export Controller Integration**
+  - Four export formats: CSV, JSON, XML, HTML
+  - Format auto-detection from file extension
+  - Unified export interface (IExporter)
+  - MainWindow file dialog with all format filters
+- ✅ **Use Cases**
+  - XML: Enterprise integration, API data exchange, automated processing
+  - HTML: Executive reports, email distribution, printable documentation
+- ✅ **Unit Tests**
+  - XmlExporterTest with 6 test cases (structure, devices, metrics, ports)
+  - HtmlReportGeneratorTest with 8 test cases (HTML structure, styling, badges)
+  - Edge case testing (empty lists, special characters)
+
+### 🚧 Planned (Phase 8.3+)
 - Scan profiles and favorites integration (Phase 8.3)
-- History & database enhancement (Phase 8.4)
-- Settings dialog with preferences (Phase 8.5)
+- History & database enhancement with DAO layers (Phase 8.4)
+- Settings dialog with comprehensive preferences (Phase 8.5)
 - UI polish with dark/light themes (Phase 9)
-- Network topology visualization (Phase 10)
-- Chart export functionality (Phase 11)
-- Advanced security scanning (Phase 12)
+- Extended testing and quality assurance (Phase 10)
+- Documentation and user guides (Phase 11)
+- Release preparation and deployment (Phase 12)
 
 ## Technology Stack
 

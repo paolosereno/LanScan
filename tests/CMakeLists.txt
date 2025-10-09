@@ -318,3 +318,36 @@ target_include_directories(WakeOnLanServiceTest PRIVATE
 )
 target_link_libraries(WakeOnLanServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
 add_test(NAME WakeOnLanServiceTest COMMAND WakeOnLanServiceTest)
+
+# Phase 8.2: Advanced Export tests
+add_executable(XmlExporterTest
+    XmlExporterTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/XmlExporter.cpp
+    ${CMAKE_SOURCE_DIR}/include/export/XmlExporter.h
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(XmlExporterTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/export
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(XmlExporterTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME XmlExporterTest COMMAND XmlExporterTest)
+
+add_executable(HtmlReportGeneratorTest
+    HtmlReportGeneratorTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/HtmlReportGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/include/export/HtmlReportGenerator.h
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(HtmlReportGeneratorTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/export
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(HtmlReportGeneratorTest PRIVATE Qt6::Test Qt6::Core)
+add_test(NAME HtmlReportGeneratorTest COMMAND HtmlReportGeneratorTest)

@@ -128,6 +128,8 @@ set(DATABASE_SOURCES
 set(EXPORT_SOURCES
     src/export/CsvExporter.cpp
     src/export/JsonExporter.cpp
+    src/export/XmlExporter.cpp
+    src/export/HtmlReportGenerator.cpp
 )
 
 # Config sources
