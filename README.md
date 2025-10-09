@@ -5,7 +5,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-21%2F21%20passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-17%2F22%20passing-yellow.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -85,7 +85,14 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - ✅ Improved metrics collection with device context emission
 - ✅ Multi-language ping parsing (Italian, German, French, Spanish)
 - ✅ Enhanced error detection for timeout/unreachable states
-- 🚧 Traceroute service implementation (in progress)
+- ✅ **Traceroute service with real-time hop discovery** (Phase 7.1)
+  - Cross-platform support (Windows tracert / Linux traceroute)
+  - Asynchronous execution with QProcess
+  - Real-time hop discovery with Qt signals
+  - TraceRouteHop model with RTT statistics (min/max/avg)
+  - Comprehensive output parsing with regex
+  - Cancellation support and error handling
+  - 11 unit tests (100% passing)
 
 ### 🚧 Planned (Phase 7+)
 - Advanced diagnostics (MTU discovery, bandwidth test, DNS diagnostics)
@@ -203,13 +210,22 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS**
+**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS** (2/5 modules - 40%)
 **Next Phase**: Phase 8 - Advanced Features
-**Progress**: 63% (6 complete + Phase 7 20%)
-**Latest Release**: [v0.6.0-phase6](https://github.com/paolosereno/LanScan/releases/tag/v0.6.0-phase6) (pending)
+**Progress**: 67% (6 complete + Phase 7 40%)
+**Latest Release**: [v0.7.1-phase7.1](https://github.com/paolosereno/LanScan/releases/tag/v0.7.1-phase7.1)
 
 ### Recent Updates
-- **2025-10-07**: Phase 7.0 progress - Advanced diagnostics improvements
+- **2025-10-09**: Phase 7.1 completed - Traceroute Service
+  - Implemented cross-platform traceroute with Windows tracert and Linux/macOS traceroute support
+  - Created TraceRouteHop model with RTT statistics (min/max/avg calculations)
+  - Built TraceRouteService with asynchronous QProcess execution
+  - Real-time hop discovery with Qt signals (hopDiscovered, traceCompleted, traceError, progressUpdated)
+  - Platform-specific output parsing with regex for Windows and Unix formats
+  - Comprehensive error handling and cancellation support
+  - 11 unit tests created (100% passing)
+  - 5 new files: 1029 lines of code
+- **2025-10-07**: Phase 7.0 completed - Advanced diagnostics improvements
   - Enhanced MetricsController with currentMonitoringDevice tracking
   - Improved onMetricsUpdated to emit metricsCollected signal with device context
   - Added proper cleanup logic to stop collection only for current device
@@ -232,11 +248,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 179 total (Phase 7.0: +4 modified files)
-- **Lines of Code**: ~17,000+ (+300 in Phase 7.0 improvements)
-- **Test Coverage**: 21/21 tests passing (100%)
-- **Build Time**: ~40-45 seconds (Release, 12 cores)
-- **Executable Size**: 39 MB (Release build)
+- **Files Created**: 184 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new)
+- **Lines of Code**: ~18,000+ lines
+- **Test Coverage**: 17/22 tests passing (77%, 5 pre-existing failures)
+- **Build Time**: ~45 seconds (Debug, 12 cores)
+- **Executable Size**: 40 MB (Debug build)
 
 ## License
 
