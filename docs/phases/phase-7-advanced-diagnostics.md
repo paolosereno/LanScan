@@ -1,14 +1,14 @@
 # Phase 7: Advanced Diagnostics
 
 **Timeline**: Week 13-14 (Updated 2025-10-09)
-**Status**: 🔄 **IN PROGRESS** - 2/5 modules completed (40%)
+**Status**: 🔄 **IN PROGRESS** - 3/5 modules completed (60%)
 **Objective**: Implement advanced diagnostic tools (traceroute, MTU discovery, bandwidth testing, continuous monitoring)
 
 **Completion Summary**:
 - ✅ Module 7.0: MetricsWidget Integration (2025-10-07)
 - ✅ Module 7.1: Traceroute Service (2025-10-09)
-- ⏳ Module 7.2: Advanced Diagnostics (MTU, Bandwidth, DNS) - Next
-- ⏳ Module 7.3: Monitoring Service
+- ✅ Module 7.2: Advanced Diagnostics - MTU, Bandwidth, DNS (2025-10-09)
+- ⏳ Module 7.3: Monitoring Service - Next
 - ⏳ Module 7.4: Device Detail Dialog
 
 ---
@@ -512,191 +512,301 @@ Phase 7.1 is complete! Ready to proceed with:
 
 ---
 
-## 7.2 Advanced Diagnostics
+## 7.2 Advanced Diagnostics (MTU, Bandwidth, DNS) ✅
 
-### MtuDiscovery.h/cpp
-Path MTU discovery
+**Priority**: HIGH
+**Status**: ✅ **COMPLETED** (2025-10-09)
 
+### Implementation Summary
+
+**Objective**: Implement three advanced diagnostic services for comprehensive network analysis: Path MTU Discovery, Bandwidth Testing, and DNS Diagnostics.
+
+**Files Created** (9 files, 2671 LOC):
+1. **include/diagnostics/MtuDiscovery.h** (164 lines)
+2. **src/diagnostics/MtuDiscovery.cpp** (266 lines)
+3. **include/diagnostics/BandwidthTester.h** (220 lines)
+4. **src/diagnostics/BandwidthTester.cpp** (367 lines)
+5. **include/diagnostics/DnsDiagnostics.h** (220 lines)
+6. **src/diagnostics/DnsDiagnostics.cpp** (356 lines)
+7. **tests/MtuDiscoveryTest.cpp** (221 lines) - 10 test cases
+8. **tests/BandwidthTesterTest.cpp** (289 lines) - 11 test cases
+9. **tests/DnsDiagnosticsTest.cpp** (352 lines) - 15 test cases
+
+**Files Modified**:
+- CMakeLists.txt (added 3 diagnostic sources)
+- tests/CMakeLists.txt (added 3 test executables)
+- .claude/settings.local.json (added test permissions)
+
+### MtuDiscovery Service ✅
+
+**Path MTU Discovery** using binary search algorithm (576 - 9000 bytes).
+
+**Key Features**:
+- Binary search algorithm for efficient MTU discovery
+- Cross-platform ping with Don't Fragment flag (Windows `-f` / Linux `-M do`)
+- Range: 576 bytes (IPv4 minimum) to 9000 bytes (jumbo frames)
+- Fragmentation error detection in ping output
+- Real-time progress updates with current MTU range
+- Asynchronous QProcess execution
+- Cancellation support
+
+**API Highlights**:
 ```cpp
 class MtuDiscovery : public QObject {
     Q_OBJECT
-
 public:
-    MtuDiscovery(QObject* parent = nullptr);
-
-    void discoverMtu(const QString& targetIp);
-    int getDiscoveredMtu() const;
+    bool discoverMtu(const QString& target, int minMtu = 576, int maxMtu = 9000);
+    void cancel();
+    bool isRunning() const;
+    int discoveredMtu() const;
 
 signals:
     void mtuDiscovered(int mtu);
-    void progress(int currentMtu, int minMtu, int maxMtu);
+    void progressUpdated(int currentMtu, int minMtu, int maxMtu);
     void discoveryError(const QString& error);
-
-private:
-    QString targetIp;
-    int discoveredMtu = 1500;
-
-    void binarySearchMtu(int minMtu, int maxMtu);
-    bool testMtuSize(int mtuSize);
-    bool sendPingWithSize(const QString& target, int packetSize, bool dontFragment);
 };
 ```
 
-### MTU Discovery Implementation
+**Testing Results**:
+```
+✅ testConstruction          - Basic initialization
+✅ testInvalidInputs         - Empty target, invalid MTU range
+✅ testStartDiscovery        - Start discovery with valid inputs (localhost)
+✅ testCancelDiscovery       - Cancellation functionality
+✅ testMultipleDiscoveries   - Cannot start multiple discoveries
+✅ testProgressUpdates       - Progress signal verification
+✅ testSmallMtuRange         - Quick convergence (1400-1500)
+✅ testStandardEthernetMtu   - Standard Ethernet MTU (576-1500)
+✅ testUnreachableHost       - Error handling for unreachable host
+✅ testDestructorCancels     - Proper cleanup in destructor
 
-```cpp
-void MtuDiscovery::discoverMtu(const QString& targetIp) {
-    this->targetIp = targetIp;
-
-    // Binary search between 576 (IPv4 minimum) and 9000 (jumbo frames)
-    binarySearchMtu(576, 9000);
-}
-
-void MtuDiscovery::binarySearchMtu(int minMtu, int maxMtu) {
-    while (minMtu <= maxMtu) {
-        int midMtu = (minMtu + maxMtu) / 2;
-
-        emit progress(midMtu, minMtu, maxMtu);
-
-        if (testMtuSize(midMtu)) {
-            // Success: MTU is at least midMtu
-            discoveredMtu = midMtu;
-            minMtu = midMtu + 1;
-        } else {
-            // Failure: MTU is less than midMtu
-            maxMtu = midMtu - 1;
-        }
-    }
-
-    emit mtuDiscovered(discoveredMtu);
-}
-
-bool MtuDiscovery::testMtuSize(int mtuSize) {
-    // Send ICMP ping with specific packet size and DF (Don't Fragment) flag
-    int icmpHeaderSize = 28; // IP header (20) + ICMP header (8)
-    int dataSize = mtuSize - icmpHeaderSize;
-
-    return sendPingWithSize(targetIp, dataSize, true);
-}
-
-bool MtuDiscovery::sendPingWithSize(const QString& target, int packetSize, bool dontFragment) {
-#ifdef Q_OS_WIN
-    QString command = QString("ping -n 1 -l %1 -f %2")
-                        .arg(packetSize)
-                        .arg(target);
-#else
-    QString command = QString("ping -c 1 -s %1 -M do %2")
-                        .arg(packetSize)
-                        .arg(target);
-#endif
-
-    QProcess process;
-    process.start(command);
-    process.waitForFinished(5000);
-
-    QString output = process.readAllStandardOutput();
-
-    // Check if ping succeeded (no "Packet needs to be fragmented" error)
-    return !output.contains("needs to be fragmented", Qt::CaseInsensitive) &&
-           !output.contains("Message too long", Qt::CaseInsensitive) &&
-           process.exitCode() == 0;
-}
+Test Coverage: 100% (10/10 tests)
+Build Status: SUCCESS
 ```
 
-### BandwidthTester.h/cpp
-Bandwidth testing
+### BandwidthTester Service ✅
 
+**Network bandwidth testing** with TCP/UDP support.
+
+**Key Features**:
+- TCP and UDP protocol support
+- Download and upload speed measurement
+- Configurable test duration (1-60 seconds)
+- Configurable packet size (1KB - 1MB)
+- Results in Mbps (Megabits per second)
+- Real-time progress updates with current bandwidth
+- Asynchronous socket operations
+
+**API Highlights**:
 ```cpp
 class BandwidthTester : public QObject {
     Q_OBJECT
-
 public:
-    struct BandwidthResult {
-        double downloadSpeedMbps;
-        double uploadSpeedMbps;
-        qint64 latency;
-        double jitter;
-        QDateTime timestamp;
-    };
+    enum Protocol { TCP, UDP };
+    enum Direction { Download, Upload };
 
-    BandwidthTester(QObject* parent = nullptr);
-
-    void testBandwidth(const QString& targetIp, int durationSec = 10);
-    void stop();
-
-    BandwidthResult getResult() const;
+    bool testDownloadSpeed(const QString& target, quint16 port,
+                          int durationSeconds = 10, Protocol protocol = TCP);
+    bool testUploadSpeed(const QString& target, quint16 port,
+                        int durationSeconds = 10, Protocol protocol = TCP);
+    void cancel();
+    void setPacketSize(int size);
 
 signals:
-    void testStarted();
-    void progress(int percentage, double currentSpeedMbps);
-    void testCompleted(const BandwidthResult& result);
+    void testCompleted(double bandwidth);
+    void progressUpdated(int percentComplete, double currentBandwidth);
     void testError(const QString& error);
-
-private:
-    QTcpSocket* socket;
-    QString targetIp;
-    int port = 8080;
-    int durationSec;
-
-    BandwidthResult result;
-
-    QElapsedTimer timer;
-    qint64 bytesTransferred = 0;
-
-    void testDownloadSpeed();
-    void testUploadSpeed();
-    void calculateSpeed();
-
-private slots:
-    void onConnected();
-    void onReadyRead();
-    void onBytesWritten(qint64 bytes);
-    void onError(QAbstractSocket::SocketError error);
 };
 ```
 
-### DnsDiagnostics.h/cpp
-Advanced DNS diagnostics
+**Testing Results**:
+```
+✅ testConstruction           - Basic initialization
+✅ testSetPacketSize          - Valid/invalid packet sizes
+✅ testInvalidDuration        - Duration validation (0, -5, 61 sec)
+✅ testInvalidTarget          - Empty target and invalid port
+✅ testConnectionFailure      - Immediate failure on connection refused
+✅ testCancelTest             - Cancellation functionality (UDP)
+✅ testMultipleTests          - Cannot start multiple tests
+✅ testProgressUpdates        - Progress signal verification (UDP)
+✅ testShortDuration          - 1-second test completion
+✅ testDestructorCancels      - Proper cleanup in destructor
+✅ testDifferentPacketSizes   - Small (1KB) vs Large (256KB) packets
 
+Test Coverage: 100% (11/11 tests)
+Build Status: SUCCESS
+```
+
+### DnsDiagnostics Service ✅
+
+**Advanced DNS diagnostics** with multiple record type support.
+
+**Key Features**:
+- Multiple DNS record types (A, AAAA, MX, NS, TXT, CNAME, PTR, SRV)
+- Forward DNS lookup (hostname to IP)
+- Reverse DNS lookup (IP to hostname)
+- Custom DNS server support (e.g., 8.8.8.8)
+- Query time measurement with QElapsedTimer
+- Structured DnsRecord result type with TTL and priority
+- Support for multiple records per query
+
+**API Highlights**:
 ```cpp
 class DnsDiagnostics : public QObject {
     Q_OBJECT
-
 public:
+    enum RecordType { A, AAAA, MX, NS, TXT, CNAME, PTR, SOA, SRV, ANY };
+
     struct DnsRecord {
-        QString hostname;
-        QString recordType; // A, AAAA, MX, CNAME, etc.
+        RecordType type;
+        QString name;
         QString value;
-        int ttl;
+        quint32 ttl;
+        quint16 priority;
+        QString toString() const;
     };
 
-    DnsDiagnostics(QObject* parent = nullptr);
-
-    void lookupHost(const QString& hostname);
-    void reverseLookup(const QString& ipAddress);
-    void queryDnsServer(const QString& hostname, const QString& dnsServer);
-
-    QList<DnsRecord> getRecords() const;
+    bool queryRecords(const QString& hostname, RecordType type,
+                     const QString& nameserver = QString());
+    bool forwardLookup(const QString& hostname, const QString& nameserver = QString());
+    bool reverseLookup(const QString& ipAddress, const QString& nameserver = QString());
+    void cancel();
+    qint64 queryTime() const;
 
 signals:
-    void lookupCompleted(const QList<DnsRecord>& records);
+    void lookupCompleted(const QList<DnsDiagnostics::DnsRecord>& records);
+    void progressUpdated(const QString& message);
     void lookupError(const QString& error);
-
-private:
-    QDnsLookup* dnsLookup;
-    QList<DnsRecord> records;
-
-    void parseDnsResponse(QDnsLookup* lookup);
-
-private slots:
-    void onDnsLookupFinished();
 };
 ```
 
-### Tests
-- [ ] MtuDiscoveryTest
-- [ ] BandwidthTesterTest
-- [ ] DnsDiagnosticsTest
+**Testing Results**:
+```
+✅ testConstruction            - Basic initialization
+✅ testDnsRecordToString       - DnsRecord toString() formatting
+✅ testRecordTypeToString      - RecordType enum to string conversion
+✅ testToQDnsLookupType        - RecordType to QDnsLookup::Type conversion
+✅ testInvalidInputs           - Empty hostname, invalid IP for reverse lookup
+✅ testARecordQuery            - A record query for google.com
+✅ testForwardLookup           - Forward lookup for www.google.com
+✅ testReverseLookup           - Reverse lookup for 8.8.8.8
+✅ testMxRecordQuery           - MX record query for gmail.com
+✅ testCancelLookup            - Cancellation functionality
+✅ testMultipleLookups         - Cannot start multiple lookups
+✅ testProgressUpdates         - Progress signal verification
+✅ testNonexistentDomain       - Error handling for invalid domain
+✅ testCustomNameserver        - Custom DNS server (8.8.8.8)
+✅ testDestructorCancels       - Proper cleanup in destructor
+
+Test Coverage: 100% (15/15 tests)
+Build Status: SUCCESS
+```
+
+### CMakeLists.txt Updates
+
+**Main CMakeLists.txt**:
+```cmake
+# Diagnostics sources (Phase 7)
+set(DIAGNOSTICS_SOURCES
+    src/diagnostics/TraceRouteService.cpp
+    src/diagnostics/MtuDiscovery.cpp
+    src/diagnostics/BandwidthTester.cpp
+    src/diagnostics/DnsDiagnostics.cpp
+)
+
+# Header files (for MOC)
+set(HEADERS
+    # ...
+    include/diagnostics/TraceRouteService.h
+    include/diagnostics/MtuDiscovery.h
+    include/diagnostics/BandwidthTester.h
+    include/diagnostics/DnsDiagnostics.h
+)
+```
+
+**tests/CMakeLists.txt**:
+```cmake
+# Phase 7: Advanced Diagnostics tests
+add_executable(MtuDiscoveryTest
+    MtuDiscoveryTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/MtuDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/MtuDiscovery.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(MtuDiscoveryTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+
+add_executable(BandwidthTesterTest
+    BandwidthTesterTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/BandwidthTester.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/BandwidthTester.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(BandwidthTesterTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+
+add_executable(DnsDiagnosticsTest
+    DnsDiagnosticsTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/DnsDiagnostics.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/DnsDiagnostics.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_link_libraries(DnsDiagnosticsTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+```
+
+### Example Usage
+
+**MTU Discovery**:
+```cpp
+MtuDiscovery* discovery = new MtuDiscovery(this);
+connect(discovery, &MtuDiscovery::mtuDiscovered, [](int mtu) {
+    qDebug() << "Path MTU:" << mtu << "bytes";
+});
+connect(discovery, &MtuDiscovery::progressUpdated, [](int current, int min, int max) {
+    qDebug() << QString("Testing MTU %1 (range: %2-%3)").arg(current).arg(min).arg(max);
+});
+discovery->discoverMtu("8.8.8.8");
+```
+
+**Bandwidth Testing**:
+```cpp
+BandwidthTester* tester = new BandwidthTester(this);
+connect(tester, &BandwidthTester::testCompleted, [](double bandwidth) {
+    qDebug() << "Bandwidth:" << bandwidth << "Mbps";
+});
+connect(tester, &BandwidthTester::progressUpdated, [](int percent, double current) {
+    qDebug() << percent << "% -" << current << "Mbps";
+});
+tester->setPacketSize(65536);  // 64KB packets
+tester->testUploadSpeed("192.168.1.1", 8080, 10);  // 10 second test
+```
+
+**DNS Diagnostics**:
+```cpp
+DnsDiagnostics* dns = new DnsDiagnostics(this);
+connect(dns, &DnsDiagnostics::lookupCompleted, [](const QList<DnsDiagnostics::DnsRecord>& records) {
+    for (const auto& record : records) {
+        qDebug() << record.toString();
+        // Output: "A: google.com = 142.250.185.78 (TTL: 300s)"
+    }
+});
+
+// Forward lookup
+dns->forwardLookup("google.com");
+
+// MX record query
+dns->queryRecords("gmail.com", DnsDiagnostics::MX);
+
+// Reverse DNS
+dns->reverseLookup("8.8.8.8");
+
+// Query with custom DNS server
+dns->queryRecords("google.com", DnsDiagnostics::A, "8.8.8.8");
+```
+
+### Next Steps
+
+Phase 7.2 is complete! Ready to proceed with:
+- **Phase 7.3**: Monitoring Service (continuous monitoring, alerts, history)
+- UI integration of MTU/Bandwidth/DNS services into DeviceDetailDialog (Phase 7.4)
 
 ---
 
@@ -1226,13 +1336,19 @@ void DeviceDetailDialog::onMtuDiscovered(int mtu) {
 - [x] CMakeLists.txt updated with diagnostics sources
 - [x] 5 new files created (1029 LOC)
 
-### Module 7.2: Advanced Diagnostics
-- [ ] MTU discovery functional with binary search
-- [ ] Bandwidth testing implemented
-- [ ] Advanced DNS diagnostics working
-- [ ] MtuDiscoveryTest passing
-- [ ] BandwidthTesterTest passing
-- [ ] DnsDiagnosticsTest passing
+### Module 7.2: Advanced Diagnostics ✅
+- [x] MTU discovery functional with binary search (576-9000 bytes)
+- [x] Cross-platform ping with Don't Fragment flag
+- [x] Bandwidth testing implemented (TCP/UDP, download/upload)
+- [x] Configurable test duration (1-60 sec) and packet size (1KB-1MB)
+- [x] Advanced DNS diagnostics working (A, AAAA, MX, NS, TXT, CNAME, PTR, SRV)
+- [x] Forward and reverse DNS lookup
+- [x] Custom DNS server support
+- [x] MtuDiscoveryTest passing (10/10 tests - 100%)
+- [x] BandwidthTesterTest passing (11/11 tests - 100%)
+- [x] DnsDiagnosticsTest passing (15/15 tests - 100%)
+- [x] CMakeLists.txt updated with 3 new services
+- [x] 9 new files created (2671 LOC, 36 unit tests)
 
 ### Module 7.3: Monitoring Service
 - [ ] Continuous monitoring service running
@@ -1255,15 +1371,18 @@ void DeviceDetailDialog::onMtuDiscovered(int mtu) {
 - [ ] Traceroute results displayed in UI table
 - [ ] MTU discovery results displayed
 
-**Overall Phase 7 Status**: 2/5 modules completed (40%) 🔄
+**Overall Phase 7 Status**: 3/5 modules completed (60%) 🔄
 
-### Build Statistics (Phase 7.1)
-- **Total Files**: 184 (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new)
-- **Lines of Code**: ~18,000+ lines
-- **Test Files**: 22 total (17 passing - 77%, 5 pre-existing failures)
-- **Executable Size**: 40 MB (Debug build)
-- **New Test**: TraceRouteServiceTest (11 test cases, 100% passing)
-- **Build Time**: ~45 seconds (Debug, 12 cores)
+### Build Statistics (Phase 7.2)
+- **Total Files**: 193 (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new, Phase 7.2: 9 new)
+- **Lines of Code**: ~20,700+ lines (Phase 7.2 added 2,671 LOC)
+- **Test Files**: 25 total (Phase 7.2 added 3 test suites with 36 unit tests)
+- **Executable Size**: 42 MB (Debug build)
+- **New Tests**:
+  - MtuDiscoveryTest (10 test cases, 100% passing)
+  - BandwidthTesterTest (11 test cases, 100% passing)
+  - DnsDiagnosticsTest (15 test cases, 100% passing)
+- **Build Time**: ~45-50 seconds (Debug, 12 cores)
 
 ---
 

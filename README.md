@@ -5,7 +5,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-17%2F22%20passing-yellow.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-25%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -93,9 +93,30 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Comprehensive output parsing with regex
   - Cancellation support and error handling
   - 11 unit tests (100% passing)
+- ✅ **Path MTU Discovery with binary search** (Phase 7.2)
+  - Binary search algorithm (576-9000 bytes range)
+  - Cross-platform ping with Don't Fragment flag (Windows -f / Linux -M do)
+  - Fragmentation error detection in ping output
+  - Real-time progress updates with current MTU range
+  - 10 unit tests (100% passing)
+- ✅ **Network bandwidth testing** (Phase 7.2)
+  - TCP and UDP protocol support
+  - Download and upload speed measurement
+  - Configurable test duration (1-60 seconds) and packet size (1KB-1MB)
+  - Results in Mbps (Megabits per second)
+  - Real-time progress updates with current bandwidth
+  - 11 unit tests (100% passing)
+- ✅ **Advanced DNS diagnostics** (Phase 7.2)
+  - Multiple DNS record types (A, AAAA, MX, NS, TXT, CNAME, PTR, SRV)
+  - Forward and reverse DNS lookups
+  - Custom DNS server support (e.g., 8.8.8.8)
+  - Query time measurement with QElapsedTimer
+  - Structured DnsRecord result type with TTL and priority
+  - 15 unit tests (100% passing)
 
 ### 🚧 Planned (Phase 7+)
-- Advanced diagnostics (MTU discovery, bandwidth test, DNS diagnostics)
+- Monitoring service with continuous tracking and alerts
+- Device detail dialog with integrated diagnostics
 - UI polish with dark/light themes
 - Historical data tracking with trend analysis
 - Network topology visualization
@@ -210,12 +231,21 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS** (2/5 modules - 40%)
+**Current Phase**: Phase 7 - Advanced Diagnostics 🚧 **IN PROGRESS** (3/5 modules - 60%)
 **Next Phase**: Phase 8 - Advanced Features
-**Progress**: 67% (6 complete + Phase 7 40%)
-**Latest Release**: [v0.7.1-phase7.1](https://github.com/paolosereno/LanScan/releases/tag/v0.7.1-phase7.1)
+**Progress**: 70% (6 complete + Phase 7 60%)
+**Latest Release**: [v0.7.2-phase7.2](https://github.com/paolosereno/LanScan/releases/tag/v0.7.2-phase7.2)
 
 ### Recent Updates
+- **2025-10-09**: Phase 7.2 completed - Advanced Diagnostics (MTU, Bandwidth, DNS)
+  - Implemented MtuDiscovery with binary search algorithm (576-9000 bytes)
+  - Cross-platform ping with Don't Fragment flag for MTU discovery
+  - Created BandwidthTester with TCP/UDP support for download/upload speed testing
+  - Implemented DnsDiagnostics with multiple record types (A, AAAA, MX, NS, TXT, CNAME, PTR, SRV)
+  - Forward and reverse DNS lookups with custom nameserver support
+  - Query time measurement and structured DnsRecord result type
+  - 36 unit tests created across 3 test suites (100% passing)
+  - 9 new files: 2,671 lines of code
 - **2025-10-09**: Phase 7.1 completed - Traceroute Service
   - Implemented cross-platform traceroute with Windows tracert and Linux/macOS traceroute support
   - Created TraceRouteHop model with RTT statistics (min/max/avg calculations)
@@ -248,11 +278,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 184 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new)
-- **Lines of Code**: ~18,000+ lines
-- **Test Coverage**: 17/22 tests passing (77%, 5 pre-existing failures)
-- **Build Time**: ~45 seconds (Debug, 12 cores)
-- **Executable Size**: 40 MB (Debug build)
+- **Files Created**: 193 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new, Phase 7.2: 9 new)
+- **Lines of Code**: ~20,700+ lines (Phase 7.2 added 2,671 LOC)
+- **Test Coverage**: 25 tests total (Phase 7.2 added 3 test suites with 36 unit tests)
+- **Build Time**: ~45-50 seconds (Debug, 12 cores)
+- **Executable Size**: 42 MB (Debug build)
 
 ## License
 

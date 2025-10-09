@@ -212,3 +212,39 @@ target_include_directories(TraceRouteServiceTest PRIVATE
 )
 target_link_libraries(TraceRouteServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
 add_test(NAME TraceRouteServiceTest COMMAND TraceRouteServiceTest)
+
+add_executable(MtuDiscoveryTest
+    MtuDiscoveryTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/MtuDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/MtuDiscovery.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(MtuDiscoveryTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/diagnostics
+)
+target_link_libraries(MtuDiscoveryTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME MtuDiscoveryTest COMMAND MtuDiscoveryTest)
+
+add_executable(BandwidthTesterTest
+    BandwidthTesterTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/BandwidthTester.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/BandwidthTester.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(BandwidthTesterTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/diagnostics
+)
+target_link_libraries(BandwidthTesterTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME BandwidthTesterTest COMMAND BandwidthTesterTest)
+
+add_executable(DnsDiagnosticsTest
+    DnsDiagnosticsTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/diagnostics/DnsDiagnostics.cpp
+    ${CMAKE_SOURCE_DIR}/include/diagnostics/DnsDiagnostics.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(DnsDiagnosticsTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/diagnostics
+)
+target_link_libraries(DnsDiagnosticsTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME DnsDiagnosticsTest COMMAND DnsDiagnosticsTest)

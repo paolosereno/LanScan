@@ -111,6 +111,9 @@ set(NETWORK_SOURCES
 # Diagnostics sources (Phase 7)
 set(DIAGNOSTICS_SOURCES
     src/diagnostics/TraceRouteService.cpp
+    src/diagnostics/MtuDiscovery.cpp
+    src/diagnostics/BandwidthTester.cpp
+    src/diagnostics/DnsDiagnostics.cpp
 )
 
 # Database sources
@@ -215,6 +218,9 @@ set(HEADERS
     include/delegates/StatusDelegate.h
     include/delegates/QualityScoreDelegate.h
     include/diagnostics/TraceRouteService.h
+    include/diagnostics/MtuDiscovery.h
+    include/diagnostics/BandwidthTester.h
+    include/diagnostics/DnsDiagnostics.h
 )
 
 # UI files (Phase 5-6)

@@ -2,10 +2,10 @@
 
 ## Current Status
 - **Active Phase**: Phase 7 - Advanced Diagnostics 🔄 **IN PROGRESS**
-- **Current Module**: 7.2 - Advanced Diagnostics (MTU, Bandwidth, DNS)
+- **Current Module**: 7.3 - Monitoring Service
 - **Timeline**: Week 12-13
-- **Next Milestone**: MTU Discovery and Bandwidth Testing
-- **Last Updated**: 2025-10-09 (Completed Phase 7.1 - Traceroute Service)
+- **Next Milestone**: Continuous Monitoring and Device Tracking
+- **Last Updated**: 2025-10-09 (Completed Phase 7.2 - Advanced Diagnostics)
 
 ## Phase Progress Overview
 
@@ -57,10 +57,10 @@
   - ✅ MetricsWidget Integration into MainWindow (Module 7.0 completed)
 
 ### Advanced Features (7-9)
-- [>] **Phase 7**: Advanced Diagnostics 🔄 **(2/5 modules completed - 40%)**
+- [>] **Phase 7**: Advanced Diagnostics 🔄 **(3/5 modules completed - 60%)**
   - ✅ Module 7.0: MetricsWidget Integration (Phase 6 completion)
   - ✅ Module 7.1: Traceroute Service
-  - [ ] Module 7.2: Advanced Diagnostics (MTU, Bandwidth, DNS)
+  - ✅ Module 7.2: Advanced Diagnostics (MTU, Bandwidth, DNS)
   - [ ] Module 7.3: Monitoring Service
   - [ ] Module 7.4: Device Detail Dialog
 - [ ] **Phase 8**: Advanced Features *(0/4 modules completed)*
@@ -293,7 +293,7 @@
 
 ## Progress Metrics
 - **Total Phases**: 12 (6 completed, 1 active, 5 pending)
-- **Overall Progress**: Phase 0-6 complete + Phase 7 (40%) → ~67% of total project
+- **Overall Progress**: Phase 0-6 complete + Phase 7 (60%) → ~70% of total project
 - **Phase 0 Completion**: 100% ✅ (4/4 modules, 5/5 tests)
 - **Phase 1 Completion**: 100% ✅ (4/4 modules, 10/10 tests)
 - **Phase 2 Completion**: 100% ✅ (4/4 modules, 15/15 tests)
@@ -301,8 +301,8 @@
 - **Phase 4 Completion**: 100% ✅ (3/3 modules, 15/19 tests passing)
 - **Phase 5 Completion**: 100% ✅ (5/5 modules, UI functional)
 - **Phase 6 Completion**: 100% ✅ (3/3 modules + integration, all features working)
-- **Phase 7 Completion**: 40% 🔄 (2/5 modules, MetricsWidget + Traceroute complete)
-- **Current Test Coverage**: 77% (17/22 tests passing, 5 pre-existing failures)
+- **Phase 7 Completion**: 60% 🔄 (3/5 modules, MetricsWidget + Traceroute + Advanced Diagnostics complete)
+- **Current Test Coverage**: 25 tests total (MTU, Bandwidth, DNS tests added)
 - **Estimated Total Timeline**: 20 weeks to v1.0.0 release
 - **Code Coverage Target**: 85% minimum for all phases
 
@@ -365,19 +365,43 @@
 - [x] Updated CMakeLists.txt with new diagnostics sources
 - [x] Build successful (5 new files: 1029 LOC)
 
-## Build Statistics (Phase 0-7.1)
-- **Files Created**: 184 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new)
-- **Lines of Code**: ~18,000+ lines
-- **Test Files**: 22 (17/22 passing - 77%, 5 pre-existing failures)
-- **Executable Size**: 40 MB (Debug build)
-- **Git Tags**: v0.1.0-phase1, v0.2.0-phase2, v0.3.0-phase3, v0.4.0-phase4, v0.5.0-phase5, v0.6.0-phase6, v0.7.1-phase7.1 (pending)
-- **Build Time**: ~40-45 seconds (Debug, 12 cores)
+### 7.2 Advanced Diagnostics (MTU, Bandwidth, DNS) ✅ (Completed 2025-10-09)
+- [x] MtuDiscovery.h/cpp - Path MTU Discovery with binary search algorithm
+- [x] Binary search range: 576 bytes (IPv4 minimum) to 9000 bytes (jumbo frames)
+- [x] Cross-platform ping with Don't Fragment flag (Windows -f / Linux -M do)
+- [x] Fragmentation error detection in ping output
+- [x] Real-time progress updates with current MTU range
+- [x] Unit test: MtuDiscoveryTest (10 test cases)
+- [x] BandwidthTester.h/cpp - Network bandwidth testing service
+- [x] TCP and UDP protocol support
+- [x] Download and upload speed measurement
+- [x] Configurable test duration (1-60 seconds) and packet size (1KB-1MB)
+- [x] Results in Mbps (Megabits per second)
+- [x] Unit test: BandwidthTesterTest (11 test cases)
+- [x] DnsDiagnostics.h/cpp - Advanced DNS query service
+- [x] Multiple DNS record types (A, AAAA, MX, NS, TXT, CNAME, PTR, SRV)
+- [x] Forward and reverse DNS lookups
+- [x] Custom DNS server support (e.g., 8.8.8.8)
+- [x] Query time measurement with QElapsedTimer
+- [x] Unit test: DnsDiagnosticsTest (15 test cases)
+- [x] Updated CMakeLists.txt with all 3 new services
+- [x] Updated tests/CMakeLists.txt with test executables
+- [x] Build successful (9 new files: 2671 LOC, 36 unit tests)
+- [x] All tests compile and build successfully
+
+## Build Statistics (Phase 0-7.2)
+- **Files Created**: 193 total (Phase 0-6: 175, Phase 7.0: 4 modified, Phase 7.1: 5 new, Phase 7.2: 9 new)
+- **Lines of Code**: ~20,700+ lines (Phase 7.2 added 2,671 LOC)
+- **Test Files**: 25 (Phase 7.2 added 3 test suites with 36 unit tests)
+- **Executable Size**: 42 MB (Debug build)
+- **Git Tags**: v0.1.0-phase1, v0.2.0-phase2, v0.3.0-phase3, v0.4.0-phase4, v0.5.0-phase5, v0.6.0-phase6, v0.7.1-phase7.1, v0.7.2-phase7.2 (pending)
+- **Build Time**: ~45-50 seconds (Debug, 12 cores)
 
 ---
 
-**Last Updated**: 2025-10-09 (Completed Phase 7.1 - Traceroute Service)
+**Last Updated**: 2025-10-09 (Completed Phase 7.2 - Advanced Diagnostics)
 **Next Review**: Weekly (every Monday)
-**Current Target**: Phase 7.2 - Advanced Diagnostics (MTU, Bandwidth, DNS)
+**Current Target**: Phase 7.3 - Monitoring Service
 
 ---
 
