@@ -154,11 +154,12 @@ set(MANAGER_SOURCES
     src/managers/FavoritesManager.cpp
 )
 
-# Service sources (Phase 7.3)
+# Service sources (Phase 7.3 + Phase 8.1)
 set(SERVICE_SOURCES
     src/services/AlertService.cpp
     src/services/HistoryService.cpp
     src/services/MonitoringService.cpp
+    src/services/WakeOnLanService.cpp
 )
 
 # ViewModel sources (Phase 5-6)
@@ -234,6 +235,7 @@ set(HEADERS
     include/services/AlertService.h
     include/services/HistoryService.h
     include/services/MonitoringService.h
+    include/services/WakeOnLanService.h
 )
 
 # UI files (Phase 5-7)

@@ -301,3 +301,20 @@ target_include_directories(MonitoringServiceTest PRIVATE
 )
 target_link_libraries(MonitoringServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network Qt6::Sql Qt6::Gui)
 add_test(NAME MonitoringServiceTest COMMAND MonitoringServiceTest)
+
+# Phase 8.1: Wake-on-LAN tests
+add_executable(WakeOnLanServiceTest
+    WakeOnLanServiceTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/services/WakeOnLanService.cpp
+    ${CMAKE_SOURCE_DIR}/include/services/WakeOnLanService.h
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(WakeOnLanServiceTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/services
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(WakeOnLanServiceTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME WakeOnLanServiceTest COMMAND WakeOnLanServiceTest)

@@ -17,6 +17,7 @@
 #include "diagnostics/MtuDiscovery.h"
 #include "diagnostics/BandwidthTester.h"
 #include "diagnostics/DnsDiagnostics.h"
+#include "services/WakeOnLanService.h"
 #include "../utils/Logger.h"
 #include <QMessageBox>
 #include <QFileDialog>
@@ -35,6 +36,7 @@ MainWindow::MainWindow(
     MtuDiscovery* mtuDiscovery,
     BandwidthTester* bandwidthTester,
     DnsDiagnostics* dnsDiagnostics,
+    WakeOnLanService* wolService,
     QWidget* parent
 )
     : QMainWindow(parent)
@@ -49,6 +51,7 @@ MainWindow::MainWindow(
     , mtuDiscovery(mtuDiscovery)
     , bandwidthTester(bandwidthTester)
     , dnsDiagnostics(dnsDiagnostics)
+    , wolService(wolService)
     , deviceTableViewModel(new DeviceTableViewModel(deviceRepository, this))
     , deviceTable(nullptr)
     , progressBar(nullptr)
@@ -134,6 +137,9 @@ void MainWindow::setupStatusBar() {
 
 void MainWindow::setupDeviceTable() {
     deviceTable = new DeviceTableWidget(deviceTableViewModel, this);
+
+    // Set Wake-on-LAN service
+    deviceTable->setWakeOnLanService(wolService);
 
     // Add to main layout
     QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->deviceTableContainer->layout());

@@ -8,6 +8,7 @@
 #include "../models/Device.h"
 
 class DeviceTableViewModel;
+class WakeOnLanService;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DeviceTableWidget; }
@@ -26,6 +27,7 @@ public:
     ~DeviceTableWidget();
 
     void setViewModel(DeviceTableViewModel* viewModel);
+    void setWakeOnLanService(WakeOnLanService* service);
     Device getSelectedDevice() const;
     QList<Device> getSelectedDevices() const;
 
@@ -44,6 +46,7 @@ private slots:
     // Context menu actions
     void onPingDevice();
     void onShowDetails();
+    void onWakeOnLan();
     void onAddToFavorites();
     void onRemoveDevice();
     void onCopyIpAddress();
@@ -53,6 +56,7 @@ private:
     DeviceTableViewModel* viewModel;
     QSortFilterProxyModel* proxyModel;
     QMenu* contextMenu;
+    WakeOnLanService* wolService;
 
     void setupTableView();
     void setupContextMenu();

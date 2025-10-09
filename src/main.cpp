@@ -24,6 +24,7 @@
 #include "../diagnostics/MtuDiscovery.h"
 #include "../diagnostics/BandwidthTester.h"
 #include "../diagnostics/DnsDiagnostics.h"
+#include "../services/WakeOnLanService.h"
 #include "../utils/Logger.h"
 
 int main(int argc, char *argv[])
@@ -115,6 +116,11 @@ int main(int argc, char *argv[])
     BandwidthTester* bandwidthTester = new BandwidthTester();
     DnsDiagnostics* dnsDiagnostics = new DnsDiagnostics();
 
+    // ========== Phase 8 Services Setup ==========
+
+    // Wake-on-LAN Service
+    WakeOnLanService* wolService = new WakeOnLanService();
+
     // ========== Main Window Setup ==========
 
     MainWindow mainWindow(
@@ -127,7 +133,8 @@ int main(int argc, char *argv[])
         tracerouteService,
         mtuDiscovery,
         bandwidthTester,
-        dnsDiagnostics
+        dnsDiagnostics,
+        wolService
     );
 
     mainWindow.show();
@@ -137,6 +144,7 @@ int main(int argc, char *argv[])
     int result = app.exec();
 
     // Cleanup
+    delete wolService;
     delete dnsDiagnostics;
     delete bandwidthTester;
     delete mtuDiscovery;

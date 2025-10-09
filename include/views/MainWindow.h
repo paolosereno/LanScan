@@ -21,6 +21,7 @@ class TraceRouteService;
 class MtuDiscovery;
 class BandwidthTester;
 class DnsDiagnostics;
+class WakeOnLanService;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -47,6 +48,7 @@ public:
         MtuDiscovery* mtuDiscovery,
         BandwidthTester* bandwidthTester,
         DnsDiagnostics* dnsDiagnostics,
+        WakeOnLanService* wolService,
         QWidget* parent = nullptr
     );
     ~MainWindow();
@@ -91,6 +93,7 @@ private:
     MtuDiscovery* mtuDiscovery;
     BandwidthTester* bandwidthTester;
     DnsDiagnostics* dnsDiagnostics;
+    WakeOnLanService* wolService;
 
     // Widgets
     DeviceTableWidget* deviceTable;

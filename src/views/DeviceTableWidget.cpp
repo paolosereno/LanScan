@@ -3,6 +3,7 @@
 #include "viewmodels/DeviceTableViewModel.h"
 #include "delegates/StatusDelegate.h"
 #include "delegates/QualityScoreDelegate.h"
+#include "services/WakeOnLanService.h"
 #include "../utils/Logger.h"
 #include <QClipboard>
 #include <QApplication>
@@ -14,6 +15,7 @@ DeviceTableWidget::DeviceTableWidget(DeviceTableViewModel* viewModel, QWidget* p
     , viewModel(viewModel)
     , proxyModel(new QSortFilterProxyModel(this))
     , contextMenu(nullptr)
+    , wolService(nullptr)
 {
     ui->setupUi(this);
 
@@ -31,6 +33,11 @@ DeviceTableWidget::~DeviceTableWidget() {
 void DeviceTableWidget::setViewModel(DeviceTableViewModel* viewModel) {
     this->viewModel = viewModel;
     proxyModel->setSourceModel(viewModel);
+}
+
+void DeviceTableWidget::setWakeOnLanService(WakeOnLanService* service) {
+    this->wolService = service;
+    Logger::debug("WakeOnLanService set for DeviceTableWidget");
 }
 
 Device DeviceTableWidget::getSelectedDevice() const {
@@ -94,6 +101,8 @@ void DeviceTableWidget::setupContextMenu() {
 
     contextMenu->addAction(tr("Ping Device"), this, &DeviceTableWidget::onPingDevice);
     contextMenu->addAction(tr("Show Details"), this, &DeviceTableWidget::onShowDetails);
+    contextMenu->addSeparator();
+    contextMenu->addAction(tr("Wake on LAN"), this, &DeviceTableWidget::onWakeOnLan);
     contextMenu->addSeparator();
     contextMenu->addAction(tr("Add to Favorites"), this, &DeviceTableWidget::onAddToFavorites);
     contextMenu->addSeparator();
@@ -174,6 +183,57 @@ void DeviceTableWidget::onShowDetails() {
     }
 
     emit deviceDoubleClicked(device);
+}
+
+void DeviceTableWidget::onWakeOnLan() {
+    Device device = getSelectedDevice();
+    if (device.getIp().isEmpty()) {
+        return;
+    }
+
+    // Check if MAC address is available
+    if (device.macAddress().isEmpty()) {
+        QMessageBox::warning(this, tr("Wake on LAN"),
+            tr("Cannot send Wake-on-LAN packet:\nMAC address is unknown for device %1")
+            .arg(device.getIp()));
+        return;
+    }
+
+    // Check if WoL service is available
+    if (!wolService) {
+        QMessageBox::critical(this, tr("Wake on LAN"),
+            tr("Wake-on-LAN service is not available."));
+        Logger::error("WakeOnLanService not set for DeviceTableWidget");
+        return;
+    }
+
+    // Confirm action
+    QString deviceName = device.hostname().isEmpty() ? device.getIp() : device.hostname();
+    int result = QMessageBox::question(this, tr("Wake on LAN"),
+        tr("Send Wake-on-LAN packet to:\n\n"
+           "Device: %1\n"
+           "IP: %2\n"
+           "MAC: %3\n\n"
+           "This will attempt to wake up the device if it supports Wake-on-LAN.")
+           .arg(deviceName)
+           .arg(device.getIp())
+           .arg(device.macAddress()),
+        QMessageBox::Yes | QMessageBox::No);
+
+    if (result == QMessageBox::Yes) {
+        // Send WoL packet
+        wolService->sendWakeOnLanToDevice(device);
+
+        // Show confirmation
+        QMessageBox::information(this, tr("Wake on LAN"),
+            tr("Wake-on-LAN packet sent to %1 (%2)")
+            .arg(deviceName)
+            .arg(device.macAddress()));
+
+        Logger::info(QString("WoL packet sent from UI to %1 (%2)")
+                    .arg(device.getIp())
+                    .arg(device.macAddress()));
+    }
 }
 
 void DeviceTableWidget::onAddToFavorites() {

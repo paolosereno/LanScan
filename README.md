@@ -131,11 +131,33 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Double-click and context menu support for opening dialog
   - 3 new files: ~1,200 LOC
 
+**Wake-on-LAN Support** (Phase 8.1 - ✅ Complete)
+- ✅ **Wake-on-LAN magic packet sender**
+  - WakeOnLanService for sending magic packets
+  - Magic packet builder (6 bytes 0xFF + 16x MAC address)
+  - MAC address validation (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)
+  - UDP broadcast on port 9 (standard WoL port)
+  - Cross-platform support (Windows/Linux/macOS)
+- ✅ **UI Integration**
+  - "Wake on LAN" context menu in device table
+  - Confirmation dialog with device details
+  - Error handling for missing MAC or unavailable service
+  - Success/failure notifications
+- ✅ **Qt Signals & Error Handling**
+  - packetSent() signal for success
+  - sendError() signal for failures
+  - Real-time status updates
+- ✅ **Unit Tests**
+  - WakeOnLanServiceTest with 12 test cases
+  - Magic packet validation tests
+  - Signal emission tests
+  - MAC address validation tests
+
 ### 🚧 Planned (Phase 8+)
-- Wake-on-LAN support (Phase 8.1)
-- Advanced export functionality (Phase 8.2)
+- Advanced export functionality (XML/HTML) (Phase 8.2)
 - Scan profiles and favorites integration (Phase 8.3)
-- Settings dialog with preferences (Phase 8.4)
+- History & database enhancement (Phase 8.4)
+- Settings dialog with preferences (Phase 8.5)
 - UI polish with dark/light themes (Phase 9)
 - Network topology visualization (Phase 10)
 - Chart export functionality (Phase 11)
@@ -248,12 +270,24 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 8 - Advanced Features 🚧 **IN PROGRESS** (0/4 modules - 0%)
+**Current Phase**: Phase 8 - Advanced Features 🚧 **IN PROGRESS** (1/5 modules - 20%)
 **Next Phase**: Phase 9 - UI Polish & Theming
-**Progress**: 83% (7 complete phases of ~12 total)
-**Latest Release**: [v0.7.4-phase7.4](https://github.com/paolosereno/LanScan/releases/tag/v0.7.4-phase7.4)
+**Progress**: 77% (~7.2 complete phases of ~12 total)
+**Latest Release**: [v0.8.1-phase8.1](https://github.com/paolosereno/LanScan/releases/tag/v0.8.1-phase8.1)
 
 ### Recent Updates
+- **2025-10-09**: Phase 8.1 completed - Wake-on-LAN Support
+  - Implemented WakeOnLanService with magic packet builder (6 bytes 0xFF + 16x MAC address)
+  - MAC address validation with regex (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX formats)
+  - UDP broadcast on port 9 (standard Wake-on-LAN port)
+  - Cross-platform support (Windows/Linux/macOS)
+  - DeviceTableWidget integration: "Wake on LAN" context menu item
+  - Confirmation dialog with device details before sending
+  - Error handling for missing MAC addresses or unavailable service
+  - Qt signals for async notifications (packetSent, sendError)
+  - MainWindow and main.cpp integration with dependency injection
+  - Unit tests: WakeOnLanServiceTest with 12 test cases (all passing)
+  - 3 new files: 551 lines of code (WakeOnLanService.h/cpp, WakeOnLanServiceTest.cpp)
 - **2025-10-09**: Phase 7.4 completed - Device Detail Dialog
   - Comprehensive five-tab interface for device information (Overview, Ports, Metrics, History, Diagnostics)
   - Overview tab with device details, Ports tab with open ports list

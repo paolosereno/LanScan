@@ -1,10 +1,10 @@
 # LanScan - Development Progress
 
-- **Active Phase**: Phase 7 - Advanced Diagnostics ✅ **COMPLETED**
-- **Current Module**: Phase 8 - Advanced Features
+- **Active Phase**: Phase 8 - Advanced Features 🔄 **IN PROGRESS**
+- **Current Module**: 8.1 Wake-on-LAN ✅ Completed
 - **Timeline**: Week 13-14
-- **Next Milestone**: Wake-on-LAN, Profiles, Settings Dialog
-- **Last Updated**: 2025-10-09 (Completed Phase 7.4 - Device Detail Dialog)
+- **Next Milestone**: Advanced Export (XML/HTML), Profiles Integration, Settings Dialog
+- **Last Updated**: 2025-10-09 (Completed Phase 8.1 - Wake-on-LAN)
 
 ## Phase Progress Overview
 
@@ -62,7 +62,12 @@
   - ✅ Module 7.2: Advanced Diagnostics (MTU, Bandwidth, DNS)
   - ✅ Module 7.3: Monitoring Service
   - ✅ Module 7.4: Device Detail Dialog
-- [ ] **Phase 8**: Advanced Features *(0/4 modules completed)*
+- [>] **Phase 8**: Advanced Features 🔄 **(1/5 modules completed - 20%)**
+  - ✅ Module 8.1: Wake-on-LAN
+  - [ ] Module 8.2: Advanced Export (XML/HTML)
+  - [ ] Module 8.3: Profile & Favorites Integration
+  - [ ] Module 8.4: History & Database Enhancement
+  - [ ] Module 8.5: Settings Dialog
 - [ ] **Phase 9**: UI Polish & Theming *(0/4 modules completed)*
 
 ### Quality & Release (10-12)
@@ -291,8 +296,8 @@
 - **[Development Guide](docs/development-guide.md)**: Setup and contribution guidelines
 
 ## Progress Metrics
-- **Total Phases**: 12 (7 completed, 0 active, 5 pending)
-- **Overall Progress**: Phase 0-7 complete → ~75% of total project
+- **Total Phases**: 12 (7 completed, 1 active, 4 pending)
+- **Overall Progress**: Phase 0-7 complete + Phase 8 (20%) → ~77% of total project
 - **Phase 1 Completion**: 100% ✅ (4/4 modules, 10/10 tests)
 - **Phase 2 Completion**: 100% ✅ (4/4 modules, 15/15 tests)
 - **Phase 3 Completion**: 100% ✅ (3/3 modules, 19/19 tests)
@@ -300,6 +305,7 @@
 - **Phase 5 Completion**: 100% ✅ (5/5 modules, UI functional)
 - **Phase 6 Completion**: 100% ✅ (3/3 modules + integration, all features working)
 - **Phase 7 Completion**: 100% ✅ (5/5 modules, All diagnostics and UI integration complete)
+- **Phase 8 Completion**: 20% 🔄 (1/5 modules, Wake-on-LAN complete)
 - **Estimated Total Timeline**: 20 weeks to v1.0.0 release
 - **Code Coverage Target**: 85% minimum for all phases
 
@@ -439,17 +445,33 @@
 - [x] LanScan.exe updated (48 MB)
 
 
+## Phase 8 - Completed Tasks ✅
+
+### 8.1 Wake-on-LAN ✅ (Completed 2025-10-09)
+- [x] WakeOnLanService.h/cpp - Magic packet builder and WoL service
+- [x] WakeOnLanPacket class - Magic packet creation (6 bytes 0xFF + 16x MAC)
+- [x] MAC address validation with regex (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)
+- [x] UDP broadcast on port 9 (standard Wake-on-LAN port)
+- [x] Cross-platform support (Windows/Linux/macOS)
+- [x] Qt signals: packetSent() and sendError()
+- [x] DeviceTableWidget integration - "Wake on LAN" context menu item
+- [x] Confirmation dialog before sending WoL packet
+- [x] Error handling (MAC missing, service unavailable)
+- [x] MainWindow integration with dependency injection
+- [x] Updated main.cpp with WakeOnLanService instantiation
+- [x] Unit test: WakeOnLanServiceTest (12 test cases, all passing)
+- [x] Updated CMakeLists.txt with new WoL sources
+- [x] Updated tests/CMakeLists.txt with test executable
+- [x] Build successful (3 new files: 551 LOC)
+- [x] LanScan.exe updated (48 MB)
+
 ---
-## Build Statistics (Phase 0-7.4)
-- **Files Created**: 214 total (Phase 7.4: 3 new + 10 modified)
-- **Lines of Code**: ~23,400+ lines (Phase 7.4 added ~1,200 LOC)
-## Build Statistics (Phase 0-7.4)
-- **Files Created**: 214 total (Phase 7.4: 3 new + 10 modified)
-- **Lines of Code**: ~23,400+ lines (Phase 7.4 added ~1,200 LOC)
-## Build Statistics (Phase 0-7.4)
-- **Files Created**: 214 total (Phase 7.4: 3 new + 10 modified)
-- **Lines of Code**: ~23,400+ lines (Phase 7.4 added ~1,200 LOC)
-**Current Target**: Phase 7.4 - Device Detail Dialog
+## Build Statistics (Phase 0-8.1)
+- **Files Created**: 217 total (Phase 8.1: 3 new + 8 modified)
+- **Lines of Code**: ~24,000+ lines (Phase 8.1 added ~551 LOC)
+- **Test Files**: 29 total (Phase 8.1 added WakeOnLanServiceTest: 12 test cases)
+- **Executable Size**: 48 MB (Debug build)
+- **Current Target**: Phase 8.2 - Advanced Export (XML/HTML)
 
 ---
 

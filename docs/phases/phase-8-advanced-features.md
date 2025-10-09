@@ -1,11 +1,18 @@
 # Phase 8: Advanced Features
 
 **Timeline**: Week 15-16
+**Status**: 🔄 IN PROGRESS (1/5 modules - 20%)
 **Objective**: Implement advanced features (Wake-on-LAN, advanced export, profiles, favorites, settings)
 
 ---
 
-## 8.1 Wake-on-LAN
+## 8.1 Wake-on-LAN ✅ (COMPLETED 2025-10-09)
+
+**Status**: ✅ **COMPLETED**
+**Files Created**: 3 (WakeOnLanService.h/cpp, WakeOnLanServiceTest.cpp)
+**Lines of Code**: 551
+**Test Coverage**: 12 test cases, all passing
+**Integration**: DeviceTableWidget context menu, MainWindow dependency injection
 
 ### WakeOnLanPacket.h/cpp
 Magic packet builder and sender
