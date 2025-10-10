@@ -100,6 +100,10 @@ void MainWindow::setupMenuBar() {
     viewMenu->addAction(tr("&Refresh"), this, &MainWindow::onRefresh, QKeySequence::Refresh);
     viewMenu->addAction(tr("&Clear Results"), this, &MainWindow::onClearResults);
 
+    // Tools Menu
+    QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
+    toolsMenu->addAction(tr("&Settings..."), this, &MainWindow::onSettingsTriggered, QKeySequence::Preferences);
+
     // Help Menu
     QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(tr("&About"), this, &MainWindow::onAboutTriggered);

@@ -1,7 +1,7 @@
 # Phase 8: Advanced Features
 
 **Timeline**: Week 15-16
-**Status**: 🔄 IN PROGRESS (2/5 modules - 40%)
+**Status**: ✅ COMPLETED (5/5 modules - 100%)
 **Objective**: Implement advanced features (Wake-on-LAN, advanced export, profiles, favorites, settings)
 
 ---
@@ -706,260 +706,295 @@ private:
 
 ---
 
-## 8.5 Settings Dialog
+## 8.5 Settings Dialog ✅ (COMPLETED 2025-10-10)
 
-### settingsdialog.ui
-Settings dialog layout
+**Status**: ✅ **COMPLETED**
+**Files Created**: 3 (SettingsDialog.h/cpp, settingsdialog.ui)
+**Lines of Code**: ~625
+**Integration**: MainWindow Tools menu, QSettings persistence
+**Tabs**: 5 configuration tabs (General/Network/Appearance/Notifications/Advanced)
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <widget class="QDialog" name="SettingsDialog">
-  <property name="windowTitle">
-   <string>Settings</string>
-  </property>
-  <layout class="QVBoxLayout">
-   <widget class="QTabWidget" name="tabWidget">
-    <!-- General Tab -->
-    <widget class="QWidget" name="generalTab"/>
+### Overview
+Comprehensive settings dialog with QSettings integration for persistent application preferences across all application features.
 
-    <!-- Network Tab -->
-    <widget class="QWidget" name="networkTab"/>
+### Features Implemented
 
-    <!-- Appearance Tab -->
-    <widget class="QWidget" name="appearanceTab"/>
+#### 1. General Tab
+- **Startup Options**:
+  - Start with system checkbox
+  - Minimize to system tray checkbox
+  - Close to tray (don't quit) checkbox
+- **Language Selection**:
+  - Combo box with 5 languages: English, Italiano, Español, Français, Deutsch
+  - Stored as language codes ("en", "it", "es", "fr", "de")
 
-    <!-- Notifications Tab -->
-    <widget class="QWidget" name="notificationsTab"/>
+#### 2. Network Tab
+- **Scan Defaults**:
+  - Timeout: QSpinBox (100-10000 ms) with ms suffix
+  - Threads: QSpinBox (1-16) for concurrent scanning
+  - Default Subnet: QLineEdit with CIDR validation (e.g., "192.168.1.0/24")
+- **Ping Settings**:
+  - Ping Count: QSpinBox (1-10 packets)
+  - Ping Interval: QSpinBox (100-5000 ms) with ms suffix
 
-    <!-- Advanced Tab -->
-    <widget class="QWidget" name="advancedTab"/>
-   </widget>
+#### 3. Appearance Tab
+- **Theme Selection**:
+  - System Default, Light, Dark themes
+  - Combo box storing theme IDs ("system", "light", "dark")
+- **Font Settings**:
+  - Font Size: QSpinBox (8-24 pt) with pt suffix
 
-   <widget class="QDialogButtonBox" name="buttonBox"/>
-  </layout>
- </widget>
-</ui>
-```
+#### 4. Notifications Tab
+- **Alert Settings**:
+  - Enable alerts checkbox (master switch)
+  - Alert sound checkbox
+  - System notifications checkbox
+  - Dependent controls auto-enable/disable with master switch
+- **Alert Thresholds**:
+  - High Latency: QSpinBox (0-1000 ms)
+  - Packet Loss: QSpinBox (0-100%)
+  - High Jitter: QSpinBox (0-100 ms)
 
-### SettingsDialog.h/cpp
-Settings dialog implementation
+#### 5. Advanced Tab
+- **Database Retention**:
+  - History Retention: QSpinBox (1-365 days)
+  - Metrics Retention: QSpinBox (1-90 days)
+- **Logging Configuration**:
+  - Log Level: Combo box (Debug, Info, Warning, Error)
+  - Enable File Logging checkbox
+
+### SettingsDialog.h
+Complete class definition with comprehensive slot declarations
 
 ```cpp
 class SettingsDialog : public QDialog {
     Q_OBJECT
 
 public:
-    SettingsDialog(QSettings* settings, QWidget* parent = nullptr);
+    explicit SettingsDialog(QWidget* parent = nullptr);
+    ~SettingsDialog();
+
+signals:
+    void settingsApplied();
 
 private slots:
-    void onApply();
-    void onOk();
-    void onCancel();
-    void onRestoreDefaults();
+    // Button handlers
+    void onApplyClicked();
+    void onOkClicked();
+    void onCancelClicked();
+    void onRestoreDefaultsClicked();
 
-    // General
+    // General tab (5 slots)
     void onStartWithSystemChanged(bool checked);
     void onMinimizeToTrayChanged(bool checked);
+    void onCloseToTrayChanged(bool checked);
+    void onLanguageChanged(int index);
 
-    // Network
-    void onDefaultTimeoutChanged(int value);
-    void onMaxThreadsChanged(int value);
-    void onDefaultSubnetChanged(const QString& subnet);
+    // Network tab (5 slots)
+    void onTimeoutChanged(int value);
+    void onThreadsChanged(int value);
+    void onSubnetChanged(const QString& text);
+    void onPingCountChanged(int value);
+    void onPingIntervalChanged(int value);
 
-    // Appearance
+    // Appearance tab (2 slots)
     void onThemeChanged(int index);
     void onFontSizeChanged(int value);
 
-    // Notifications
+    // Notifications tab (6 slots)
     void onEnableAlertsChanged(bool checked);
     void onAlertSoundChanged(bool checked);
+    void onSystemNotificationsChanged(bool checked);
+    void onLatencyThresholdChanged(int value);
+    void onPacketLossThresholdChanged(int value);
+    void onJitterThresholdChanged(int value);
+
+    // Advanced tab (4 slots)
+    void onHistoryRetentionChanged(int value);
+    void onMetricsRetentionChanged(int value);
+    void onLogLevelChanged(int index);
+    void onEnableFileLoggingChanged(bool checked);
 
 private:
     Ui::SettingsDialog* ui;
     QSettings* settings;
+    bool modified;
 
-    void setupGeneralTab();
-    void setupNetworkTab();
-    void setupAppearanceTab();
-    void setupNotificationsTab();
-    void setupAdvancedTab();
-
+    // Initialization (5 methods)
+    void setupConnections();
     void loadSettings();
+    void setupTabGeneral();
+    void setupTabNetwork();
+    void setupTabAppearance();
+    void setupTabNotifications();
+    void setupTabAdvanced();
+
+    // Settings management (3 methods)
     void saveSettings();
     void applySettings();
+    void restoreDefaults();
+
+    // Validation
+    bool validateSettings();
+
+    // UI state management
+    void setModified(bool modified);
+    void updateApplyButton();
 };
 ```
 
-### Settings Implementation
+### Key Implementation Details
 
+#### QSettings Integration
 ```cpp
-void SettingsDialog::setupGeneralTab() {
-    QVBoxLayout* layout = new QVBoxLayout(ui->generalTab);
-
-    // Startup
-    QGroupBox* startupGroup = new QGroupBox(tr("Startup"));
-    QVBoxLayout* startupLayout = new QVBoxLayout(startupGroup);
-
-    QCheckBox* startWithSystem = new QCheckBox(tr("Start with system"));
-    connect(startWithSystem, &QCheckBox::toggled,
-            this, &SettingsDialog::onStartWithSystemChanged);
-    startupLayout->addWidget(startWithSystem);
-
-    QCheckBox* minimizeToTray = new QCheckBox(tr("Minimize to system tray"));
-    connect(minimizeToTray, &QCheckBox::toggled,
-            this, &SettingsDialog::onMinimizeToTrayChanged);
-    startupLayout->addWidget(minimizeToTray);
-
-    layout->addWidget(startupGroup);
-
-    // Language
-    QGroupBox* languageGroup = new QGroupBox(tr("Language"));
-    QVBoxLayout* languageLayout = new QVBoxLayout(languageGroup);
-
-    QComboBox* languageCombo = new QComboBox();
-    languageCombo->addItem(tr("English"), "en");
-    languageCombo->addItem(tr("Italiano"), "it");
-    languageLayout->addWidget(languageCombo);
-
-    layout->addWidget(languageGroup);
-
-    layout->addStretch();
-}
-
-void SettingsDialog::setupNetworkTab() {
-    QFormLayout* layout = new QFormLayout(ui->networkTab);
-
-    // Scan defaults
-    QGroupBox* scanGroup = new QGroupBox(tr("Scan Defaults"));
-    QFormLayout* scanLayout = new QFormLayout(scanGroup);
-
-    QSpinBox* timeoutSpin = new QSpinBox();
-    timeoutSpin->setRange(100, 10000);
-    timeoutSpin->setSuffix(" ms");
-    scanLayout->addRow(tr("Timeout:"), timeoutSpin);
-
-    QSpinBox* threadsSpin = new QSpinBox();
-    threadsSpin->setRange(1, 64);
-    threadsSpin->setValue(QThread::idealThreadCount());
-    scanLayout->addRow(tr("Max Threads:"), threadsSpin);
-
-    QLineEdit* subnetEdit = new QLineEdit();
-    subnetEdit->setPlaceholderText("192.168.1.0/24");
-    scanLayout->addRow(tr("Default Subnet:"), subnetEdit);
-
-    layout->addRow(scanGroup);
-
-    // Network interface
-    QGroupBox* interfaceGroup = new QGroupBox(tr("Network Interface"));
-    QVBoxLayout* interfaceLayout = new QVBoxLayout(interfaceGroup);
-
-    QComboBox* interfaceCombo = new QComboBox();
-    // Populate with available network interfaces
-    interfaceLayout->addWidget(interfaceCombo);
-
-    layout->addRow(interfaceGroup);
-}
-
-void SettingsDialog::setupAppearanceTab() {
-    QVBoxLayout* layout = new QVBoxLayout(ui->appearanceTab);
-
-    // Theme
-    QGroupBox* themeGroup = new QGroupBox(tr("Theme"));
-    QVBoxLayout* themeLayout = new QVBoxLayout(themeGroup);
-
-    QComboBox* themeCombo = new QComboBox();
-    themeCombo->addItem(tr("Light"), "light");
-    themeCombo->addItem(tr("Dark"), "dark");
-    themeCombo->addItem(tr("System"), "system");
-    connect(themeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &SettingsDialog::onThemeChanged);
-    themeLayout->addWidget(themeCombo);
-
-    layout->addWidget(themeGroup);
-
-    // Font
-    QGroupBox* fontGroup = new QGroupBox(tr("Font"));
-    QFormLayout* fontLayout = new QFormLayout(fontGroup);
-
-    QSpinBox* fontSizeSpin = new QSpinBox();
-    fontSizeSpin->setRange(8, 24);
-    fontSizeSpin->setValue(10);
-    fontLayout->addRow(tr("Font Size:"), fontSizeSpin);
-
-    layout->addWidget(fontGroup);
-
-    layout->addStretch();
-}
-
-void SettingsDialog::loadSettings() {
-    // General
-    ui->startWithSystemCheck->setChecked(
-        settings->value("General/StartWithSystem", false).toBool()
-    );
-    ui->minimizeToTrayCheck->setChecked(
-        settings->value("General/MinimizeToTray", true).toBool()
-    );
-
-    // Network
-    ui->timeoutSpin->setValue(
-        settings->value("Network/Timeout", 1000).toInt()
-    );
-    ui->maxThreadsSpin->setValue(
-        settings->value("Network/MaxThreads", QThread::idealThreadCount()).toInt()
-    );
-    ui->defaultSubnetEdit->setText(
-        settings->value("Network/DefaultSubnet", "192.168.1.0/24").toString()
-    );
-
-    // Appearance
-    QString theme = settings->value("Appearance/Theme", "system").toString();
-    int themeIndex = ui->themeCombo->findData(theme);
-    ui->themeCombo->setCurrentIndex(themeIndex);
-
-    ui->fontSizeSpin->setValue(
-        settings->value("Appearance/FontSize", 10).toInt()
-    );
-
-    // Notifications
-    ui->enableAlertsCheck->setChecked(
-        settings->value("Notifications/EnableAlerts", true).toBool()
-    );
-    ui->alertSoundCheck->setChecked(
-        settings->value("Notifications/AlertSound", false).toBool()
-    );
-}
-
-void SettingsDialog::saveSettings() {
-    // General
-    settings->setValue("General/StartWithSystem",
-        ui->startWithSystemCheck->isChecked());
-    settings->setValue("General/MinimizeToTray",
-        ui->minimizeToTrayCheck->isChecked());
-
-    // Network
-    settings->setValue("Network/Timeout",
-        ui->timeoutSpin->value());
-    settings->setValue("Network/MaxThreads",
-        ui->maxThreadsSpin->value());
-    settings->setValue("Network/DefaultSubnet",
-        ui->defaultSubnetEdit->text());
-
-    // Appearance
-    settings->setValue("Appearance/Theme",
-        ui->themeCombo->currentData().toString());
-    settings->setValue("Appearance/FontSize",
-        ui->fontSizeSpin->value());
-
-    // Notifications
-    settings->setValue("Notifications/EnableAlerts",
-        ui->enableAlertsCheck->isChecked());
-    settings->setValue("Notifications/AlertSound",
-        ui->alertSoundCheck->isChecked());
-
-    settings->sync();
+SettingsDialog::SettingsDialog(QWidget* parent)
+    : QDialog(parent)
+    , ui(new Ui::SettingsDialog)
+    , settings(new QSettings("LanScan", "LanScan", this))
+    , modified(false) {
+    // Platform-specific storage:
+    // Windows: HKEY_CURRENT_USER\Software\LanScan\LanScan
+    // Linux: ~/.config/LanScan/LanScan.conf
+    // macOS: ~/Library/Preferences/com.LanScan.LanScan.plist
 }
 ```
+
+#### Modified State Tracking
+```cpp
+void SettingsDialog::setModified(bool mod) {
+    modified = mod;
+    updateApplyButton();  // Enable/disable Apply button
+}
+
+void SettingsDialog::onTimeoutChanged(int value) {
+    Q_UNUSED(value);
+    setModified(true);  // Mark as modified on any change
+}
+```
+
+#### Input Validation
+```cpp
+bool SettingsDialog::validateSettings() {
+    QString subnet = ui->subnetEdit->text();
+    if (!subnet.contains('/')) {
+        QMessageBox::warning(this, "Invalid Subnet",
+            "Subnet must be in CIDR notation (e.g., 192.168.1.0/24)");
+        ui->tabWidget->setCurrentIndex(1); // Switch to Network tab
+        ui->subnetEdit->setFocus();
+        return false;
+    }
+    return true;
+}
+```
+
+#### Restore Defaults with Confirmation
+```cpp
+void SettingsDialog::restoreDefaults() {
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this, "Restore Defaults",
+        "Are you sure you want to restore all settings to their default values?",
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+    if (reply != QMessageBox::Yes) return;
+
+    // Restore all defaults across all tabs...
+    setModified(true);
+}
+```
+
+#### Dependent Control Management
+```cpp
+void SettingsDialog::onEnableAlertsChanged(bool checked) {
+    // Auto-enable/disable dependent controls
+    ui->alertSoundCheck->setEnabled(checked);
+    ui->systemNotificationsCheck->setEnabled(checked);
+    ui->latencyThresholdSpin->setEnabled(checked);
+    ui->packetLossThresholdSpin->setEnabled(checked);
+    ui->jitterThresholdSpin->setEnabled(checked);
+    setModified(true);
+}
+```
+
+### MainWindow Integration
+```cpp
+// In MainWindow::setupMenuBar()
+QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
+toolsMenu->addAction(tr("&Settings..."), this,
+                    &MainWindow::onSettingsTriggered,
+                    QKeySequence::Preferences);
+
+// Settings dialog handler
+void MainWindow::onSettingsTriggered() {
+    SettingsDialog dialog(this);
+
+    connect(&dialog, &SettingsDialog::settingsApplied, this, [this]() {
+        Logger::info("Settings have been updated");
+        // TODO: Reload application settings (theme, font, etc.)
+    });
+
+    dialog.exec();
+}
+```
+
+### Settings Persistence Structure
+```
+General/
+├── StartWithSystem (bool, default: false)
+├── MinimizeToTray (bool, default: false)
+├── CloseToTray (bool, default: false)
+└── Language (QString, default: "en")
+
+Network/
+├── Timeout (int, default: 1000)
+├── Threads (int, default: 4)
+├── DefaultSubnet (QString, default: "192.168.1.0/24")
+├── PingCount (int, default: 4)
+└── PingInterval (int, default: 1000)
+
+Appearance/
+├── Theme (QString, default: "system")
+└── FontSize (int, default: 10)
+
+Notifications/
+├── EnableAlerts (bool, default: true)
+├── AlertSound (bool, default: true)
+├── SystemNotifications (bool, default: false)
+├── LatencyThreshold (int, default: 100)
+├── PacketLossThreshold (int, default: 5)
+└── JitterThreshold (int, default: 10)
+
+Advanced/
+├── HistoryRetention (int, default: 30)
+├── MetricsRetention (int, default: 7)
+├── LogLevel (int, default: Logger::INFO)
+└── EnableFileLogging (bool, default: true)
+```
+
+### Testing Performed
+- ✅ All tabs render correctly with proper layouts
+- ✅ Settings save to Windows registry (verified with regedit)
+- ✅ Settings persist across application restarts
+- ✅ Modified state tracking works correctly
+- ✅ Apply button enables/disables appropriately
+- ✅ Restore Defaults confirmation dialog works
+- ✅ Input validation for subnet CIDR notation
+- ✅ Dependent controls enable/disable with master switches
+- ✅ All 22 slot connections functional
+- ✅ settingsApplied signal emits correctly
+
+### Files Structure
+```
+ui/settingsdialog.ui              (Qt Designer layout, 5 tabs)
+include/views/SettingsDialog.h    (105 LOC)
+src/views/SettingsDialog.cpp      (520 LOC)
+```
+
+### Integration with Existing Code
+- **SettingsManager**: Already uses QSettings for network/logging settings
+- **Logger**: Already reads log level from settings
+- **ScanCoordinator**: Already reads timeout/threads from settings
+- **MonitoringService**: Can read alert thresholds from settings
+- **Phase 9**: Will implement theme application, font changes, tray integration
 
 ---
 
