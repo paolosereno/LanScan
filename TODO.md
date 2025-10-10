@@ -1,8 +1,8 @@
 # LanScan - Development Progress
 
-**Active Phase**: Phase 8 - Advanced Features ✅ (5/5 modules - 100%)
-**Next Milestone**: Phase 9 - UI Polish & Theming
-**Last Updated**: 2025-10-10 (Completed Phase 8.5 - Settings Dialog)
+**Active Phase**: Phase 9 - UI Polish & Theming ⏳ (0/4 modules - 0%)
+**Next Milestone**: Theme System (9.1) - High Priority
+**Last Updated**: 2025-10-10 (Phase 8 completed, Phase 9 roadmap defined)
 
 ---
 
@@ -277,7 +277,8 @@
 | 6 | ✅ 100% | 3/3 | 26/26 | ~1,400 |
 | 7 | ✅ 100% | 5/5 | All pass | ~6,400 |
 | **8** | **✅ 100%** | **5/5** | **33/33** | **~5,259** |
-| 9-12 | ⏳ 0% | 0/17 | - | - |
+| **9** | **⏳ 0%** | **0/4** | **TBD** | **~2,700** |
+| 10-12 | ⏳ 0% | 0/13 | - | - |
 
 **Total**: ~28,708 LOC across 236 files
 
@@ -285,11 +286,111 @@
 
 ## 🚀 Upcoming Phases
 
-### Phase 9: UI Polish & Theming
-- Dark/Light theme support
-- Custom styling
-- Responsive layouts
-- Accessibility improvements
+### Phase 9: UI Polish & Theming ⏳ (Next - 0/4 modules)
+**Estimated**: ~2,700 LOC | 3-4 days
+**Priority**: Theme System → System Tray → SVG Icons → Custom Widgets
+
+#### 9.1 Theme System (Priority: HIGH) ⏳
+- [ ] Create ThemeManager singleton class
+  - Enum: Light, Dark, System
+  - Methods: setTheme(), applyThemeToApplication(), detectSystemTheme()
+  - Windows registry detection for system theme
+- [ ] Create dark.qss stylesheet (~400 lines)
+  - Styles for: QMainWindow, QMenuBar, QMenu, QToolBar, QTableView, QScrollBar
+  - Styles for: QPushButton, QLineEdit, QSpinBox, QComboBox, QCheckBox, QTabWidget
+- [ ] Create light.qss stylesheet (~400 lines)
+  - Complete widget coverage matching dark theme
+- [ ] Setup Qt Resource System
+  - Create resources/resources.qrc
+  - Add stylesheets to resources
+  - Update CMakeLists.txt with qt6_add_resources()
+- [ ] Integrate with SettingsDialog
+  - Call ThemeManager::setTheme() on theme change
+  - Connect settingsApplied signal
+- [ ] Apply theme at application startup
+  - Load from QSettings in main.cpp
+  - Set initial theme before window shows
+- **Estimated**: ~1,200 LOC | 1-2 days
+
+#### 9.2 Custom Widgets (Priority: MEDIUM) ⏳
+- [ ] Create QualityGauge widget
+  - Circular gauge with colored arc (0-100)
+  - Custom paintEvent() with QPainter
+  - Color mapping: Green (>80), Yellow (50-80), Red (<50)
+  - Integration in DeviceDetailDialog and MetricsWidget
+- [ ] Create NetworkActivityIndicator widget
+  - Animated LED with 3 states: Off, Blinking, On
+  - QPropertyAnimation for smooth blinking
+  - Add to MainWindow status bar
+- [ ] Create GradientProgressBar
+  - Replace standard QProgressBar
+  - Smooth gradient colors based on progress
+  - Animation for value updates
+- **Estimated**: ~600 LOC | 1 day
+
+#### 9.3 UI Enhancements (Priority: MEDIUM) ⏳
+- [ ] SVG Icons (Material Design)
+  - Download/create icon set (15-20 icons)
+  - Icons: scan, stop, export, settings, ping, details, favorite, copy, delete, power, refresh, clear, wake-on-lan
+  - Create loadSvgIcon() helper function
+  - Add icons to resources.qrc
+  - Replace text-only actions with icon actions
+- [ ] System Tray Integration
+  - Create QSystemTrayIcon in MainWindow
+  - Tray menu: Show/Hide, Quick Scan, Exit
+  - Implement minimize to tray (from Settings)
+  - Implement close to tray (from Settings)
+  - Tray notifications for alerts
+- [ ] Smooth Animations
+  - Fade-in animation for dialogs (QGraphicsOpacityEffect)
+  - Hover effects on buttons (QPropertyAnimation)
+  - Smooth scrolling for tables
+  - Progress bar smooth animation
+- [ ] UI Polish
+  - Rich text tooltips with HTML formatting
+  - Add comprehensive tooltips to all controls
+  - Improve spacing and margins consistency
+  - Add visual feedback for all user actions
+- **Estimated**: ~900 LOC | 1.5 days
+
+#### 9.4 Localization (Priority: LOW - OPTIONAL) ⏳
+- [ ] Setup Qt Linguist Tools
+  - Update CMakeLists.txt with Qt6::LinguistTools
+  - Define TS_FILES (lanscan_en.ts, lanscan_it.ts, lanscan_es.ts, lanscan_fr.ts, lanscan_de.ts)
+  - Add qt6_add_translation() to CMakeLists.txt
+- [ ] Create LanguageManager singleton
+  - Load/switch language at runtime
+  - QTranslator management per language
+  - Emit languageChanged() signal
+- [ ] Wrap all UI strings with tr()
+  - Review all .cpp files for user-facing strings
+  - Add context to translations where needed
+  - Use numbered arguments for dynamic strings
+- [ ] Generate and translate .ts files
+  - Run lupdate to extract strings
+  - Translate with Qt Linguist
+  - Run lrelease to generate .qm files
+- [ ] Integrate with SettingsDialog
+  - Connect language combo to LanguageManager
+  - Retranslate all widgets on language change
+- **Estimated**: ~800 LOC | 2 days (OPTIONAL)
+
+**Phase 9 Files to Create**:
+```
+include/managers/ThemeManager.h
+src/managers/ThemeManager.cpp
+include/managers/LanguageManager.h (optional)
+src/managers/LanguageManager.cpp (optional)
+include/widgets/QualityGauge.h
+src/widgets/QualityGauge.cpp
+include/widgets/NetworkActivityIndicator.h
+src/widgets/NetworkActivityIndicator.cpp
+resources/styles/dark.qss
+resources/styles/light.qss
+resources/resources.qrc
+resources/icons/*.svg (15-20 files)
+translations/*.ts (5 files, optional)
+```
 
 ### Phase 10: Testing & Quality Assurance
 - Integration test suite expansion
