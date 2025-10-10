@@ -191,6 +191,7 @@ set(VIEW_SOURCES
     src/views/ProfileDialog.cpp
     src/views/FavoritesWidget.cpp
     src/views/TrendsWidget.cpp
+    src/views/SettingsDialog.cpp
 )
 
 # Delegate sources (Phase 5)
@@ -236,6 +237,7 @@ set(HEADERS
     include/views/ProfileDialog.h
     include/views/FavoritesWidget.h
     include/views/TrendsWidget.h
+    include/views/SettingsDialog.h
     include/database/HistoryDao.h
     include/database/MetricsDao.h
     include/delegates/StatusDelegate.h
@@ -258,6 +260,7 @@ set(UI_SOURCES
     ui/metricswidget.ui
     ui/devicedetaildialog.ui
     ui/profiledialog.ui
+    ui/settingsdialog.ui
 )
 
 # Set AUTOUIC search paths for UI files

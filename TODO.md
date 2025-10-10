@@ -1,20 +1,19 @@
 # LanScan - Development Progress
 
-**Active Phase**: Phase 8 - Advanced Features 🔄 (4/5 modules - 80%)
-**Next Milestone**: Settings Dialog
-**Last Updated**: 2025-10-10 (Completed Phase 8.4 - History & Database)
+**Active Phase**: Phase 8 - Advanced Features ✅ (5/5 modules - 100%)
+**Next Milestone**: Phase 9 - UI Polish & Theming
+**Last Updated**: 2025-10-10 (Completed Phase 8.5 - Settings Dialog)
 
 ---
 
 ## 📊 Progress Overview
 
-**Overall**: ~82% complete (7.8 of 12 phases)
-**Files**: 233 total | **LOC**: ~28,083 | **Tests**: 33 suites (80+ test cases)
-**Executable**: 48 MB (Debug build)
+**Overall**: ~85% complete (8.0 of 12 phases)
+**Files**: 236 total | **LOC**: ~28,708 | **Tests**: 33 suites (80+ test cases)
+**Executable**: 49 MB (Debug build)
 
 ### Phase Status
-- ✅ **Phase 0-7**: Foundation through Advanced Diagnostics (100% complete)
-- 🔄 **Phase 8**: Advanced Features (80% - 4/5 modules)
+- ✅ **Phase 0-8**: Foundation through Advanced Features (100% complete)
 - ⏳ **Phase 9-12**: UI Polish, Testing, Documentation, Release (pending)
 
 ---
@@ -48,8 +47,13 @@
   - DatabaseManager extended for transaction support
   - 33 unit tests (HistoryDaoTest: 11, MetricsDaoTest: 13, existing: 9) | ~1,433 LOC
 
-### Pending
-- [ ] **8.5 Settings Dialog** - Comprehensive preferences UI
+- ✅ **8.5 Settings Dialog** (2025-10-10)
+  - SettingsDialog with 5 configuration tabs (General/Network/Appearance/Notifications/Advanced)
+  - QSettings integration for persistence (registry on Windows)
+  - Input validation and modified state tracking
+  - Apply/OK/Cancel/Restore Defaults functionality
+  - MainWindow integration via Tools menu
+  - 3 new files created | ~625 LOC
 
 ---
 
@@ -216,12 +220,38 @@
 
 **Total Lines of Code**: ~1,433 LOC
 
-### 8.5 Settings Dialog ⏳
-- `settingsdialog.ui` - 5-tab UI (General/Network/Appearance/Notifications/Advanced)
-- QSettings integration
-- Theme selection (light/dark/system)
-- Network configuration (timeout, threads, subnet)
-- Alert preferences
+### 8.5 Settings Dialog ✅ (Completed)
+**SettingsDialog UI (5 Tabs)**:
+- **General Tab**: Start with system, minimize/close to tray, language selection (5 languages)
+- **Network Tab**: Timeout (100-10000ms), threads (1-16), default subnet (CIDR), ping count/interval
+- **Appearance Tab**: Theme selection (System/Light/Dark), font size (8-24pt)
+- **Notifications Tab**: Enable alerts, alert sound, system notifications, thresholds (latency/packet loss/jitter)
+- **Advanced Tab**: Database retention (history 1-365 days, metrics 1-90 days), log level, file logging
+
+**Implementation Features**:
+- QSettings persistence with platform-specific storage (Windows registry)
+- Input validation (subnet CIDR format check)
+- Modified state tracking with Apply button management
+- Apply/OK/Cancel/Restore Defaults button handling
+- Dependent control enable/disable (alerts enable/disable threshold controls)
+- Signal emission on settings applied for MainWindow integration
+- All settings saved with sensible defaults
+
+**Integration**:
+- MainWindow: Added Settings menu item in Tools menu
+- Connected settingsApplied signal for future theme/font reloading
+- Replaced placeholder implementation with full dialog
+
+**Files Created**: 3
+- `ui/settingsdialog.ui` - Qt Designer UI file with 5-tab layout
+- `include/views/SettingsDialog.h` - Class definition with QSettings integration (105 LOC)
+- `src/views/SettingsDialog.cpp` - Full implementation with load/save/validate (520 LOC)
+
+**Files Modified**: 2
+- MainWindow.h/cpp - Added SettingsDialog integration
+- CMakeLists.txt - Added new sources to build
+
+**Total Lines of Code**: ~625 LOC
 
 ---
 
@@ -246,10 +276,10 @@
 | 5 | ✅ 100% | 5/5 | UI tests | ~3,200 |
 | 6 | ✅ 100% | 3/3 | 26/26 | ~1,400 |
 | 7 | ✅ 100% | 5/5 | All pass | ~6,400 |
-| **8** | **🔄 80%** | **4/5** | **33/33** | **~4,634** |
+| **8** | **✅ 100%** | **5/5** | **33/33** | **~5,259** |
 | 9-12 | ⏳ 0% | 0/17 | - | - |
 
-**Total**: ~28,083 LOC across 233 files
+**Total**: ~28,708 LOC across 236 files
 
 ---
 

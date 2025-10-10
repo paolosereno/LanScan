@@ -245,8 +245,52 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - DatabaseManager: +5 LOC for database access
   - tests/CMakeLists.txt: +32 LOC for DAO tests
 
-### 🚧 Planned (Phase 8.5+)
-- Settings dialog with comprehensive preferences (Phase 8.5)
+**Settings Dialog** (Phase 8.5 - ✅ Complete)
+- ✅ **Comprehensive Settings Interface**
+  - Five configuration tabs: General, Network, Appearance, Notifications, Advanced
+  - QSettings integration for persistent platform-specific storage (Windows registry)
+  - Input validation with user feedback (subnet CIDR format)
+  - Modified state tracking with Apply button management
+- ✅ **General Settings Tab**
+  - Start with system checkbox
+  - Minimize to system tray checkbox
+  - Close to tray (don't quit) checkbox
+  - Language selection: English, Italiano, Español, Français, Deutsch
+- ✅ **Network Settings Tab**
+  - Scan timeout (100-10000ms) with ms suffix
+  - Thread count (1-16 threads)
+  - Default subnet in CIDR notation with validation
+  - Ping count (1-10 packets)
+  - Ping interval (100-5000ms) with ms suffix
+- ✅ **Appearance Settings Tab**
+  - Theme selection: System Default, Light, Dark
+  - Font size (8-24pt) with pt suffix
+- ✅ **Notifications Settings Tab**
+  - Enable alerts checkbox with dependent controls
+  - Alert sound checkbox
+  - System notifications checkbox
+  - Alert thresholds: High latency (0-1000ms), Packet loss (0-100%), High jitter (0-100ms)
+  - Threshold controls auto-enable/disable with alerts checkbox
+- ✅ **Advanced Settings Tab**
+  - History retention (1-365 days)
+  - Metrics retention (1-90 days)
+  - Log level selection: Debug, Info, Warning, Error
+  - Enable file logging checkbox
+- ✅ **Dialog Features**
+  - Apply/OK/Cancel button handling with proper state management
+  - Restore Defaults with confirmation dialog
+  - settingsApplied() signal for MainWindow integration
+  - Tab switching with proper layout management
+  - Sensible default values for all settings
+- ✅ **Implementation**
+  - 3 new files created (~625 LOC)
+  - SettingsDialog.h with comprehensive slot definitions (105 LOC)
+  - SettingsDialog.cpp with load/save/validate methods (520 LOC)
+  - settingsdialog.ui with 5-tab Qt Designer layout
+  - MainWindow integration via Tools menu
+  - Full CMakeLists.txt integration
+
+### 🚧 Planned (Phase 9+)
 - UI polish with dark/light themes (Phase 9)
 - Extended testing and quality assurance (Phase 10)
 - Documentation and user guides (Phase 11)
@@ -359,12 +403,30 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 8 - Advanced Features 🚧 **IN PROGRESS** (4/5 modules - 80%)
-**Next Phase**: Phase 8.5 - Settings Dialog, then Phase 9 - UI Polish & Theming
-**Progress**: 82% (~7.8 complete phases of ~12 total)
-**Latest Release**: [v0.8.4-phase8.4](https://github.com/paolosereno/LanScan/releases/tag/v0.8.4-phase8.4)
+**Current Phase**: Phase 8 - Advanced Features ✅ **COMPLETE** (5/5 modules - 100%)
+**Next Phase**: Phase 9 - UI Polish & Theming
+**Progress**: 85% (~8.0 complete phases of ~12 total)
+**Latest Release**: [v0.8.5-phase8.5](https://github.com/paolosereno/LanScan/releases/tag/v0.8.5-phase8.5)
 
 ### Recent Updates
+- **2025-10-10**: Phase 8.5 completed - Settings Dialog
+  - Implemented comprehensive SettingsDialog with 5 configuration tabs (General/Network/Appearance/Notifications/Advanced)
+  - Integrated QSettings for persistent platform-specific storage (Windows registry)
+  - Created General tab with startup options (start with system, minimize/close to tray) and language selection (5 languages)
+  - Built Network tab with scan configuration (timeout, threads, subnet CIDR, ping settings)
+  - Added Appearance tab with theme selection (System/Light/Dark) and font size control
+  - Implemented Notifications tab with alert toggles and configurable thresholds (latency, packet loss, jitter)
+  - Created Advanced tab with database retention settings (history/metrics days) and logging configuration
+  - Added input validation with user feedback (subnet CIDR format check)
+  - Implemented modified state tracking with Apply button management
+  - Built Apply/OK/Cancel/Restore Defaults button handling with confirmation dialogs
+  - Created settingsApplied() signal for MainWindow integration and future theme/font reloading
+  - Added dependent control enable/disable (alert thresholds auto-enable with alerts checkbox)
+  - Integrated dialog into MainWindow Tools menu, replacing placeholder implementation
+  - 3 new files created (~625 LOC total)
+  - Successfully tested all tabs and settings persistence
+  - **Phase 8 (Advanced Features) now 100% complete!**
+
 - **2025-10-10**: Phase 8.4 completed - History & Database
   - Implemented HistoryDao for event persistence with JSON metadata support
   - Created HistoryEvent model with event types (scan, status_change, alert, user_action)

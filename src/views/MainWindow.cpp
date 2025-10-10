@@ -4,6 +4,7 @@
 #include "views/ScanConfigDialog.h"
 #include "views/MetricsWidget.h"
 #include "views/DeviceDetailDialog.h"
+#include "views/SettingsDialog.h"
 #include "viewmodels/DeviceTableViewModel.h"
 #include "viewmodels/ScanConfigViewModel.h"
 #include "viewmodels/MetricsViewModel.h"
@@ -236,8 +237,15 @@ void MainWindow::onExportTriggered() {
 }
 
 void MainWindow::onSettingsTriggered() {
-    // Placeholder for settings dialog (Phase 8)
-    QMessageBox::information(this, tr("Settings"), tr("Settings dialog coming in Phase 8"));
+    SettingsDialog dialog(this);
+
+    // Connect settings applied signal to refresh application settings
+    connect(&dialog, &SettingsDialog::settingsApplied, this, [this]() {
+        Logger::info("Settings have been updated");
+        // TODO: Reload application settings if needed (theme, font, etc.)
+    });
+
+    dialog.exec();
 }
 
 void MainWindow::onAboutTriggered() {
