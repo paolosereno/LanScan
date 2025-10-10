@@ -1,6 +1,7 @@
 #include "views/SettingsDialog.h"
 #include "ui_settingsdialog.h"
 #include "utils/Logger.h"
+#include "managers/ThemeManager.h"
 #include <QMessageBox>
 
 SettingsDialog::SettingsDialog(QWidget* parent)
@@ -449,6 +450,12 @@ void SettingsDialog::onPingIntervalChanged(int value) {
 void SettingsDialog::onThemeChanged(int index) {
     Q_UNUSED(index);
     setModified(true);
+
+    // Apply theme immediately for preview
+    QString themeStr = ui->themeCombo->currentData().toString();
+    ThemeManager::Theme theme = ThemeManager::stringToTheme(themeStr);
+    ThemeManager::instance().setTheme(theme);
+    Logger::info(QString("Theme changed to: %1").arg(themeStr));
 }
 
 void SettingsDialog::onFontSizeChanged(int value) {

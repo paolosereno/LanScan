@@ -152,10 +152,11 @@ set(CONTROLLER_SOURCES
     src/controllers/ExportController.cpp
 )
 
-# Manager sources (Phase 4)
+# Manager sources (Phase 4 + Phase 9.1)
 set(MANAGER_SOURCES
     src/managers/ProfileManager.cpp
     src/managers/FavoritesManager.cpp
+    src/managers/ThemeManager.cpp
 )
 
 # Service sources (Phase 7.3 + Phase 8.1)
@@ -221,6 +222,7 @@ set(HEADERS
     include/controllers/ExportController.h
     include/managers/ProfileManager.h
     include/managers/FavoritesManager.h
+    include/managers/ThemeManager.h
     include/utils/ProgressTracker.h
     include/viewmodels/DeviceTableViewModel.h
     include/viewmodels/ScanConfigViewModel.h
@@ -266,6 +268,11 @@ set(UI_SOURCES
 # Set AUTOUIC search paths for UI files
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
 
+# Qt Resource files (Phase 9.1)
+set(RESOURCE_FILES
+    resources/resources.qrc
+)
+
 # Create executable
 add_executable(${PROJECT_NAME}
     ${SOURCES}
@@ -286,6 +293,7 @@ add_executable(${PROJECT_NAME}
     ${CHART_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
+    ${RESOURCE_FILES}
 )
 
 # Link Qt libraries

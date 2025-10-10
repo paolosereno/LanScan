@@ -381,3 +381,18 @@ target_include_directories(MetricsDaoTest PRIVATE
 )
 target_link_libraries(MetricsDaoTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql)
 add_test(NAME MetricsDaoTest COMMAND MetricsDaoTest)
+
+# Phase 9.1: Theme Manager tests
+add_executable(ThemeManagerTest
+    ThemeManagerTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/managers/ThemeManager.cpp
+    ${CMAKE_SOURCE_DIR}/include/managers/ThemeManager.h
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+    ${CMAKE_SOURCE_DIR}/resources/resources.qrc
+)
+target_include_directories(ThemeManagerTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/managers
+    ${CMAKE_SOURCE_DIR}/include/utils
+)
+target_link_libraries(ThemeManagerTest PRIVATE Qt6::Test Qt6::Core Qt6::Widgets)
+add_test(NAME ThemeManagerTest COMMAND ThemeManagerTest)

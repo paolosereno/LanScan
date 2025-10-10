@@ -26,6 +26,8 @@
 #include "../diagnostics/DnsDiagnostics.h"
 #include "../services/WakeOnLanService.h"
 #include "../utils/Logger.h"
+#include "../managers/ThemeManager.h"
+#include <QSettings>
 
 int main(int argc, char *argv[])
 {
@@ -37,6 +39,15 @@ int main(int argc, char *argv[])
     // Initialize logger
     Logger::setLogLevel(Logger::DEBUG);  // Enable DEBUG logging
     Logger::info("LanScan v0.5.0-phase5 starting...");
+
+    // ========== Theme Setup (Phase 9.1) ==========
+
+    // Load theme from settings
+    QSettings settings("LanScan", "LanScan");
+    QString themeStr = settings.value("Appearance/Theme", "System").toString();
+    ThemeManager::Theme theme = ThemeManager::stringToTheme(themeStr);
+    ThemeManager::instance().setTheme(theme);
+    Logger::info(QString("Theme initialized: %1").arg(themeStr));
 
     // ========== Infrastructure Setup ==========
 

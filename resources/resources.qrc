@@ -1,0 +1,28 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/styles">
+        <file>styles/dark.qss</file>
+        <file>styles/light.qss</file>
+    </qresource>
+    <!-- Future: Icons will be added here when Phase 9.3 is implemented -->
+    <!--
+    <qresource prefix="/icons">
+        <file>icons/scan.svg</file>
+        <file>icons/stop.svg</file>
+        <file>icons/export.svg</file>
+        <file>icons/settings.svg</file>
+        <file>icons/ping.svg</file>
+        <file>icons/details.svg</file>
+        <file>icons/favorite.svg</file>
+        <file>icons/copy.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/power.svg</file>
+        <file>icons/refresh.svg</file>
+        <file>icons/clear.svg</file>
+        <file>icons/wake-on-lan.svg</file>
+        <file>icons/arrow-down.svg</file>
+        <file>icons/close.svg</file>
+        <file>icons/undock.svg</file>
+    </qresource>
+    -->
+</RCC>
