@@ -5,7 +5,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-33%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-34%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -290,8 +290,38 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - MainWindow integration via Tools menu
   - Full CMakeLists.txt integration
 
+**Theme System** (Phase 9.1 - ✅ Complete)
+- ✅ **ThemeManager Singleton**
+  - Application-wide theme switching with Light, Dark, and System modes
+  - Windows system theme auto-detection via registry (AppsUseLightTheme)
+  - Runtime theme switching without application restart
+  - Qt signals for theme change notifications
+- ✅ **Professional Stylesheets**
+  - dark.qss - Modern dark theme (658 LOC, #1e1e1e background, #0e639c accent)
+  - light.qss - Clean light theme (658 LOC, #ffffff background, #0078d4 accent)
+  - Complete widget coverage: QMainWindow, QMenu, QToolBar, QPushButton, QLineEdit, QComboBox, QTableView, QScrollBar, QTabWidget, etc.
+  - Consistent styling across all UI components
+- ✅ **Qt Resource System**
+  - resources.qrc for embedded stylesheet resources
+  - CMAKE_AUTORCC automatic compilation
+  - Embedded access via ":/styles/dark.qss" and ":/styles/light.qss"
+- ✅ **Integration**
+  - SettingsDialog: Theme combo with instant preview
+  - main.cpp: Automatic theme loading at startup from QSettings
+  - Persistent theme preference across sessions
+- ✅ **Unit Tests**
+  - ThemeManagerTest with 9 test cases (singleton, conversion, switching, loading)
+- ✅ **Implementation**
+  - 6 new files created (~2,039 LOC including stylesheets)
+  - ThemeManager.h/cpp (332 LOC)
+  - dark.qss + light.qss (1,316 LOC)
+  - resources.qrc (23 LOC)
+  - ThemeManagerTest.cpp (168 LOC)
+
 ### 🚧 Planned (Phase 9+)
-- UI polish with dark/light themes (Phase 9)
+- Custom widgets (QualityGauge, NetworkActivityIndicator, GradientProgressBar) - Phase 9.2
+- UI enhancements (SVG icons, system tray, animations) - Phase 9.3
+- Localization support (optional) - Phase 9.4
 - Extended testing and quality assurance (Phase 10)
 - Documentation and user guides (Phase 11)
 - Release preparation and deployment (Phase 12)
@@ -403,12 +433,25 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 8 - Advanced Features ✅ **COMPLETE** (5/5 modules - 100%)
-**Next Phase**: Phase 9 - UI Polish & Theming
-**Progress**: 85% (~8.0 complete phases of ~12 total)
-**Latest Release**: [v0.8.5-phase8.5](https://github.com/paolosereno/LanScan/releases/tag/v0.8.5-phase8.5)
+**Current Phase**: Phase 9 - UI Polish & Theming 🔄 **IN PROGRESS** (1/4 modules - 25%)
+**Next Milestone**: Custom Widgets (9.2)
+**Progress**: 86% (~8.25 complete phases of ~12 total)
+**Latest Release**: [v0.9.1-phase9.1](https://github.com/paolosereno/LanScan/releases/tag/v0.9.1-phase9.1)
 
 ### Recent Updates
+- **2025-10-10**: Phase 9.1 completed - Theme System
+  - Implemented ThemeManager singleton for application-wide theme control
+  - Created professional dark.qss and light.qss stylesheets (1,316 LOC total)
+  - Built Qt Resource System integration for embedded stylesheet resources
+  - Added Windows system theme auto-detection via registry (AppsUseLightTheme)
+  - Implemented runtime theme switching without application restart
+  - Integrated theme selection in SettingsDialog with instant preview
+  - Added automatic theme loading at startup from QSettings
+  - Created ThemeManagerTest with 9 comprehensive test cases
+  - 6 new files created (~2,039 LOC including stylesheets)
+  - Modified CMakeLists.txt, main.cpp, and SettingsDialog.cpp for integration
+  - **Phase 9 (UI Polish & Theming) now 25% complete!**
+
 - **2025-10-10**: Phase 8.5 completed - Settings Dialog
   - Implemented comprehensive SettingsDialog with 5 configuration tabs (General/Network/Appearance/Notifications/Advanced)
   - Integrated QSettings for persistent platform-specific storage (Windows registry)
@@ -541,11 +584,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 233 total (Phase 8.4 added 8 new files)
-- **Lines of Code**: ~28,083+ lines (Phase 8.4 added ~1,433 LOC)
-- **Test Coverage**: 80+ tests across 33 test suites
+- **Files Created**: 242 total (Phase 9.1 added 6 new files)
+- **Lines of Code**: ~30,747+ lines (Phase 9.1 added ~2,039 LOC)
+- **Test Coverage**: 89+ tests across 34 test suites
 - **Build Time**: ~50-60 seconds (Debug, 8-12 cores)
-- **Executable Size**: 48 MB (Debug build with all Phase 8 features)
+- **Executable Size**: 51 MB (Debug build with Phase 9.1 theme system)
 
 ## License
 
