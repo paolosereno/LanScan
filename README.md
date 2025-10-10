@@ -5,7 +5,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-31%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-33%20total-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -182,9 +182,70 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - HtmlReportGeneratorTest with 8 test cases (HTML structure, styling, badges)
   - Edge case testing (empty lists, special characters)
 
-### 🚧 Planned (Phase 8.3+)
-- Scan profiles and favorites integration (Phase 8.3)
-- History & database enhancement with DAO layers (Phase 8.4)
+**Profile & Favorites** (Phase 8.3 - ✅ Complete)
+- ✅ **ProfileManager Extensions**
+  - Export/import profiles to/from JSON files
+  - Three template profiles: Home Network, Enterprise Network, Security Audit
+  - Usage statistics tracking (last used, usage count)
+  - Profile templates with optimized port lists (6-62 ports)
+- ✅ **ProfileDialog UI**
+  - Split view with profile list and details panel
+  - New/Edit/Delete/Import/Export buttons
+  - Template buttons for quick profile creation
+  - HTML-formatted details with usage statistics
+  - Star indicator (⭐) for frequently used profiles (>10 uses)
+- ✅ **FavoritesManager Extensions**
+  - Group management (create, delete, organize devices)
+  - Notes system (add, view, remove notes per device)
+  - Custom icons support (PNG, JPG, SVG)
+  - Extended JSON persistence for all metadata
+- ✅ **FavoritesWidget UI**
+  - Tree view organized by groups with "Ungrouped" section
+  - Real-time search filtering by name/IP
+  - Group filter dropdown with device counts
+  - Context menu with device and group actions
+  - Quick Connect via double-click
+  - Custom icons with theme-based fallback
+- ✅ **Implementation**
+  - 6 new files created (~1,850 LOC)
+  - ProfileManager: 9 new methods (~165 LOC)
+  - FavoritesManager: 16 new methods (~233 LOC)
+  - Full CMakeLists.txt integration
+
+**History & Database** (Phase 8.4 - ✅ Complete)
+- ✅ **HistoryDao - Event Persistence**
+  - Event model with JSON metadata support
+  - Event types: scan, status_change, alert, user_action
+  - Query methods: findByDevice(), findByType(), findByDateRange()
+  - Batch insert with transaction support
+  - Cleanup methods: deleteOlderThan(), deleteByDevice()
+  - Database indices for query optimization
+- ✅ **MetricsDao - Metrics Persistence**
+  - Network metrics temporal tracking
+  - Statistical aggregation queries (avg, min, max)
+  - getAverageMetrics() for comprehensive statistics
+  - Specialized queries: getMaxLatency(), getMinLatency(), getAveragePacketLoss(), getAverageJitter()
+  - Batch operations with transaction support
+  - Metrics retention management
+- ✅ **TrendsWidget - Temporal Visualization**
+  - LatencyChart integration for trend display
+  - Configurable time ranges: 1h, 6h, 24h, 7d, 30d, 90d, custom
+  - Real-time statistics with data points count
+  - Latency metrics (min/avg/max), packet loss, jitter, quality score
+  - CSV export functionality
+  - Auto-refresh on time range change
+- ✅ **DatabaseManager Extensions**
+  - database() method for transaction support
+  - Maintains singleton pattern
+- ✅ **Unit Tests**
+  - HistoryDaoTest with 11 test cases
+  - MetricsDaoTest with 13 test cases
+- ✅ **Implementation**
+  - 8 new files created (~1,433 LOC)
+  - DatabaseManager: +5 LOC for database access
+  - tests/CMakeLists.txt: +32 LOC for DAO tests
+
+### 🚧 Planned (Phase 8.5+)
 - Settings dialog with comprehensive preferences (Phase 8.5)
 - UI polish with dark/light themes (Phase 9)
 - Extended testing and quality assurance (Phase 10)
@@ -298,12 +359,54 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 8 - Advanced Features 🚧 **IN PROGRESS** (1/5 modules - 20%)
-**Next Phase**: Phase 9 - UI Polish & Theming
-**Progress**: 77% (~7.2 complete phases of ~12 total)
-**Latest Release**: [v0.8.1-phase8.1](https://github.com/paolosereno/LanScan/releases/tag/v0.8.1-phase8.1)
+**Current Phase**: Phase 8 - Advanced Features 🚧 **IN PROGRESS** (4/5 modules - 80%)
+**Next Phase**: Phase 8.5 - Settings Dialog, then Phase 9 - UI Polish & Theming
+**Progress**: 82% (~7.8 complete phases of ~12 total)
+**Latest Release**: [v0.8.4-phase8.4](https://github.com/paolosereno/LanScan/releases/tag/v0.8.4-phase8.4)
 
 ### Recent Updates
+- **2025-10-10**: Phase 8.4 completed - History & Database
+  - Implemented HistoryDao for event persistence with JSON metadata support
+  - Created HistoryEvent model with event types (scan, status_change, alert, user_action)
+  - Built MetricsDao for network metrics temporal tracking and statistical aggregation
+  - Added specialized query methods: getAverageMetrics(), getMaxLatency(), getMinLatency(), getAveragePacketLoss(), getAverageJitter()
+  - Implemented batch insert with transaction support for both DAOs
+  - Created TrendsWidget for temporal metrics visualization with LatencyChart integration
+  - Added configurable time ranges: 1h, 6h, 24h, 7d, 30d, 90d, and custom date picker
+  - Implemented real-time statistics display (data points, latency min/avg/max, packet loss, jitter, quality score)
+  - Added CSV export functionality for trend data
+  - Extended DatabaseManager with database() method for transaction support
+  - Created database indices for query optimization (device_id, event_type, timestamp)
+  - Implemented cleanup methods: deleteOlderThan(), deleteByDevice() for data retention
+  - Built comprehensive unit tests: HistoryDaoTest (11 test cases), MetricsDaoTest (13 test cases)
+  - 8 new files created: ~1,433 LOC
+  - Extended CMakeLists.txt with DAO test configuration (+32 LOC)
+- **2025-10-10**: Phase 8.3 completed - Profile & Favorites
+  - Extended ProfileManager with export/import functionality and JSON file support
+  - Created three template profiles: Home Network (6 ports), Enterprise Network (25 ports), Security Audit (62 ports)
+  - Implemented usage statistics tracking (last used date, usage count)
+  - Built ProfileDialog with split view (30% list, 70% details panel)
+  - Added template buttons for quick profile creation from predefined configurations
+  - Extended FavoritesManager with group management (create, delete, organize)
+  - Implemented notes system for devices (add, view, remove notes)
+  - Added custom icons support (PNG, JPG, SVG) with theme-based fallback
+  - Created FavoritesWidget with tree view organized by groups
+  - Implemented real-time search filtering (by name and IP address)
+  - Added group filter dropdown with device counts
+  - Built context menu with device-specific and group-specific actions
+  - Implemented Quick Connect via double-click
+  - 6 new files: ~1,850 LOC (ProfileDialog, FavoritesWidget)
+  - ProfileManager: 9 new methods (~165 LOC)
+  - FavoritesManager: 16 new methods (~233 LOC)
+  - Extended JSON persistence for groups, notes, and custom icons
+- **2025-10-09**: Phase 8.2 completed - Advanced Export (XML, HTML)
+  - Implemented XmlExporter with structured XML output and QXmlStreamWriter
+  - Created HtmlReportGenerator with professional CSS styling and responsive design
+  - Added gradient summary cards and color-coded quality indicators
+  - Integrated XML and HTML formats into ExportController
+  - Updated MainWindow file dialog with all 4 format filters (CSV, JSON, XML, HTML)
+  - 14 unit tests (XmlExporter: 6, HtmlReportGenerator: 8)
+  - 4 new files: ~800 LOC
 - **2025-10-09**: Phase 8.1 completed - Wake-on-LAN Support
   - Implemented WakeOnLanService with magic packet builder (6 bytes 0xFF + 16x MAC address)
   - MAC address validation with regex (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX formats)
@@ -376,11 +479,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 214 total (Phase 7 completed: 25 new files total)
-- **Lines of Code**: ~23,400+ lines (Phase 7.4 added final ~1,200 LOC)
-- **Test Coverage**: 60+ tests across all test suites (Phase 7 added comprehensive diagnostic tests)
-- **Build Time**: ~50-55 seconds (Debug, 12 cores)
-- **Executable Size**: 48 MB (Debug build with all Phase 7 features)
+- **Files Created**: 233 total (Phase 8.4 added 8 new files)
+- **Lines of Code**: ~28,083+ lines (Phase 8.4 added ~1,433 LOC)
+- **Test Coverage**: 80+ tests across 33 test suites
+- **Build Time**: ~50-60 seconds (Debug, 8-12 cores)
+- **Executable Size**: 48 MB (Debug build with all Phase 8 features)
 
 ## License
 

@@ -129,9 +129,67 @@ public:
      */
     void clearAllProfiles();
 
+    // Export/Import profiles
+    /**
+     * @brief Export a profile to a file
+     * @param profile Profile to export
+     * @param filepath Path to export file
+     * @return True if successful
+     */
+    bool exportProfile(const ScanProfile& profile, const QString& filepath);
+
+    /**
+     * @brief Import a profile from a file
+     * @param filepath Path to import file
+     * @return Imported profile (empty if failed)
+     */
+    ScanProfile importProfile(const QString& filepath);
+
+    // Profile templates
+    /**
+     * @brief Create a home network profile template
+     * @return Home network profile
+     */
+    static ScanProfile createHomeNetworkProfile();
+
+    /**
+     * @brief Create an enterprise network profile template
+     * @return Enterprise network profile
+     */
+    static ScanProfile createEnterpriseNetworkProfile();
+
+    /**
+     * @brief Create a security audit profile template
+     * @return Security audit profile
+     */
+    static ScanProfile createSecurityAuditProfile();
+
+    // Profile statistics
+    /**
+     * @brief Get the last time a profile was used
+     * @param profileId Profile identifier
+     * @return Last used timestamp (null if never used)
+     */
+    QDateTime getLastUsed(const QString& profileId) const;
+
+    /**
+     * @brief Get the number of times a profile was used
+     * @param profileId Profile identifier
+     * @return Usage count
+     */
+    int getUsageCount(const QString& profileId) const;
+
+    /**
+     * @brief Update usage statistics for a profile
+     * @param profileId Profile identifier
+     */
+    void updateUsageStats(const QString& profileId);
+
 private:
     QString storageFile;
     QMap<QString, ScanProfile> profiles;
+    QMap<QString, int> usageCounts;
+    QMap<QString, QDateTime> lastUsedTimes;
 
     void loadFromFile();
     void saveToFile();

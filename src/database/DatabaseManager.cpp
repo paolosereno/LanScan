@@ -205,6 +205,10 @@ QString DatabaseManager::getLastError() const {
     return lastError;
 }
 
+QSqlDatabase DatabaseManager::database() {
+    return db;
+}
+
 bool DatabaseManager::beginTransaction() {
     if (!db.transaction()) {
         lastError = db.lastError().text();

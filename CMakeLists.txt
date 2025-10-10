@@ -117,11 +117,13 @@ set(DIAGNOSTICS_SOURCES
     src/diagnostics/DnsDiagnostics.cpp
 )
 
-# Database sources
+# Database sources (Phase 3 + 8.4)
 set(DATABASE_SOURCES
     src/database/DatabaseManager.cpp
     src/database/DeviceCache.cpp
     src/database/DeviceRepository.cpp
+    src/database/HistoryDao.cpp
+    src/database/MetricsDao.cpp
 )
 
 # Export sources
@@ -179,13 +181,16 @@ set(CHART_SOURCES
     src/charts/JitterChart.cpp
 )
 
-# View sources (Phase 5-6)
+# View sources (Phase 5-6-8)
 set(VIEW_SOURCES
     src/views/MainWindow.cpp
     src/views/DeviceTableWidget.cpp
     src/views/ScanConfigDialog.cpp
     src/views/MetricsWidget.cpp
     src/views/DeviceDetailDialog.cpp
+    src/views/ProfileDialog.cpp
+    src/views/FavoritesWidget.cpp
+    src/views/TrendsWidget.cpp
 )
 
 # Delegate sources (Phase 5)
@@ -228,6 +233,11 @@ set(HEADERS
     include/views/ScanConfigDialog.h
     include/views/MetricsWidget.h
     include/views/DeviceDetailDialog.h
+    include/views/ProfileDialog.h
+    include/views/FavoritesWidget.h
+    include/views/TrendsWidget.h
+    include/database/HistoryDao.h
+    include/database/MetricsDao.h
     include/delegates/StatusDelegate.h
     include/delegates/QualityScoreDelegate.h
     include/diagnostics/TraceRouteService.h
@@ -240,13 +250,14 @@ set(HEADERS
     include/services/WakeOnLanService.h
 )
 
-# UI files (Phase 5-7)
+# UI files (Phase 5-7-8)
 set(UI_SOURCES
     ui/mainwindow.ui
     ui/scanconfigdialog.ui
     ui/devicetablewidget.ui
     ui/metricswidget.ui
     ui/devicedetaildialog.ui
+    ui/profiledialog.ui
 )
 
 # Set AUTOUIC search paths for UI files

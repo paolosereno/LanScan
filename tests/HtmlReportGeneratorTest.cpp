@@ -68,7 +68,7 @@ QList<Device> HtmlReportGeneratorTest::createTestDevices() {
     metrics2.setLatencyAvg(0.0);
     metrics2.setPacketLoss(100.0);
     metrics2.setJitter(0.0);
-    metrics2.setQualityScore(NetworkMetrics::Bad);
+    metrics2.setQualityScore(NetworkMetrics::Critical);
     device2.setMetrics(metrics2);
 
     devices.append(device2);

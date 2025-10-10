@@ -1,20 +1,20 @@
 # LanScan - Development Progress
 
-**Active Phase**: Phase 8 - Advanced Features 🔄 (2/5 modules - 40%)
-**Next Milestone**: Profiles Integration, History & Database, Settings Dialog
-**Last Updated**: 2025-10-09 (Completed Phase 8.2 - Advanced Export)
+**Active Phase**: Phase 8 - Advanced Features 🔄 (4/5 modules - 80%)
+**Next Milestone**: Settings Dialog
+**Last Updated**: 2025-10-10 (Completed Phase 8.4 - History & Database)
 
 ---
 
 ## 📊 Progress Overview
 
-**Overall**: ~78% complete (7.4 of 12 phases)
-**Files**: 221 total | **LOC**: ~24,800 | **Tests**: 31 suites (66+ test cases)
+**Overall**: ~82% complete (7.8 of 12 phases)
+**Files**: 233 total | **LOC**: ~28,083 | **Tests**: 33 suites (80+ test cases)
 **Executable**: 48 MB (Debug build)
 
 ### Phase Status
 - ✅ **Phase 0-7**: Foundation through Advanced Diagnostics (100% complete)
-- 🔄 **Phase 8**: Advanced Features (40% - 2/5 modules)
+- 🔄 **Phase 8**: Advanced Features (80% - 4/5 modules)
 - ⏳ **Phase 9-12**: UI Polish, Testing, Documentation, Release (pending)
 
 ---
@@ -34,9 +34,21 @@
   - MainWindow UI support for all formats
   - 14 unit tests (XmlExporter: 6, HtmlReportGenerator: 8) | ~800 LOC
 
+- ✅ **8.3 Profile & Favorites** (2025-10-10)
+  - ProfileManager extensions (export/import, templates, usage stats)
+  - ProfileDialog with template profiles (Home/Enterprise/Security)
+  - FavoritesManager extensions (groups, notes, custom icons)
+  - FavoritesWidget with tree view and advanced filtering
+  - 6 new files created | ~1,850 LOC
+
+- ✅ **8.4 History & Database** (2025-10-10)
+  - HistoryDao with JSON metadata support
+  - MetricsDao with statistical aggregation queries
+  - TrendsWidget with temporal visualization
+  - DatabaseManager extended for transaction support
+  - 33 unit tests (HistoryDaoTest: 11, MetricsDaoTest: 13, existing: 9) | ~1,433 LOC
+
 ### Pending
-- [ ] **8.3 Profile & Favorites** - UI integration & enhancement
-- [ ] **8.4 History & Database** - DAO layers & trends widget
 - [ ] **8.5 Settings Dialog** - Comprehensive preferences UI
 
 ---
@@ -99,19 +111,110 @@
 - XmlExporterTest (6 test cases covering structure, devices, metrics, ports)
 - HtmlReportGeneratorTest (8 test cases covering HTML structure, summary, tables, styling)
 
-### 8.3 Profile & Favorites ⏳
-- ProfileManager enhancement (export/import)
-- FavoritesManager enhancement (groups, notes)
-- ProfileDialog UI
-- FavoritesWidget UI
-- Template profiles (Home/Enterprise/Security)
+### 8.3 Profile & Favorites ✅ (Completed)
+**ProfileManager Extensions**:
+- `exportProfile()` - Export profiles to JSON files
+- `importProfile()` - Import profiles from JSON with new ID generation
+- `createHomeNetworkProfile()` - Template for home networks (6 common ports)
+- `createEnterpriseNetworkProfile()` - Template for business networks (25 ports)
+- `createSecurityAuditProfile()` - Template for security audits (62 ports)
+- Usage statistics: `getLastUsed()`, `getUsageCount()`, `updateUsageStats()`
 
-### 8.4 History & Database ⏳
-- `HistoryDao.h/cpp` - Events DAO
-- `MetricsDao.h/cpp` - Metrics DAO
-- `TrendsWidget.h/cpp` - Trends visualization
-- Query builders for date ranges
-- Auto-cleanup policies
+**ProfileDialog UI**:
+- Split view with profile list (30%) and details panel (70%)
+- New/Edit/Delete/Import/Export buttons
+- Template buttons for quick profile creation
+- HTML-formatted details view with usage statistics
+- Star indicator (⭐) for frequently used profiles (>10 uses)
+- Tooltips with full statistics
+
+**FavoritesManager Extensions**:
+- Groups: `createGroup()`, `deleteGroup()`, `getGroups()`, `addToGroup()`, `removeFromGroup()`
+- Notes: `addNote()`, `getNotes()`, `removeNote()`, `clearNotes()`
+- Custom icons: `setCustomIcon()`, `getCustomIcon()`, `removeCustomIcon()`
+- Extended JSON persistence for groups, notes, and icons
+
+**FavoritesWidget UI**:
+- Tree view organized by groups (Ungrouped + custom groups)
+- Real-time search filtering (name/IP)
+- Group filter dropdown with device counts
+- Context menu with device-specific and group-specific actions
+- Custom icons support (PNG, JPG, SVG) with theme fallback
+- Quick Connect via double-click or button
+- "New Group" button for rapid group creation
+
+**Files Created**: 6
+- `include/views/ProfileDialog.h`
+- `src/views/ProfileDialog.cpp`
+- `ui/profiledialog.ui`
+- `include/views/FavoritesWidget.h`
+- `src/views/FavoritesWidget.cpp`
+
+**Files Modified**: 5
+- ProfileManager.h/cpp (9 new methods, ~165 LOC)
+- FavoritesManager.h/cpp (16 new methods, ~233 LOC + extended persistence)
+- CMakeLists.txt (added new sources)
+
+**Total Lines of Code**: ~1,850 LOC
+
+### 8.4 History & Database ✅ (Completed)
+**HistoryDao Implementation**:
+- Event persistence with JSON metadata support
+- HistoryEvent model (id, deviceId, eventType, description, metadata, timestamp)
+- Event types: "scan", "status_change", "alert", "user_action"
+- Query methods: `findByDevice()`, `findByType()`, `findByDateRange()`, `findByDeviceAndDateRange()`
+- Batch insert with transaction support: `insertBatch()`
+- Cleanup methods: `deleteOlderThan()`, `deleteByDevice()`
+- Database indices on device_id, event_type, timestamp for query optimization
+
+**MetricsDao Implementation**:
+- Network metrics persistence with temporal tracking
+- Statistical aggregation queries:
+  - `getAverageMetrics()` - Average of all metrics in date range
+  - `getMaxLatency()`, `getMinLatency()` - Peak latency values
+  - `getAveragePacketLoss()`, `getAverageJitter()` - Quality metrics
+- Query methods: `findByDevice()`, `findByDateRange()`
+- Batch operations: `insertBatch()` with transaction support
+- Database indices on device_id, timestamp for performance
+- Metrics retention management: `deleteOlderThan()`, `deleteByDevice()`
+
+**TrendsWidget UI**:
+- Temporal visualization using LatencyChart integration
+- Configurable time ranges:
+  - Presets: 1h, 6h, 24h, 7d, 30d, 90d
+  - Custom date range picker
+- Real-time statistics display:
+  - Data points count, latency (min/avg/max)
+  - Packet loss percentage, jitter
+  - Quality score aggregate
+- CSV export functionality for trend data
+- Auto-refresh on time range change
+
+**DatabaseManager Extensions**:
+- Added `database()` method for direct QSqlDatabase access
+- Required for DAO transaction support
+- Maintains singleton pattern
+
+**Testing**:
+- HistoryDaoTest (11 test cases covering insert, batch, queries, cleanup)
+- MetricsDaoTest (13 test cases covering insert, aggregation, queries, retention)
+
+**Files Created**: 8
+- `include/database/HistoryDao.h` (155 LOC)
+- `src/database/HistoryDao.cpp` (220 LOC)
+- `include/database/MetricsDao.h` (156 LOC)
+- `src/database/MetricsDao.cpp` (395 LOC)
+- `include/views/TrendsWidget.h` (98 LOC)
+- `src/views/TrendsWidget.cpp` (293 LOC)
+- `tests/HistoryDaoTest.cpp` (245 LOC)
+- `tests/MetricsDaoTest.cpp` (280 LOC)
+
+**Files Modified**: 3
+- DatabaseManager.h/cpp (+5 LOC for `database()` method)
+- tests/CMakeLists.txt (+32 LOC for DAO test configuration)
+- HtmlReportGeneratorTest.cpp (1 fix: NetworkMetrics::Critical)
+
+**Total Lines of Code**: ~1,433 LOC
 
 ### 8.5 Settings Dialog ⏳
 - `settingsdialog.ui` - 5-tab UI (General/Network/Appearance/Notifications/Advanced)
@@ -143,10 +246,10 @@
 | 5 | ✅ 100% | 5/5 | UI tests | ~3,200 |
 | 6 | ✅ 100% | 3/3 | 26/26 | ~1,400 |
 | 7 | ✅ 100% | 5/5 | All pass | ~6,400 |
-| **8** | **🔄 40%** | **2/5** | **26/26** | **~1,351** |
+| **8** | **🔄 80%** | **4/5** | **33/33** | **~4,634** |
 | 9-12 | ⏳ 0% | 0/17 | - | - |
 
-**Total**: ~24,800 LOC across 221 files
+**Total**: ~28,083 LOC across 233 files
 
 ---
 

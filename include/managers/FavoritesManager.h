@@ -170,9 +170,108 @@ public:
      */
     void clearAllFavorites();
 
+    // Groups management
+    /**
+     * @brief Create a new group
+     * @param groupName Name of the group
+     */
+    void createGroup(const QString& groupName);
+
+    /**
+     * @brief Delete a group
+     * @param groupName Name of the group
+     */
+    void deleteGroup(const QString& groupName);
+
+    /**
+     * @brief Get all group names
+     * @return List of group names
+     */
+    QList<QString> getGroups() const;
+
+    /**
+     * @brief Add a device to a group
+     * @param deviceId Device identifier
+     * @param groupName Group name
+     */
+    void addToGroup(const QString& deviceId, const QString& groupName);
+
+    /**
+     * @brief Remove a device from a group
+     * @param deviceId Device identifier
+     * @param groupName Group name
+     */
+    void removeFromGroup(const QString& deviceId, const QString& groupName);
+
+    /**
+     * @brief Get all devices in a group
+     * @param groupName Group name
+     * @return List of devices in the group
+     */
+    QList<FavoriteDevice> getDevicesInGroup(const QString& groupName) const;
+
+    /**
+     * @brief Get groups that a device belongs to
+     * @param deviceId Device identifier
+     * @return List of group names
+     */
+    QStringList getDeviceGroups(const QString& deviceId) const;
+
+    // Notes management
+    /**
+     * @brief Add a note to a device
+     * @param deviceId Device identifier
+     * @param note Note text
+     */
+    void addNote(const QString& deviceId, const QString& note);
+
+    /**
+     * @brief Get all notes for a device
+     * @param deviceId Device identifier
+     * @return List of notes
+     */
+    QList<QString> getNotes(const QString& deviceId) const;
+
+    /**
+     * @brief Remove a note from a device
+     * @param deviceId Device identifier
+     * @param noteIndex Index of the note to remove
+     */
+    void removeNote(const QString& deviceId, int noteIndex);
+
+    /**
+     * @brief Clear all notes for a device
+     * @param deviceId Device identifier
+     */
+    void clearNotes(const QString& deviceId);
+
+    // Custom icons management
+    /**
+     * @brief Set a custom icon for a device
+     * @param deviceId Device identifier
+     * @param iconPath Path to icon file
+     */
+    void setCustomIcon(const QString& deviceId, const QString& iconPath);
+
+    /**
+     * @brief Get the custom icon path for a device
+     * @param deviceId Device identifier
+     * @return Icon path (empty if not set)
+     */
+    QString getCustomIcon(const QString& deviceId) const;
+
+    /**
+     * @brief Remove custom icon for a device
+     * @param deviceId Device identifier
+     */
+    void removeCustomIcon(const QString& deviceId);
+
 private:
     QString storageFile;
     QMap<QString, FavoriteDevice> favorites;
+    QMap<QString, QList<QString>> deviceGroups;  // group name -> [device IDs]
+    QMap<QString, QList<QString>> deviceNotes;   // device ID -> [notes]
+    QMap<QString, QString> customIcons;          // device ID -> icon path
 
     void loadFromFile();
     void saveToFile();

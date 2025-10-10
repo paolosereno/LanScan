@@ -195,6 +195,34 @@ void FavoritesManager::loadFromFile() {
         }
     }
 
+    // Load groups
+    QJsonObject groupsObject = root["groups"].toObject();
+    for (auto it = groupsObject.constBegin(); it != groupsObject.constEnd(); ++it) {
+        QList<QString> deviceIds;
+        QJsonArray deviceIdsArray = it.value().toArray();
+        for (const QJsonValue& val : deviceIdsArray) {
+            deviceIds.append(val.toString());
+        }
+        deviceGroups[it.key()] = deviceIds;
+    }
+
+    // Load notes
+    QJsonObject notesObject = root["notes"].toObject();
+    for (auto it = notesObject.constBegin(); it != notesObject.constEnd(); ++it) {
+        QList<QString> notes;
+        QJsonArray notesArray = it.value().toArray();
+        for (const QJsonValue& val : notesArray) {
+            notes.append(val.toString());
+        }
+        deviceNotes[it.key()] = notes;
+    }
+
+    // Load custom icons
+    QJsonObject iconsObject = root["customIcons"].toObject();
+    for (auto it = iconsObject.constBegin(); it != iconsObject.constEnd(); ++it) {
+        customIcons[it.key()] = it.value().toString();
+    }
+
     Logger::info("Loaded " + QString::number(favorites.size()) + " favorites from file");
 }
 
@@ -205,9 +233,38 @@ void FavoritesManager::saveToFile() {
         favoritesArray.append(favoriteToJson(favorite));
     }
 
+    // Save groups
+    QJsonObject groupsObject;
+    for (auto it = deviceGroups.constBegin(); it != deviceGroups.constEnd(); ++it) {
+        QJsonArray deviceIds;
+        for (const QString& id : it.value()) {
+            deviceIds.append(id);
+        }
+        groupsObject[it.key()] = deviceIds;
+    }
+
+    // Save notes
+    QJsonObject notesObject;
+    for (auto it = deviceNotes.constBegin(); it != deviceNotes.constEnd(); ++it) {
+        QJsonArray notes;
+        for (const QString& note : it.value()) {
+            notes.append(note);
+        }
+        notesObject[it.key()] = notes;
+    }
+
+    // Save custom icons
+    QJsonObject iconsObject;
+    for (auto it = customIcons.constBegin(); it != customIcons.constEnd(); ++it) {
+        iconsObject[it.key()] = it.value();
+    }
+
     QJsonObject root;
     root["version"] = "1.0";
     root["favorites"] = favoritesArray;
+    root["groups"] = groupsObject;
+    root["notes"] = notesObject;
+    root["customIcons"] = iconsObject;
 
     QJsonDocument doc(root);
 
@@ -270,4 +327,165 @@ FavoriteDevice FavoritesManager::favoriteFromJson(const QJsonObject& json) const
 
 QString FavoritesManager::generateFavoriteId() const {
     return QUuid::createUuid().toString(QUuid::WithoutBraces);
+}
+
+// Groups management
+void FavoritesManager::createGroup(const QString& groupName) {
+    if (groupName.isEmpty()) {
+        Logger::warn("Cannot create group with empty name");
+        return;
+    }
+
+    if (!deviceGroups.contains(groupName)) {
+        deviceGroups[groupName] = QList<QString>();
+        saveToFile();
+        Logger::info("Created group: " + groupName);
+    } else {
+        Logger::warn("Group already exists: " + groupName);
+    }
+}
+
+void FavoritesManager::deleteGroup(const QString& groupName) {
+    if (deviceGroups.contains(groupName)) {
+        deviceGroups.remove(groupName);
+        saveToFile();
+        Logger::info("Deleted group: " + groupName);
+    } else {
+        Logger::warn("Cannot delete group: not found (" + groupName + ")");
+    }
+}
+
+QList<QString> FavoritesManager::getGroups() const {
+    return deviceGroups.keys();
+}
+
+void FavoritesManager::addToGroup(const QString& deviceId, const QString& groupName) {
+    if (!favorites.contains(deviceId)) {
+        Logger::warn("Cannot add device to group: device not found (" + deviceId + ")");
+        return;
+    }
+
+    if (!deviceGroups.contains(groupName)) {
+        createGroup(groupName);
+    }
+
+    if (!deviceGroups[groupName].contains(deviceId)) {
+        deviceGroups[groupName].append(deviceId);
+        saveToFile();
+        Logger::debug("Added device " + deviceId + " to group: " + groupName);
+    }
+}
+
+void FavoritesManager::removeFromGroup(const QString& deviceId, const QString& groupName) {
+    if (deviceGroups.contains(groupName)) {
+        deviceGroups[groupName].removeAll(deviceId);
+        saveToFile();
+        Logger::debug("Removed device " + deviceId + " from group: " + groupName);
+    }
+}
+
+QList<FavoriteDevice> FavoritesManager::getDevicesInGroup(const QString& groupName) const {
+    QList<FavoriteDevice> result;
+
+    if (deviceGroups.contains(groupName)) {
+        for (const QString& deviceId : deviceGroups[groupName]) {
+            if (favorites.contains(deviceId)) {
+                result.append(favorites[deviceId]);
+            }
+        }
+    }
+
+    return result;
+}
+
+QStringList FavoritesManager::getDeviceGroups(const QString& deviceId) const {
+    QStringList groups;
+
+    for (auto it = deviceGroups.constBegin(); it != deviceGroups.constEnd(); ++it) {
+        if (it.value().contains(deviceId)) {
+            groups.append(it.key());
+        }
+    }
+
+    return groups;
+}
+
+// Notes management
+void FavoritesManager::addNote(const QString& deviceId, const QString& note) {
+    if (!favorites.contains(deviceId)) {
+        Logger::warn("Cannot add note: device not found (" + deviceId + ")");
+        return;
+    }
+
+    if (note.isEmpty()) {
+        Logger::warn("Cannot add empty note");
+        return;
+    }
+
+    if (!deviceNotes.contains(deviceId)) {
+        deviceNotes[deviceId] = QList<QString>();
+    }
+
+    deviceNotes[deviceId].append(note);
+    saveToFile();
+    Logger::debug("Added note to device: " + deviceId);
+}
+
+QList<QString> FavoritesManager::getNotes(const QString& deviceId) const {
+    if (deviceNotes.contains(deviceId)) {
+        return deviceNotes[deviceId];
+    }
+    return QList<QString>();
+}
+
+void FavoritesManager::removeNote(const QString& deviceId, int noteIndex) {
+    if (deviceNotes.contains(deviceId)) {
+        if (noteIndex >= 0 && noteIndex < deviceNotes[deviceId].size()) {
+            deviceNotes[deviceId].removeAt(noteIndex);
+            saveToFile();
+            Logger::debug("Removed note from device: " + deviceId);
+        } else {
+            Logger::warn("Invalid note index: " + QString::number(noteIndex));
+        }
+    }
+}
+
+void FavoritesManager::clearNotes(const QString& deviceId) {
+    if (deviceNotes.contains(deviceId)) {
+        deviceNotes.remove(deviceId);
+        saveToFile();
+        Logger::debug("Cleared notes for device: " + deviceId);
+    }
+}
+
+// Custom icons management
+void FavoritesManager::setCustomIcon(const QString& deviceId, const QString& iconPath) {
+    if (!favorites.contains(deviceId)) {
+        Logger::warn("Cannot set custom icon: device not found (" + deviceId + ")");
+        return;
+    }
+
+    if (iconPath.isEmpty()) {
+        removeCustomIcon(deviceId);
+        return;
+    }
+
+    customIcons[deviceId] = iconPath;
+    saveToFile();
+    Logger::debug("Set custom icon for device: " + deviceId);
+}
+
+QString FavoritesManager::getCustomIcon(const QString& deviceId) const {
+    if (customIcons.contains(deviceId)) {
+        return customIcons[deviceId];
+    }
+    return QString();
+}
+
+void FavoritesManager::removeCustomIcon(const QString& deviceId) {
+    if (customIcons.contains(deviceId)) {
+        customIcons.remove(deviceId);
+        saveToFile();
+        Logger::debug("Removed custom icon for device: " + deviceId);
+    }
 }

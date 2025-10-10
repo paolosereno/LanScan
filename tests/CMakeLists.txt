@@ -351,3 +351,33 @@ target_include_directories(HtmlReportGeneratorTest PRIVATE
 )
 target_link_libraries(HtmlReportGeneratorTest PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME HtmlReportGeneratorTest COMMAND HtmlReportGeneratorTest)
+
+# Phase 8.4: Database DAO tests
+add_executable(HistoryDaoTest
+    HistoryDaoTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/HistoryDao.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(HistoryDaoTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/utils
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(HistoryDaoTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql)
+add_test(NAME HistoryDaoTest COMMAND HistoryDaoTest)
+
+add_executable(MetricsDaoTest
+    MetricsDaoTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/MetricsDao.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(MetricsDaoTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/utils
+    ${CMAKE_SOURCE_DIR}/include/models
+)
+target_link_libraries(MetricsDaoTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql)
+add_test(NAME MetricsDaoTest COMMAND MetricsDaoTest)

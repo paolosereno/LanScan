@@ -244,3 +244,167 @@ ScanProfile ProfileManager::profileFromJson(const QJsonObject& json) const {
 QString ProfileManager::generateProfileId() const {
     return QUuid::createUuid().toString(QUuid::WithoutBraces);
 }
+
+// Export/Import profiles
+bool ProfileManager::exportProfile(const ScanProfile& profile, const QString& filepath) {
+    if (!profile.isValid()) {
+        Logger::error("Cannot export invalid profile");
+        return false;
+    }
+
+    QJsonObject json = profileToJson(profile);
+    QJsonObject root;
+    root["version"] = "1.0";
+    root["profile"] = json;
+
+    QJsonDocument doc(root);
+
+    QFile file(filepath);
+    if (!file.open(QIODevice::WriteOnly)) {
+        Logger::error("Cannot write to profile export file: " + filepath);
+        return false;
+    }
+
+    file.write(doc.toJson(QJsonDocument::Indented));
+    file.close();
+
+    Logger::info("Profile exported: " + profile.name + " to " + filepath);
+    return true;
+}
+
+ScanProfile ProfileManager::importProfile(const QString& filepath) {
+    QFile file(filepath);
+
+    if (!file.exists()) {
+        Logger::error("Profile import file does not exist: " + filepath);
+        return ScanProfile();
+    }
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        Logger::error("Cannot open profile import file: " + filepath);
+        return ScanProfile();
+    }
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (!doc.isObject()) {
+        Logger::error("Invalid JSON in profile import file");
+        return ScanProfile();
+    }
+
+    QJsonObject root = doc.object();
+    QJsonObject profileJson = root["profile"].toObject();
+
+    ScanProfile profile = profileFromJson(profileJson);
+
+    if (profile.isValid()) {
+        // Generate new ID for imported profile to avoid conflicts
+        profile.id = generateProfileId();
+        profile.createdAt = QDateTime::currentDateTime();
+        profile.modifiedAt = QDateTime::currentDateTime();
+
+        Logger::info("Profile imported: " + profile.name + " from " + filepath);
+    } else {
+        Logger::error("Failed to import profile: invalid data");
+    }
+
+    return profile;
+}
+
+// Profile templates
+ScanProfile ProfileManager::createHomeNetworkProfile() {
+    ScanProfile profile;
+    profile.id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    profile.name = "Home Network";
+    profile.description = "Standard home network scan: Basic discovery and common services";
+    profile.subnet = "192.168.1.0/24";
+    profile.resolveDns = true;
+    profile.resolveArp = true;
+    profile.scanPorts = true;
+    profile.portsToScan = {80, 443, 8080, 22, 3389, 5900}; // HTTP, HTTPS, Alt-HTTP, SSH, RDP, VNC
+    profile.timeout = 2000;
+    profile.createdAt = QDateTime::currentDateTime();
+    profile.modifiedAt = QDateTime::currentDateTime();
+
+    return profile;
+}
+
+ScanProfile ProfileManager::createEnterpriseNetworkProfile() {
+    ScanProfile profile;
+    profile.id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    profile.name = "Enterprise Network";
+    profile.description = "Enterprise network scan: Comprehensive discovery with business services";
+    profile.subnet = "10.0.0.0/16";
+    profile.resolveDns = true;
+    profile.resolveArp = true;
+    profile.scanPorts = true;
+    profile.portsToScan = {
+        20, 21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 389, 443, 445,
+        636, 993, 995, 1433, 1521, 3306, 3389, 5432, 5900, 8080, 8443
+    }; // FTP, SSH, Telnet, SMTP, DNS, HTTP, POP3, RPC, SMB, IMAP, LDAP, HTTPS,
+       // LDAPS, IMAPS, POP3S, MSSQL, Oracle, MySQL, RDP, PostgreSQL, VNC, Alt-HTTP, HTTPS-Alt
+    profile.timeout = 3000;
+    profile.createdAt = QDateTime::currentDateTime();
+    profile.modifiedAt = QDateTime::currentDateTime();
+
+    return profile;
+}
+
+ScanProfile ProfileManager::createSecurityAuditProfile() {
+    ScanProfile profile;
+    profile.id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    profile.name = "Security Audit";
+    profile.description = "Security audit scan: Extensive port scan for vulnerability assessment";
+    profile.subnet = "192.168.1.0/24";
+    profile.resolveDns = true;
+    profile.resolveArp = true;
+    profile.scanPorts = true;
+    profile.portsToScan = {
+        20, 21, 22, 23, 25, 53, 69, 79, 80, 110, 111, 123, 135, 137, 138, 139, 143, 161, 162,
+        389, 443, 445, 465, 514, 515, 587, 636, 873, 989, 990, 992, 993, 995, 1080, 1433, 1434,
+        1521, 1723, 2049, 2082, 2083, 2181, 2222, 3000, 3306, 3389, 4000, 4444, 5000, 5432, 5900,
+        6379, 6667, 7001, 8000, 8080, 8443, 8888, 9000, 9001, 9200, 9300, 10000, 27017, 50000
+    }; // Common ports + potentially vulnerable services
+    profile.timeout = 5000;
+    profile.createdAt = QDateTime::currentDateTime();
+    profile.modifiedAt = QDateTime::currentDateTime();
+
+    return profile;
+}
+
+// Profile statistics
+QDateTime ProfileManager::getLastUsed(const QString& profileId) const {
+    if (lastUsedTimes.contains(profileId)) {
+        return lastUsedTimes[profileId];
+    }
+    return QDateTime();
+}
+
+int ProfileManager::getUsageCount(const QString& profileId) const {
+    if (usageCounts.contains(profileId)) {
+        return usageCounts[profileId];
+    }
+    return 0;
+}
+
+void ProfileManager::updateUsageStats(const QString& profileId) {
+    if (!profiles.contains(profileId)) {
+        Logger::warn("Cannot update usage stats: profile not found (" + profileId + ")");
+        return;
+    }
+
+    // Update usage count
+    if (usageCounts.contains(profileId)) {
+        usageCounts[profileId]++;
+    } else {
+        usageCounts[profileId] = 1;
+    }
+
+    // Update last used time
+    lastUsedTimes[profileId] = QDateTime::currentDateTime();
+
+    Logger::debug("Updated usage stats for profile: " + profileId +
+                 " (count: " + QString::number(usageCounts[profileId]) + ")");
+}

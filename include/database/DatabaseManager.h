@@ -20,6 +20,9 @@ public:
 
     QString getLastError() const;
 
+    // Database access
+    QSqlDatabase database();
+
     // Transaction support
     bool beginTransaction();
     bool commit();
