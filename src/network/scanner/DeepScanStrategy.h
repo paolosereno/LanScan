@@ -25,9 +25,13 @@ public:
     QString getName() const override;
     QString getDescription() const override;
 
+    // Enable/disable port scanning
+    void setPortScanningEnabled(bool enabled);
+
 private:
     HostDiscovery* m_hostDiscovery;
     DnsResolver* m_dnsResolver;
+    bool m_portScanningEnabled;
 
     // Common ports to scan
     static const QList<int> COMMON_PORTS;

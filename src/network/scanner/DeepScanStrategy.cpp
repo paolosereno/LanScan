@@ -27,6 +27,7 @@ const QList<int> DeepScanStrategy::COMMON_PORTS = {
 DeepScanStrategy::DeepScanStrategy()
     : m_hostDiscovery(new HostDiscovery())
     , m_dnsResolver(new DnsResolver())
+    , m_portScanningEnabled(true)  // Default: enabled for backward compatibility
 {
 }
 
@@ -73,24 +74,27 @@ Device DeepScanStrategy::scan(const QString& ip)
         Logger::debug(QString("Hostname: %1").arg(hostname));
     }
 
-    // Scan common ports
-    PortServiceMapper portMapper;
+    // Scan common ports (only if enabled)
     int openPortCount = 0;
 
-    for (int port : COMMON_PORTS) {
-        if (scanPort(ip, port)) {
-            PortInfo portInfo;
-            portInfo.setPortNumber(port);
-            portInfo.setProtocol(PortInfo::TCP);
-            portInfo.setState(PortInfo::Open);
+    if (m_portScanningEnabled) {
+        PortServiceMapper portMapper;
 
-            QString service = portMapper.getServiceName(port, "tcp");
-            portInfo.setService(service);
+        for (int port : COMMON_PORTS) {
+            if (scanPort(ip, port)) {
+                PortInfo portInfo;
+                portInfo.setPortNumber(port);
+                portInfo.setProtocol(PortInfo::TCP);
+                portInfo.setState(PortInfo::Open);
 
-            device.addPort(portInfo);
-            openPortCount++;
+                QString service = portMapper.getServiceName(port, "tcp");
+                portInfo.setService(service);
 
-            Logger::debug(QString("Port %1/%2 open (%3)").arg(port).arg("tcp").arg(service));
+                device.addPort(portInfo);
+                openPortCount++;
+
+                Logger::debug(QString("Port %1/%2 open (%3)").arg(port).arg("tcp").arg(service));
+            }
         }
     }
 
@@ -107,6 +111,11 @@ QString DeepScanStrategy::getName() const
 QString DeepScanStrategy::getDescription() const
 {
     return "Comprehensive scan: ping, DNS, MAC, and common port scanning.";
+}
+
+void DeepScanStrategy::setPortScanningEnabled(bool enabled)
+{
+    m_portScanningEnabled = enabled;
 }
 
 bool DeepScanStrategy::scanPort(const QString& ip, int port)

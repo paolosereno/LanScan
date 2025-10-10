@@ -289,8 +289,15 @@ IScanStrategy* ScanCoordinator::createScanStrategy(const ScanConfig& config) {
     // Determine scan strategy based on configuration
     // Use DeepScanStrategy if ANY advanced feature is requested (DNS, ARP, or Ports)
     if (config.resolveDns || config.resolveArp || config.scanPorts) {
-        Logger::debug("Creating DeepScanStrategy (DNS/ARP/Ports requested)");
-        return new DeepScanStrategy();
+        Logger::debug(QString("Creating DeepScanStrategy (DNS=%1, ARP=%2, Ports=%3)")
+                     .arg(config.resolveDns ? "true" : "false")
+                     .arg(config.resolveArp ? "true" : "false")
+                     .arg(config.scanPorts ? "true" : "false"));
+
+        DeepScanStrategy* strategy = new DeepScanStrategy();
+        // Only enable port scanning if explicitly requested
+        strategy->setPortScanningEnabled(config.scanPorts);
+        return strategy;
     } else {
         // QuickScanStrategy: basic ping-only scan
         Logger::debug("Creating QuickScanStrategy (ping-only)");
