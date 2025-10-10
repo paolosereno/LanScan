@@ -176,6 +176,21 @@ void DeviceTableViewModel::clear() {
     emit deviceCountChanged(0);
 }
 
+void DeviceTableViewModel::markAllDevicesOffline() {
+    for (int i = 0; i < devices.count(); ++i) {
+        devices[i].setOnline(false);
+    }
+
+    // Notify view that all rows have changed
+    if (devices.count() > 0) {
+        QModelIndex topLeft = index(0, 0);
+        QModelIndex bottomRight = index(devices.count() - 1, ColumnCount - 1);
+        emit dataChanged(topLeft, bottomRight);
+    }
+
+    Logger::info("All devices marked as offline");
+}
+
 Device DeviceTableViewModel::getDeviceAt(int row) const {
     if (row < 0 || row >= devices.count()) {
         Logger::warn("Invalid row index: " + QString::number(row));

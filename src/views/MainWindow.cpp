@@ -170,10 +170,14 @@ void MainWindow::setupMetricsWidget() {
 
 void MainWindow::setupConnections() {
     // ScanController signals
+    connect(scanController, &ScanController::scanStarted,
+            this, &MainWindow::onScanStarted);
     connect(scanController, &ScanController::scanStatusChanged,
             this, &MainWindow::onScanStatusChanged);
     connect(scanController, &ScanController::devicesUpdated,
             this, &MainWindow::onDevicesUpdated);
+    connect(scanController, &ScanController::deviceDiscovered,
+            this, &MainWindow::onDeviceDiscovered);
     connect(scanController, &ScanController::scanProgressUpdated,
             this, &MainWindow::onScanProgressUpdated);
 
@@ -288,12 +292,25 @@ void MainWindow::onClearResults() {
     updateStatusMessage(tr("Results cleared"));
 }
 
+void MainWindow::onScanStarted(int totalHosts) {
+    // Mark all existing devices as offline before scan starts
+    // Devices that are found during scan will be updated to online
+    deviceTableViewModel->markAllDevicesOffline();
+    Logger::info(QString("Scan starting - marked all devices as offline"));
+}
+
 void MainWindow::onScanStatusChanged(const QString& status) {
     updateStatusMessage(status);
 }
 
 void MainWindow::onDevicesUpdated() {
     deviceTableViewModel->loadDevices();
+}
+
+void MainWindow::onDeviceDiscovered(const Device& device) {
+    // Update or add device directly to the ViewModel
+    // This is more efficient than reloading all devices
+    deviceTableViewModel->addDevice(device);  // addDevice internally handles update if exists
 }
 
 void MainWindow::onScanProgressUpdated(int current, int total, double percentage) {

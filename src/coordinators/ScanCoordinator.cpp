@@ -53,6 +53,35 @@ ScanCoordinator::ScanCoordinator(
                 });
     }
 
+    // Connect PortScanner signals
+    if (portScanner) {
+        connect(portScanner, &PortScanner::portFound,
+                this, [this](const PortScanner::PortScanResult& result) {
+                    onPortFound(result.host, result.port, result.service);
+                });
+        connect(portScanner, &PortScanner::scanCompleted,
+                this, [this](const QList<PortScanner::PortScanResult>& results) {
+                    // Get host from results OR from currentPortScanHost as fallback
+                    QString host;
+
+                    if (!results.isEmpty()) {
+                        // Use host from first result (all results are for same host)
+                        host = results.first().host;
+                    } else {
+                        // Fallback: use currentPortScanHost (but this might have race condition)
+                        QMutexLocker locker(&mutex);
+                        host = currentPortScanHost;
+                    }
+
+                    if (!host.isEmpty()) {
+                        Logger::debug(QString("scanCompleted signal received for host: %1").arg(host));
+                        onPortScanCompleted(host);
+                    } else {
+                        Logger::warn("scanCompleted signal received but host is empty!");
+                    }
+                });
+    }
+
     Logger::info("ScanCoordinator initialized with " +
                  QString::number(threadPool->maxThreadCount()) + " threads");
 }
@@ -159,6 +188,10 @@ void ScanCoordinator::coordinateScan(const ScanConfig& config) {
 }
 
 void ScanCoordinator::processDiscoveredDevice(Device& device) {
+    Logger::info(QString("processDiscoveredDevice called for %1 - scanPorts=%2")
+                .arg(device.getIp())
+                .arg(currentConfig.scanPorts ? "true" : "false"));
+
     // Additional processing can be done here
     // For example, collect metrics if aggregator is available
     if (metricsAggregator && currentConfig.timeout > 0) {
@@ -167,15 +200,37 @@ void ScanCoordinator::processDiscoveredDevice(Device& device) {
         metricsAggregator->startContinuousCollection(device.getIp(), currentConfig.timeout);
     }
 
-    // Scan ports if requested
+    // Scan ports if requested AND device doesn't already have ports from DeepScanStrategy
     if (currentConfig.scanPorts && portScanner && !device.getIp().isEmpty()) {
-        if (currentConfig.portsToScan.isEmpty()) {
-            // Use quick scan with common ports
-            portScanner->scanPorts(device.getIp(), PortScanner::QUICK_SCAN);
-        } else {
-            // Use custom port list
-            portScanner->scanPorts(device.getIp(), currentConfig.portsToScan);
+        // Check if device already has ports (from DeepScanStrategy)
+        int existingPorts = device.getOpenPorts().size();
+
+        if (existingPorts > 0) {
+            Logger::info(QString("Device %1 already has %2 ports from deep scan - skipping PortScanner")
+                        .arg(device.getIp())
+                        .arg(existingPorts));
+            return;  // Skip PortScanner if ports already found
         }
+
+        Logger::info(QString("Port scanning enabled for %1").arg(device.getIp()));
+        QMutexLocker locker(&mutex);
+
+        // Add device to pending map and queue
+        pendingDevices[device.getIp()] = device;
+        portScanResults[device.getIp()].clear();  // Initialize empty port list
+
+        // Add to queue if not already there
+        if (!portScanQueue.contains(device.getIp())) {
+            portScanQueue.append(device.getIp());
+            Logger::debug(QString("Added %1 to port scan queue (position %2)")
+                         .arg(device.getIp())
+                         .arg(portScanQueue.size()));
+        }
+
+        locker.unlock();
+
+        // Try to process next in queue (will only start if scanner is free)
+        processNextPortScan();
     }
 }
 
@@ -192,6 +247,13 @@ void ScanCoordinator::cleanup() {
     if (metricsAggregator && metricsAggregator->isCollecting()) {
         metricsAggregator->stopContinuousCollection();
     }
+
+    // Clear port scanning data
+    QMutexLocker locker(&mutex);
+    pendingDevices.clear();
+    portScanResults.clear();
+    portScanQueue.clear();
+    currentPortScanHost.clear();
 }
 
 void ScanCoordinator::onDeviceFound(const Device& device) {
@@ -200,10 +262,15 @@ void ScanCoordinator::onDeviceFound(const Device& device) {
     }
 
     Device deviceCopy = device;
-    processDiscoveredDevice(deviceCopy);
 
+    // Always emit device immediately (even if we'll scan ports later)
+    // This ensures users see discovered devices right away
     emit deviceDiscovered(deviceCopy);
     devicesFoundCount++;
+
+    // Process device (including port scanning if enabled)
+    // If port scanning is enabled, we'll emit another update when ports are found
+    processDiscoveredDevice(deviceCopy);
 }
 
 void ScanCoordinator::onScanFinished() {
@@ -228,5 +295,119 @@ IScanStrategy* ScanCoordinator::createScanStrategy(const ScanConfig& config) {
         // QuickScanStrategy: basic ping-only scan
         Logger::debug("Creating QuickScanStrategy (ping-only)");
         return new QuickScanStrategy();
+    }
+}
+
+void ScanCoordinator::onPortFound(const QString& host, int port, const QString& service) {
+    QMutexLocker locker(&mutex);
+
+    // Store port result for this host
+    if (portScanResults.contains(host)) {
+        portScanResults[host].append(qMakePair(port, service));
+        Logger::debug(QString("Port found on %1: %2 (%3)").arg(host).arg(port).arg(service));
+    }
+}
+
+void ScanCoordinator::onPortScanCompleted(const QString& host) {
+    Logger::info(QString("onPortScanCompleted called for host: %1").arg(host));
+
+    QMutexLocker locker(&mutex);
+    int portsFound = portScanResults.value(host).size();
+    locker.unlock();
+
+    Logger::info(QString("Port scan completed for %1 - found %2 ports").arg(host).arg(portsFound));
+
+    emitDeviceWithPorts(host);
+
+    // Process next device in queue
+    Logger::debug("Calling processNextPortScan from onPortScanCompleted");
+    processNextPortScan();
+}
+
+void ScanCoordinator::emitDeviceWithPorts(const QString& ip) {
+    QMutexLocker locker(&mutex);
+
+    // Check if we have this device in pending list
+    if (!pendingDevices.contains(ip)) {
+        Logger::warn(QString("Device %1 not found in pending devices").arg(ip));
+        return;
+    }
+
+    // Get the device and port results
+    Device device = pendingDevices[ip];
+    QList<QPair<int, QString>> ports = portScanResults.value(ip);
+
+    // Add all found ports to the device
+    for (const auto& portPair : ports) {
+        PortInfo portInfo(portPair.first, PortInfo::TCP);
+        portInfo.setService(portPair.second);
+        portInfo.setState(PortInfo::Open);
+        device.addPort(portInfo);
+    }
+
+    // Clean up
+    pendingDevices.remove(ip);
+    portScanResults.remove(ip);
+    if (currentPortScanHost == ip) {
+        currentPortScanHost.clear();
+    }
+
+    locker.unlock();
+
+    // Emit the device with ports
+    emit deviceDiscovered(device);
+    devicesFoundCount++;
+
+    Logger::info(QString("Device %1 discovered with %2 open ports").arg(ip).arg(ports.size()));
+
+    // Debug: Log each port
+    for (const PortInfo& port : device.getOpenPorts()) {
+        Logger::debug(QString("  - Port %1/%2 (%3) - %4")
+                     .arg(port.getPort())
+                     .arg(port.protocolString())
+                     .arg(port.getService())
+                     .arg(port.stateString()));
+    }
+}
+
+void ScanCoordinator::processNextPortScan() {
+    QMutexLocker locker(&mutex);
+
+    Logger::debug(QString("processNextPortScan called - queue size: %1").arg(portScanQueue.size()));
+
+    // Check if there's anything in the queue
+    if (portScanQueue.isEmpty()) {
+        Logger::debug("Port scan queue is empty, nothing to process");
+        return;
+    }
+
+    // Check if scanner is already busy
+    if (portScanner && portScanner->isScanning()) {
+        Logger::debug("PortScanner is busy, waiting...");
+        return;
+    }
+
+    if (!portScanner) {
+        Logger::error("PortScanner is null!");
+        return;
+    }
+
+    // Get next IP from queue
+    QString nextIp = portScanQueue.takeFirst();
+    currentPortScanHost = nextIp;
+
+    locker.unlock();
+
+    Logger::info(QString("Processing port scan for %1 (%2 remaining in queue)")
+                .arg(nextIp)
+                .arg(portScanQueue.size()));
+
+    // Log the ports we're going to scan
+    if (currentConfig.portsToScan.isEmpty()) {
+        Logger::debug("Using QUICK_SCAN (common ports)");
+        portScanner->scanPorts(nextIp, PortScanner::QUICK_SCAN);
+    } else {
+        Logger::debug(QString("Scanning custom ports: %1").arg(currentConfig.portsToScan.size()));
+        portScanner->scanPorts(nextIp, currentConfig.portsToScan);
     }
 }

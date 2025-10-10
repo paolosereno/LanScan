@@ -3,6 +3,7 @@
 #include "../services/PortServiceMapper.h"
 #include "../../utils/Logger.h"
 #include <QElapsedTimer>
+#include <QtConcurrent>
 
 PortScanner::PortScanner(QObject* parent)
     : QObject(parent)
@@ -11,7 +12,11 @@ PortScanner::PortScanner(QObject* parent)
     , totalPorts(0)
     , scannedPorts(0)
     , scanning(false)
+    , scanWatcher(new QFutureWatcher<void>(this))
 {
+    // Connect watcher to slot
+    connect(scanWatcher, &QFutureWatcher<void>::finished,
+            this, &PortScanner::onScanFinished);
 }
 
 PortScanner::~PortScanner() {
@@ -79,6 +84,13 @@ void PortScanner::scanPortRange(const QString& host, int startPort, int endPort)
 void PortScanner::cancelScan() {
     if (scanning) {
         scanning = false;
+        Logger::info("PortScanner: Cancelling scan...");
+
+        // Wait for the scan to finish (it will stop at the next port check)
+        if (scanWatcher && scanWatcher->isRunning()) {
+            scanWatcher->waitForFinished();
+        }
+
         Logger::info("PortScanner: Scan cancelled");
     }
 }
@@ -138,34 +150,33 @@ void PortScanner::executeScan(const QString& host, const QList<int>& ports) {
     scannedPorts = 0;
     scanning = true;
 
-    Logger::info(QString("PortScanner: Starting scan of %1 ports on %2")
+    Logger::info(QString("PortScanner: Starting async scan of %1 ports on %2")
                  .arg(totalPorts).arg(host));
 
-    // Scan ports sequentially (could be parallelized with QtConcurrent in future)
-    for (int port : ports) {
-        if (!scanning) {
-            Logger::info("PortScanner: Scan cancelled by user");
-            break;
+    // Run scan asynchronously using QtConcurrent
+    QFuture<void> future = QtConcurrent::run([this, host, ports]() {
+        // Scan ports sequentially in background thread
+        for (int port : ports) {
+            if (!scanning) {
+                Logger::info("PortScanner: Scan cancelled by user");
+                break;
+            }
+
+            PortScanResult result = scanSinglePort(host, port, 1000);
+
+            if (result.state == "open") {
+                scanResults.append(result);
+                emit portFound(result);
+                Logger::debug(QString("PortScanner: Port %1 is open (%2)")
+                             .arg(port).arg(result.service));
+            }
+
+            scannedPorts++;
+            updateProgress();
         }
+    });
 
-        PortScanResult result = scanSinglePort(host, port, 1000);
-
-        if (result.state == "open") {
-            scanResults.append(result);
-            emit portFound(result);
-            Logger::debug(QString("PortScanner: Port %1 is open (%2)")
-                         .arg(port).arg(result.service));
-        }
-
-        scannedPorts++;
-        updateProgress();
-    }
-
-    scanning = false;
-    emit scanCompleted(scanResults);
-
-    Logger::info(QString("PortScanner: Scan completed: %1 open ports found")
-                 .arg(scanResults.size()));
+    scanWatcher->setFuture(future);
 }
 
 void PortScanner::updateProgress() {
@@ -179,4 +190,24 @@ void PortScanner::updateProgress() {
             Logger::debug(QString("PortScanner: Scan progress: %1%").arg(percentage, 0, 'f', 1));
         }
     }
+}
+
+void PortScanner::onScanFinished() {
+    scanning = false;
+
+    // If no ports found, create a dummy result with the host so the coordinator knows which host finished
+    QList<PortScanResult> resultsToEmit = scanResults;
+    if (resultsToEmit.isEmpty() && !currentHost.isEmpty()) {
+        PortScanResult dummyResult;
+        dummyResult.host = currentHost;
+        dummyResult.port = 0;
+        dummyResult.state = "none";
+        resultsToEmit.append(dummyResult);
+    }
+
+    emit scanCompleted(resultsToEmit);
+
+    Logger::info(QString("PortScanner: Async scan completed: %1 open ports found on %2")
+                 .arg(scanResults.size())
+                 .arg(currentHost));
 }

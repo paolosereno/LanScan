@@ -77,6 +77,12 @@ public:
 
 signals:
     /**
+     * @brief Emitted when a new scan is about to start
+     * @param totalHosts Total number of hosts to scan
+     */
+    void scanStarted(int totalHosts);
+
+    /**
      * @brief Emitted when scan status changes
      * @param status Status message
      */
@@ -86,6 +92,12 @@ signals:
      * @brief Emitted when devices list is updated
      */
     void devicesUpdated();
+
+    /**
+     * @brief Emitted when a specific device is discovered or updated
+     * @param device The discovered/updated device
+     */
+    void deviceDiscovered(const Device& device);
 
     /**
      * @brief Emitted for scan progress updates

@@ -143,6 +143,8 @@ signals:
 private slots:
     void onDeviceFound(const Device& device);
     void onScanFinished();
+    void onPortFound(const QString& host, int port, const QString& service);
+    void onPortScanCompleted(const QString& host);
 
 private:
     IpScanner* ipScanner;
@@ -165,11 +167,19 @@ private:
 
     mutable QMutex mutex;
 
+    // Port scanning data structures
+    QMap<QString, Device> pendingDevices;  ///< Devices waiting for port scan completion (IP -> Device)
+    QMap<QString, QList<QPair<int, QString>>> portScanResults;  ///< Port scan results (IP -> List of (port, service))
+    QString currentPortScanHost;  ///< Currently scanning host IP
+    QList<QString> portScanQueue;  ///< Queue of IPs waiting for port scan
+
     void coordinateScan(const ScanConfig& config);
     void processDiscoveredDevice(Device& device);
     void updateProgress(const QString& currentIp);
     void cleanup();
     IScanStrategy* createScanStrategy(const ScanConfig& config);
+    void emitDeviceWithPorts(const QString& ip);
+    void processNextPortScan();  ///< Process next device in port scan queue
 };
 
 #endif // SCANCOORDINATOR_H

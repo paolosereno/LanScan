@@ -44,6 +44,7 @@ public:
     void updateDevice(const Device& device);
     void removeDevice(const QString& ip);
     void clear();
+    void markAllDevicesOffline();
 
     Device getDeviceAt(int row) const;
     int findDeviceRow(const QString& ip) const;

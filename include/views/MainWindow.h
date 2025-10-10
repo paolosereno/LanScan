@@ -66,8 +66,10 @@ private slots:
     void onClearResults();
 
     // Controller signals
+    void onScanStarted(int totalHosts);
     void onScanStatusChanged(const QString& status);
     void onDevicesUpdated();
+    void onDeviceDiscovered(const Device& device);
     void onScanProgressUpdated(int current, int total, double percentage);
 
     // Device table signals

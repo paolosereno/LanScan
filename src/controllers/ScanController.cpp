@@ -78,17 +78,21 @@ void ScanController::clearAllDevices() {
 void ScanController::onScanStarted(int totalHosts) {
     QString status = "Scan started: " + QString::number(totalHosts) + " hosts to scan";
     Logger::info(status);
+
+    emit scanStarted(totalHosts);  // Emit before status to allow UI preparation
     emit scanStatusChanged(status);
 }
 
 void ScanController::onDeviceDiscovered(const Device& device) {
-    Logger::debug("Device discovered: " + device.getIp());
-
     // Save to cache and repository
     saveDevice(device);
 
-    // Emit updated notification
-    emit devicesUpdated();
+    // Emit device-specific signal (for direct ViewModel update)
+    emit deviceDiscovered(device);
+
+    // NOTE: We no longer emit devicesUpdated() here because it triggers a full
+    // reload from database which overwrites the in-memory devices (losing ports).
+    // The deviceDiscovered signal above handles ViewModel updates directly.
 }
 
 void ScanController::onScanProgress(int current, int total, const QString& currentIp) {
@@ -108,8 +112,9 @@ void ScanController::onScanCompleted(int count, qint64 duration) {
     Logger::info(status);
     emit scanStatusChanged(status);
 
-    // Emit final notification
-    emit devicesUpdated();
+    // NOTE: We no longer emit devicesUpdated() here because it would trigger
+    // a full reload from database, overwriting all in-memory devices (losing ports).
+    // All devices have already been added via deviceDiscovered signals during scan.
 }
 
 void ScanController::onScanError(const QString& error) {

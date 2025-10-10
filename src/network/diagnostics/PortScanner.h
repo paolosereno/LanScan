@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <QFuture>
+#include <QFutureWatcher>
 
 // Forward declarations
 class TcpSocketManager;
@@ -105,6 +107,9 @@ signals:
      */
     void errorOccurred(const QString& error);
 
+private slots:
+    void onScanFinished();
+
 private:
     TcpSocketManager* socketManager;
     PortServiceMapper* serviceMapper;
@@ -114,6 +119,8 @@ private:
     int totalPorts;
     int scannedPorts;
     bool scanning;
+
+    QFutureWatcher<void>* scanWatcher;
 
     /**
      * @brief Get list of common ports for quick scan
