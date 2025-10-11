@@ -23,6 +23,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Test
     Sql
     Concurrent
+    Svg
 )
 
 # Include directories
@@ -43,6 +44,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/views
     ${CMAKE_SOURCE_DIR}/include/delegates
     ${CMAKE_SOURCE_DIR}/include/charts
+    ${CMAKE_SOURCE_DIR}/include/widgets
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${CMAKE_SOURCE_DIR}/src/utils
@@ -57,6 +59,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/views
     ${CMAKE_SOURCE_DIR}/src/delegates
     ${CMAKE_SOURCE_DIR}/src/charts
+    ${CMAKE_SOURCE_DIR}/src/widgets
     ${CMAKE_SOURCE_DIR}/src/persistence
     ${CMAKE_SOURCE_DIR}/src/ui
     ${CMAKE_SOURCE_DIR}/src/core
@@ -77,13 +80,16 @@ set(MODEL_SOURCES
     src/models/Alert.cpp
 )
 
-# Utils sources
+# Utils sources (Phase 9.3: added IconLoader, AnimationHelper, TooltipHelper)
 set(UTILS_SOURCES
     src/utils/Logger.cpp
     src/utils/IpAddressValidator.cpp
     src/utils/StringFormatter.cpp
     src/utils/TimeFormatter.cpp
     src/utils/StatisticsCalculator.cpp
+    src/utils/IconLoader.cpp
+    src/utils/AnimationHelper.cpp
+    src/utils/TooltipHelper.cpp
 )
 
 # Network sources
@@ -201,6 +207,13 @@ set(DELEGATE_SOURCES
     src/delegates/QualityScoreDelegate.cpp
 )
 
+# Widget sources (Phase 9.2)
+set(WIDGET_SOURCES
+    src/widgets/QualityGauge.cpp
+    src/widgets/NetworkActivityIndicator.cpp
+    src/widgets/GradientProgressBar.cpp
+)
+
 # Header files (for MOC)
 set(HEADERS
     src/models/Device.h
@@ -252,6 +265,9 @@ set(HEADERS
     include/services/HistoryService.h
     include/services/MonitoringService.h
     include/services/WakeOnLanService.h
+    include/widgets/QualityGauge.h
+    include/widgets/NetworkActivityIndicator.h
+    include/widgets/GradientProgressBar.h
 )
 
 # UI files (Phase 5-7-8)
@@ -291,6 +307,7 @@ add_executable(${PROJECT_NAME}
     ${VIEW_SOURCES}
     ${DELEGATE_SOURCES}
     ${CHART_SOURCES}
+    ${WIDGET_SOURCES}
     ${HEADERS}
     ${UI_SOURCES}
     ${RESOURCE_FILES}
@@ -304,6 +321,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Charts
     Qt6::Sql
     Qt6::Concurrent
+    Qt6::Svg
 )
 
 # Copy OUI database to build directory for development

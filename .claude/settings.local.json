@@ -86,7 +86,22 @@
       "Bash(./DnsDiagnosticsTest.exe -v2)",
       "Bash(./tests/MtuDiscoveryTest.exe)",
       "Bash(./tests/BandwidthTesterTest.exe)",
-      "Bash(./tests/DnsDiagnosticsTest.exe)"
+      "Bash(./tests/DnsDiagnosticsTest.exe)",
+      "Bash(if exist build rmdir /s /q build)",
+      "Bash(./HistoryServiceTest.exe -v2)",
+      "Bash(./HistoryServiceTest.exe)",
+      "Bash(rm:*)",
+      "Bash(./WakeOnLanServiceTest.exe)",
+      "Bash(./build/tests/WakeOnLanServiceTest.exe)",
+      "Bash(./build/tests/WakeOnLanServiceTest.exe:*)",
+      "Bash(echo $NUMBER_OF_PROCESSORS)",
+      "Bash(sysctl:*)",
+      "Bash(./XmlExporterTest.exe)",
+      "Bash(./XmlExporterTest.exe -v2)",
+      "Bash(./ThemeManagerTest.exe -v2)",
+      "Bash(./ThemeManagerTest.exe)",
+      "Bash(set PATH=C:Qt6.9.1mingw_64bin)",
+      "Bash(ThemeManagerTest.exe)"
     ],
     "deny": [],
     "ask": []

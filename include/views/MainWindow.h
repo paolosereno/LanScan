@@ -5,6 +5,8 @@
 #include <QProgressBar>
 #include <QLabel>
 #include <QDockWidget>
+#include <QSystemTrayIcon>
+#include <QMenu>
 #include "../models/Device.h"
 
 class ScanController;
@@ -77,6 +79,15 @@ private slots:
     void onPingDevice(const Device& device);
     void onShowDeviceDetails(const Device& device);
 
+    // System tray slots
+    void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
+    void onShowHideAction();
+    void onTrayQuickScan();
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
+    void changeEvent(QEvent* event) override;
+
 private:
     Ui::MainWindow* ui;
 
@@ -109,13 +120,21 @@ private:
     MetricsViewModel* metricsViewModel;
     QDockWidget* metricsDock;
 
+    // System tray
+    QSystemTrayIcon* trayIcon;
+    QMenu* trayMenu;
+    bool minimizeToTray;
+    bool closeToTray;
+
     void setupMenuBar();
     void setupToolBar();
     void setupStatusBar();
     void setupConnections();
     void setupDeviceTable();
     void setupMetricsWidget();
+    void setupSystemTray();
     void updateStatusMessage(const QString& message);
+    void loadTraySettings();
 };
 
 #endif // MAINWINDOW_H

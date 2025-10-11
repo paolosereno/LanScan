@@ -20,11 +20,14 @@
 #include "diagnostics/DnsDiagnostics.h"
 #include "services/WakeOnLanService.h"
 #include "../utils/Logger.h"
+#include "utils/IconLoader.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressBar>
 #include <QLabel>
 #include <QDockWidget>
+#include <QSettings>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(
     ScanController* scanController,
@@ -61,6 +64,10 @@ MainWindow::MainWindow(
     , metricsWidget(nullptr)
     , metricsViewModel(nullptr)
     , metricsDock(nullptr)
+    , trayIcon(nullptr)
+    , trayMenu(nullptr)
+    , minimizeToTray(false)
+    , closeToTray(false)
 {
     ui->setupUi(this);
 
@@ -69,10 +76,14 @@ MainWindow::MainWindow(
     setupStatusBar();
     setupDeviceTable();
     setupMetricsWidget();
+    setupSystemTray();
     setupConnections();
 
     // Load initial devices
     deviceTableViewModel->loadDevices();
+
+    // Load tray settings
+    loadTraySettings();
 
     Logger::info("MainWindow initialized");
 }
@@ -383,4 +394,126 @@ void MainWindow::onPingDevice(const Device& device) {
 void MainWindow::updateStatusMessage(const QString& message) {
     statusLabel->setText(message);
     Logger::info("Status: " + message);
+}
+
+void MainWindow::setupSystemTray() {
+    // Check if system tray is available
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+        Logger::warn("System tray not available on this platform");
+        return;
+    }
+
+    // Create tray icon
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(IconLoader::loadIcon("scan", QSize(22, 22)));
+    trayIcon->setToolTip(tr("LanScan - Network Scanner"));
+
+    // Create tray menu
+    trayMenu = new QMenu(this);
+
+    QAction* showHideAction = trayMenu->addAction(IconLoader::loadIcon("scan"), tr("Show/Hide"));
+    connect(showHideAction, &QAction::triggered, this, &MainWindow::onShowHideAction);
+
+    trayMenu->addSeparator();
+
+    QAction* quickScanAction = trayMenu->addAction(IconLoader::loadIcon("scan"), tr("Quick Scan"));
+    connect(quickScanAction, &QAction::triggered, this, &MainWindow::onTrayQuickScan);
+
+    trayMenu->addSeparator();
+
+    QAction* exitAction = trayMenu->addAction(IconLoader::loadIcon("power"), tr("Exit"));
+    connect(exitAction, &QAction::triggered, qApp, &QApplication::quit);
+
+    trayIcon->setContextMenu(trayMenu);
+
+    // Connect tray icon activation
+    connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::onTrayIconActivated);
+
+    // Show tray icon
+    trayIcon->show();
+
+    Logger::info("System tray initialized");
+}
+
+void MainWindow::loadTraySettings() {
+    QSettings settings;
+    minimizeToTray = settings.value("general/minimizeToTray", false).toBool();
+    closeToTray = settings.value("general/closeToTray", false).toBool();
+
+    Logger::info(QString("Tray settings: minimize=%1, close=%2")
+        .arg(minimizeToTray).arg(closeToTray));
+}
+
+void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason) {
+    if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick) {
+        onShowHideAction();
+    }
+}
+
+void MainWindow::onShowHideAction() {
+    if (isVisible()) {
+        hide();
+        Logger::info("Window hidden to tray");
+    } else {
+        show();
+        raise();
+        activateWindow();
+        Logger::info("Window restored from tray");
+    }
+}
+
+void MainWindow::onTrayQuickScan() {
+    // Show window if hidden
+    if (!isVisible()) {
+        show();
+        raise();
+        activateWindow();
+    }
+
+    // Trigger quick scan
+    onQuickScan();
+
+    // Show tray notification
+    if (trayIcon && trayIcon->isVisible()) {
+        trayIcon->showMessage(
+            tr("LanScan"),
+            tr("Quick scan started"),
+            QSystemTrayIcon::Information,
+            3000
+        );
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+    if (closeToTray && trayIcon && trayIcon->isVisible()) {
+        hide();
+        event->ignore();
+
+        if (trayIcon->supportsMessages()) {
+            trayIcon->showMessage(
+                tr("LanScan"),
+                tr("Application minimized to tray. Right-click the tray icon for options."),
+                QSystemTrayIcon::Information,
+                3000
+            );
+        }
+
+        Logger::info("Window closed to tray");
+    } else {
+        event->accept();
+        Logger::info("Application closing");
+    }
+}
+
+void MainWindow::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::WindowStateChange) {
+        if (isMinimized() && minimizeToTray && trayIcon && trayIcon->isVisible()) {
+            hide();
+            event->ignore();
+            Logger::info("Window minimized to tray");
+            return;
+        }
+    }
+
+    QMainWindow::changeEvent(event);
 }
