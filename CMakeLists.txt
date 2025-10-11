@@ -24,6 +24,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Sql
     Concurrent
     Svg
+    LinguistTools
 )
 
 # Include directories
@@ -158,11 +159,12 @@ set(CONTROLLER_SOURCES
     src/controllers/ExportController.cpp
 )
 
-# Manager sources (Phase 4 + Phase 9.1)
+# Manager sources (Phase 4 + Phase 9.1 + Phase 9.4)
 set(MANAGER_SOURCES
     src/managers/ProfileManager.cpp
     src/managers/FavoritesManager.cpp
     src/managers/ThemeManager.cpp
+    src/managers/LanguageManager.cpp
 )
 
 # Service sources (Phase 7.3 + Phase 8.1)
@@ -236,6 +238,7 @@ set(HEADERS
     include/managers/ProfileManager.h
     include/managers/FavoritesManager.h
     include/managers/ThemeManager.h
+    include/managers/LanguageManager.h
     include/utils/ProgressTracker.h
     include/viewmodels/DeviceTableViewModel.h
     include/viewmodels/ScanConfigViewModel.h
@@ -289,6 +292,17 @@ set(RESOURCE_FILES
     resources/resources.qrc
 )
 
+# Translation files (Phase 9.4)
+set(TS_FILES
+    translations/lanscan_it.ts
+    translations/lanscan_es.ts
+    translations/lanscan_fr.ts
+    translations/lanscan_de.ts
+)
+
+# Generate .qm files from .ts files
+qt6_add_translation(QM_FILES ${TS_FILES})
+
 # Create executable
 add_executable(${PROJECT_NAME}
     ${SOURCES}
@@ -311,6 +325,7 @@ add_executable(${PROJECT_NAME}
     ${HEADERS}
     ${UI_SOURCES}
     ${RESOURCE_FILES}
+    ${QM_FILES}
 )
 
 # Link Qt libraries
@@ -331,6 +346,22 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/oui_database.txt
     COMMENT "Copying OUI database to build directory"
 )
+
+# Copy translation files to build directory
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/translations
+    COMMENT "Creating translations directory in build directory"
+)
+
+foreach(qm_file ${QM_FILES})
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${qm_file}
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/translations/
+        COMMENT "Copying ${qm_file} to build directory"
+    )
+endforeach()
 
 # Enable testing
 enable_testing()

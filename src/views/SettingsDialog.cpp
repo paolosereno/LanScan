@@ -2,6 +2,7 @@
 #include "ui_settingsdialog.h"
 #include "utils/Logger.h"
 #include "managers/ThemeManager.h"
+#include "managers/LanguageManager.h"
 #include <QMessageBox>
 
 SettingsDialog::SettingsDialog(QWidget* parent)
@@ -96,8 +97,10 @@ void SettingsDialog::setupConnections() {
 }
 
 void SettingsDialog::setupTabGeneral() {
-    // Language is already set in UI file
-    // Just add additional languages if needed
+    // Populate language combo with LanguageManager languages
+    ui->languageCombo->clear();
+    ui->languageCombo->addItem("English", "en");
+    ui->languageCombo->addItem("Italiano", "it");
     ui->languageCombo->addItem("Español", "es");
     ui->languageCombo->addItem("Français", "fr");
     ui->languageCombo->addItem("Deutsch", "de");
@@ -289,6 +292,12 @@ void SettingsDialog::applySettings() {
     }
 
     saveSettings();
+
+    // Apply language change immediately
+    QString languageCode = ui->languageCombo->currentData().toString();
+    LanguageManager::Language language = LanguageManager::codeToLanguage(languageCode);
+    LanguageManager::instance().setLanguage(language);
+
     emit settingsApplied();
 
     Logger::info("Settings applied successfully");

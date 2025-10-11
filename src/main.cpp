@@ -27,6 +27,7 @@
 #include "../services/WakeOnLanService.h"
 #include "../utils/Logger.h"
 #include "../managers/ThemeManager.h"
+#include "../managers/LanguageManager.h"
 #include <QSettings>
 
 int main(int argc, char *argv[])
@@ -48,6 +49,14 @@ int main(int argc, char *argv[])
     ThemeManager::Theme theme = ThemeManager::stringToTheme(themeStr);
     ThemeManager::instance().setTheme(theme);
     Logger::info(QString("Theme initialized: %1").arg(themeStr));
+
+    // ========== Language Setup (Phase 9.4) ==========
+
+    // Load language from settings
+    QString languageCode = settings.value("General/Language", "en").toString();
+    LanguageManager::Language language = LanguageManager::codeToLanguage(languageCode);
+    LanguageManager::instance().setLanguage(language);
+    Logger::info(QString("Language initialized: %1").arg(LanguageManager::languageToName(language)));
 
     // ========== Infrastructure Setup ==========
 

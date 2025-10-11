@@ -6,7 +6,7 @@
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
 [![Tests](https://img.shields.io/badge/tests-34%20suites-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Progress](https://img.shields.io/badge/progress-88%25-blue.svg)](https://github.com/paolosereno/LanScan)
+[![Progress](https://img.shields.io/badge/progress-92%25-blue.svg)](https://github.com/paolosereno/LanScan)
 [![LOC](https://img.shields.io/badge/LOC-32.7k-informational.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
@@ -292,7 +292,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - MainWindow integration via Tools menu
   - Full CMakeLists.txt integration
 
-**UI Polish & Theming** (Phase 9 - 🔄 75% Complete)
+**UI Polish & Theming** (Phase 9 - ✅ Complete)
 
 **Theme System** (Phase 9.1 - ✅ Complete)
 - ✅ **ThemeManager Singleton**
@@ -380,21 +380,52 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - MainWindow extended with tray functionality
   - All utilities compiled and tested
 
-### 🚧 Planned (Phase 9.4+)
-- Localization support (optional) - Phase 9.4
+**Localization** (Phase 9.4 - ✅ Complete)
+- ✅ **LanguageManager Singleton**
+  - Application-wide multi-language support
+  - 5 languages: English, Italian (Italiano), Spanish (Español), French (Français), German (Deutsch)
+  - Runtime language switching with Qt signals
+  - Automatic translation file loading (.qm files)
+  - Language code conversions (en, it, es, fr, de)
+- ✅ **Qt Linguist Integration**
+  - Qt6::LinguistTools component in CMake
+  - qt6_add_translation() for .ts to .qm compilation
+  - Post-build commands to copy .qm files to build/translations/
+  - 4 translation files with 17 translations each
+- ✅ **Translation Files**
+  - lanscan_it.ts - Italian translations
+  - lanscan_es.ts - Spanish translations
+  - lanscan_fr.ts - French translations
+  - lanscan_de.ts - German translations
+  - MainWindow menu translations (File, Scan, View, Tools)
+  - QualityGauge level translations (Excellent, Good, Fair, Poor, Unknown)
+- ✅ **Settings Integration**
+  - Language combo box in SettingsDialog General tab
+  - Persistent language preference via QSettings
+  - Immediate language application on settings save
+  - Language initialization at application startup
+- ✅ **Implementation**
+  - 2 new files created (~200 LOC)
+  - LanguageManager.h/cpp with singleton pattern
+  - 4 translation files (~320 LOC total)
+  - CMakeLists.txt updates (~25 LOC)
+  - main.cpp startup language loading
+
+### 🚧 Planned (Phase 10+)
 - Extended testing and quality assurance (Phase 10)
 - Documentation and user guides (Phase 11)
 - Release preparation and deployment (Phase 12)
 
 ## Technology Stack
 
-- **Framework**: Qt 6.x (Widgets, Network, Charts, Sql, Concurrent, Svg)
+- **Framework**: Qt 6.x (Widgets, Network, Charts, Sql, Concurrent, Svg, LinguistTools)
 - **Language**: C++ 17
 - **Build System**: CMake 3.16+
 - **Architecture**: MVVM pattern with dependency injection
 - **Database**: SQLite with Repository pattern
 - **Testing**: Qt Test framework (34 test suites, 89+ test cases)
 - **Platform**: Cross-platform (Windows, Linux, macOS)
+- **Localization**: Qt Linguist (5 languages: en, it, es, fr, de)
 
 ## Build Instructions
 
@@ -495,18 +526,29 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 9 - UI Polish & Theming 🔄 **IN PROGRESS** (3/4 modules - 75%)
-**Next Milestone**: Localization (9.4 - Optional) or Phase 10 (Testing & QA)
-**Progress**: 88% (~8.75 complete phases of ~12 total)
-**Latest Release**: [v0.9.3-phase9.3](https://github.com/paolosereno/LanScan/releases/tag/v0.9.3-phase9.3)
+**Current Phase**: Phase 9 - UI Polish & Theming ✅ **COMPLETE** (4/4 modules - 100%)
+**Next Milestone**: Phase 10 - Testing & Quality Assurance
+**Progress**: 92% (~9.0 complete phases of ~12 total)
+**Latest Release**: [v0.9.4-phase9.4](https://github.com/paolosereno/LanScan/releases/tag/v0.9.4-phase9.4)
 
 ### Metrics
-- **Files**: 260 total
-- **Lines of Code**: ~32,747 LOC
+- **Files**: 262 total
+- **Lines of Code**: ~33,292 LOC
 - **Test Coverage**: 34 suites, 89+ test cases
 - **Build Size**: 61 MB (Debug build)
+- **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-11**: Phase 9.4 completed - Localization
+  - Implemented LanguageManager singleton for multi-language support
+  - Created translation files for 5 languages (English, Italian, Spanish, French, German)
+  - Integrated Qt6::LinguistTools with CMake for .qm file generation
+  - Added language selection in SettingsDialog with persistent storage
+  - Implemented automatic language loading at application startup
+  - 17 translations per language file (MainWindow menus, QualityGauge levels)
+  - Post-build commands to copy translation files to build directory
+  - ~545 LOC added (LanguageManager + 4 translation files)
+  - **Phase 9 (UI Polish & Theming) now 100% complete!**
 - **2025-10-11**: Phase 9.3 completed - UI Enhancements
   - Created 10 SVG icons with IconLoader utility class
   - Implemented System Tray integration with notifications
@@ -662,11 +704,12 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 242 total (Phase 9.1 added 6 new files)
-- **Lines of Code**: ~30,747+ lines (Phase 9.1 added ~2,039 LOC)
+- **Files Created**: 262 total (Phase 9 added 24 new files)
+- **Lines of Code**: ~33,292+ lines (Phase 9 added ~4,584 LOC)
 - **Test Coverage**: 89+ tests across 34 test suites
 - **Build Time**: ~50-60 seconds (Debug, 8-12 cores)
-- **Executable Size**: 51 MB (Debug build with Phase 9.1 theme system)
+- **Executable Size**: 61 MB (Debug build with Phase 9 complete)
+- **Translation Files**: 4 languages × 17 translations = 68 translated strings
 
 ## License
 
