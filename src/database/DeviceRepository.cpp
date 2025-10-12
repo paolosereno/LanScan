@@ -266,6 +266,28 @@ void DeviceRepository::saveToDatabase(const Device& device) {
 }
 
 void DeviceRepository::updateInDatabase(const Device& device) {
+    // Get existing device to merge data (preserve hostname if new device doesn't have it)
+    Device existing = findById(device.getId());
+
+    // Merge: keep existing hostname if new device has empty hostname
+    QString hostname = device.getHostname();
+    if (hostname.isEmpty() && !existing.getHostname().isEmpty()) {
+        hostname = existing.getHostname();
+        Logger::debug(QString("DeviceRepository: Preserving existing hostname '%1' for %2")
+                     .arg(existing.getHostname()).arg(device.getIp()));
+    }
+
+    // Merge: keep existing MAC/vendor if new device doesn't have them
+    QString mac = device.getMacAddress();
+    if (mac.isEmpty() && !existing.getMacAddress().isEmpty()) {
+        mac = existing.getMacAddress();
+    }
+
+    QString vendor = device.getVendor();
+    if (vendor.isEmpty() && !existing.getVendor().isEmpty()) {
+        vendor = existing.getVendor();
+    }
+
     QString query = R"(
         UPDATE devices
         SET ip = :ip, hostname = :hostname, mac_address = :mac,
@@ -277,9 +299,9 @@ void DeviceRepository::updateInDatabase(const Device& device) {
     QSqlQuery sqlQuery = db->prepareQuery(query);
     sqlQuery.bindValue(":id", device.getId());
     sqlQuery.bindValue(":ip", device.getIp());
-    sqlQuery.bindValue(":hostname", device.getHostname());
-    sqlQuery.bindValue(":mac", device.getMacAddress());
-    sqlQuery.bindValue(":vendor", device.getVendor());
+    sqlQuery.bindValue(":hostname", hostname);  // Use merged hostname
+    sqlQuery.bindValue(":mac", mac);            // Use merged MAC
+    sqlQuery.bindValue(":vendor", vendor);      // Use merged vendor
     sqlQuery.bindValue(":online", device.isOnline() ? 1 : 0);
     sqlQuery.bindValue(":last_seen", device.getLastSeen());
 
@@ -288,14 +310,17 @@ void DeviceRepository::updateInDatabase(const Device& device) {
         return;
     }
 
-    // Delete old ports and save new ones
-    QSqlQuery deleteQuery = db->prepareQuery("DELETE FROM ports WHERE device_id = :id");
-    deleteQuery.bindValue(":id", device.getId());
-    deleteQuery.exec();
+    // Delete old ports and save new ones (only if device has ports)
+    if (!device.getOpenPorts().isEmpty()) {
+        QSqlQuery deleteQuery = db->prepareQuery("DELETE FROM ports WHERE device_id = :id");
+        deleteQuery.bindValue(":id", device.getId());
+        deleteQuery.exec();
 
-    savePorts(device.getId(), device.getOpenPorts());
+        savePorts(device.getId(), device.getOpenPorts());
+    }
 
-    Logger::info("DeviceRepository: Device updated: " + device.getIp());
+    Logger::info(QString("DeviceRepository: Device updated: %1 (hostname: %2)")
+                .arg(device.getIp()).arg(hostname.isEmpty() ? "none" : hostname));
 }
 
 void DeviceRepository::savePorts(const QString& deviceId, const QList<PortInfo>& ports) {
