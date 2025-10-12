@@ -32,9 +32,16 @@ void DnsResolver::resolveHostname(const QString& ip)
     Logger::debug(QString("Resolving hostname for: %1").arg(ip));
 
     // Use QHostInfo for reverse DNS lookup (IP -> hostname)
-    m_lookupId = QHostInfo::lookupHost(ip, this, &DnsResolver::onLookupFinished);
+    int lookupId = QHostInfo::lookupHost(ip, this, &DnsResolver::onLookupFinished);
 
-    Logger::debug(QString("QHostInfo::lookupHost started with ID: %1").arg(m_lookupId));
+    // Store mapping of lookupId -> IP to avoid race conditions
+    {
+        QMutexLocker locker(&m_lookupMutex);
+        m_lookupIdToIp[lookupId] = ip;
+        m_lookupId = lookupId;
+    }
+
+    Logger::debug(QString("QHostInfo::lookupHost started for %1 with ID: %2").arg(ip).arg(lookupId));
 }
 
 QString DnsResolver::resolveSync(const QString& ip, int timeout, int maxRetries)
@@ -182,7 +189,22 @@ void DnsResolver::onLookupFinished(const QHostInfo& info)
         return;
     }
 
-    Logger::debug(QString("onLookupFinished called for: %1").arg(m_currentIp));
+    // Get the IP address for this lookup ID
+    QString ip;
+    {
+        QMutexLocker locker(&m_lookupMutex);
+        ip = m_lookupIdToIp.value(info.lookupId());
+
+        if (ip.isEmpty()) {
+            Logger::warn(QString("onLookupFinished: Unknown lookup ID %1, ignoring").arg(info.lookupId()));
+            return;
+        }
+
+        // Clean up the mapping
+        m_lookupIdToIp.remove(info.lookupId());
+    }
+
+    Logger::debug(QString("onLookupFinished called for: %1 (lookup ID: %2)").arg(ip).arg(info.lookupId()));
     Logger::debug(QString("  Error code: %1").arg(info.error()));
     Logger::debug(QString("  Error string: %1").arg(info.errorString()));
     Logger::debug(QString("  Hostname: '%1'").arg(info.hostName()));
@@ -195,15 +217,15 @@ void DnsResolver::onLookupFinished(const QHostInfo& info)
         // If reverse DNS returns an IP instead of hostname, treat as failure
         QRegularExpression ipRegex("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$");
         if (ipRegex.match(hostname).hasMatch()) {
-            Logger::warn(QString("DNS returned IP address instead of hostname for %1: %2").arg(m_currentIp).arg(hostname));
-            emit resolveFailed(m_currentIp);
+            Logger::warn(QString("DNS returned IP address instead of hostname for %1: %2").arg(ip).arg(hostname));
+            emit resolveFailed(ip);
             return;
         }
 
-        Logger::debug(QString("Resolved %1 to %2").arg(m_currentIp).arg(hostname));
-        emit hostnameResolved(m_currentIp, hostname);
+        Logger::info(QString("DNS resolved %1 -> %2 (lookup ID: %3)").arg(ip).arg(hostname).arg(info.lookupId()));
+        emit hostnameResolved(ip, hostname);
     } else {
-        Logger::debug(QString("Failed to resolve %1: %2").arg(m_currentIp).arg(info.errorString()));
-        emit resolveFailed(m_currentIp);
+        Logger::debug(QString("Failed to resolve %1: %2").arg(ip).arg(info.errorString()));
+        emit resolveFailed(ip);
     }
 }

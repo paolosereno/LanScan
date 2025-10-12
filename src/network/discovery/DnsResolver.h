@@ -6,6 +6,7 @@
 #include <QHostInfo>
 #include <QCache>
 #include <QMutex>
+#include <QMap>
 
 class DnsResolver : public QObject
 {
@@ -43,6 +44,10 @@ private:
     // DNS cache: IP -> hostname mapping
     QCache<QString, QString> m_dnsCache;
     mutable QMutex m_cacheMutex;
+
+    // Map lookupId -> IP address to avoid race conditions
+    QMap<int, QString> m_lookupIdToIp;
+    QMutex m_lookupMutex;
 
     // Statistics
     int m_cacheHits;

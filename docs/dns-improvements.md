@@ -221,6 +221,58 @@ Per verificare i miglioramenti:
 - Tempo medio di risoluzione
 - Fallimenti dopo tutti i retry (obiettivo: <5%)
 
+## Bug Fix: Race Condition negli Hostname
+
+### Problema Critico Risolto (2025-10-12)
+
+**Sintomo**: Due IP diversi (es. 192.168.1.105 e 192.168.1.118) mostravano lo stesso hostname.
+
+**Causa Root**: Race condition nella variabile `m_currentIp` condivisa:
+
+```cpp
+// PRIMA (BUGGY):
+void DnsResolver::resolveHostname(const QString& ip) {
+    m_currentIp = ip;  // ❌ Variabile condivisa!
+    QHostInfo::lookupHost(ip, this, &DnsResolver::onLookupFinished);
+}
+
+void DnsResolver::onLookupFinished(const QHostInfo& info) {
+    // ❌ Usa m_currentIp che potrebbe essere stato sovrascritto!
+    emit hostnameResolved(m_currentIp, hostname);
+}
+```
+
+**Scenario Race Condition**:
+1. Thread A: `resolveHostname("192.168.1.105")` → `m_currentIp = "192.168.1.105"`
+2. Thread B: `resolveHostname("192.168.1.118")` → `m_currentIp = "192.168.1.118"` ⚠️ (sovrascrive!)
+3. Thread A: `onLookupFinished()` → usa `m_currentIp` che ora vale "192.168.1.118"!
+4. Risultato: hostname di .118 assegnato anche a .105
+
+**Soluzione**: Mapping thread-safe `lookupId → IP`:
+
+```cpp
+// DOPO (CORRETTO):
+QMap<int, QString> m_lookupIdToIp;  // ✅ Mappa lookup ID -> IP
+QMutex m_lookupMutex;               // ✅ Thread-safe
+
+void DnsResolver::resolveHostname(const QString& ip) {
+    int lookupId = QHostInfo::lookupHost(ip, this, &DnsResolver::onLookupFinished);
+
+    QMutexLocker locker(&m_lookupMutex);
+    m_lookupIdToIp[lookupId] = ip;  // ✅ Salva mapping
+}
+
+void DnsResolver::onLookupFinished(const QHostInfo& info) {
+    QMutexLocker locker(&m_lookupMutex);
+    QString ip = m_lookupIdToIp.value(info.lookupId());  // ✅ Recupera IP corretto
+    m_lookupIdToIp.remove(info.lookupId());              // ✅ Cleanup
+
+    emit hostnameResolved(ip, hostname);  // ✅ IP corretto garantito!
+}
+```
+
+**Risultato**: Ogni `lookupId` è univoco e traccia correttamente quale IP corrisponde a quale callback DNS, eliminando completamente la race condition.
+
 ## Conclusione
 
 Queste modifiche migliorano significativamente l'affidabilità e la consistenza del riconoscimento hostname durante i deep scan. Il sistema ora:
@@ -230,5 +282,6 @@ Queste modifiche migliorano significativamente l'affidabilità e la consistenza 
 - ✅ Fornisce logging dettagliato per debugging
 - ✅ È configurabile per diverse condizioni di rete
 - ✅ Mantiene compatibilità con il codice esistente
+- ✅ **Elimina race condition che causava hostname duplicati** (fix 2025-10-12)
 
-La variabilità nel riconoscimento hostname è stata ridotta significativamente, rendendo i deep scan più prevedibili e affidabili.
+La variabilità nel riconoscimento hostname è stata ridotta significativamente, rendendo i deep scan più prevedibili e affidabili. Il bug critico degli hostname duplicati è stato completamente risolto.
