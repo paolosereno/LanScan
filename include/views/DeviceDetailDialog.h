@@ -12,6 +12,7 @@
 #include "diagnostics/MtuDiscovery.h"
 #include "diagnostics/BandwidthTester.h"
 #include "diagnostics/DnsDiagnostics.h"
+#include "widgets/QualityGauge.h"
 
 namespace Ui {
 class DeviceDetailDialog;
@@ -92,6 +93,7 @@ private:
     // Widgets
     MetricsWidget* m_metricsWidget;
     MetricsViewModel* m_metricsViewModel;
+    QualityGauge* m_qualityGauge;
 
     // UI setup methods
     void setupUi();

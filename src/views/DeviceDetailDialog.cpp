@@ -109,6 +109,12 @@ void DeviceDetailDialog::setupPortsTab()
 
 void DeviceDetailDialog::setupMetricsTab()
 {
+    // Create QualityGauge for visual quality indicator
+    m_qualityGauge = new QualityGauge(this);
+    m_qualityGauge->setMinimumSize(150, 150);
+    m_qualityGauge->setMaximumSize(200, 200);
+    m_qualityGauge->setValue(0);  // Will be updated with real metrics
+
     // Create MetricsViewModel
     m_metricsViewModel = new MetricsViewModel(
         m_metricsController,
@@ -119,14 +125,52 @@ void DeviceDetailDialog::setupMetricsTab()
     // Create MetricsWidget
     m_metricsWidget = new MetricsWidget(m_metricsViewModel, this);
 
-    // Add to metrics tab layout
-    ui->metricsTab->layout()->addWidget(m_metricsWidget);
+    // Create a horizontal layout for gauge and metrics
+    QHBoxLayout* metricsLayout = qobject_cast<QHBoxLayout*>(ui->metricsTab->layout());
+    if (!metricsLayout) {
+        metricsLayout = new QHBoxLayout(ui->metricsTab);
+        ui->metricsTab->setLayout(metricsLayout);
+    }
+
+    // Add quality gauge on the left
+    QVBoxLayout* gaugeLayout = new QVBoxLayout();
+    gaugeLayout->addWidget(m_qualityGauge, 0, Qt::AlignCenter);
+    gaugeLayout->addWidget(new QLabel(tr("Connection Quality"), this), 0, Qt::AlignCenter);
+    gaugeLayout->addStretch();
+
+    metricsLayout->addLayout(gaugeLayout);
+    metricsLayout->addWidget(m_metricsWidget, 1);
+
+    // Connect metrics updates to quality gauge
+    // Convert QualityScore enum to 0-100 value for gauge
+    connect(m_metricsViewModel, &MetricsViewModel::metricsUpdated,
+            this, [this](const NetworkMetrics& metrics) {
+                int gaugeValue = 0;
+                switch (metrics.qualityScore()) {
+                    case NetworkMetrics::Excellent:
+                        gaugeValue = 95;
+                        break;
+                    case NetworkMetrics::Good:
+                        gaugeValue = 75;
+                        break;
+                    case NetworkMetrics::Fair:
+                        gaugeValue = 55;
+                        break;
+                    case NetworkMetrics::Poor:
+                        gaugeValue = 35;
+                        break;
+                    case NetworkMetrics::Critical:
+                        gaugeValue = 15;
+                        break;
+                }
+                m_qualityGauge->setValue(gaugeValue);
+            });
 
     // Set device and start monitoring
     m_metricsViewModel->setDevice(m_device);
     m_metricsViewModel->startMonitoring();
 
-    Logger::info("DeviceDetailDialog: MetricsWidget integrated and monitoring started");
+    Logger::info("DeviceDetailDialog: MetricsWidget integrated with QualityGauge and monitoring started");
 }
 
 void DeviceDetailDialog::setupHistoryTab()

@@ -142,12 +142,21 @@ void MainWindow::setupStatusBar() {
     statusLabel = new QLabel(tr("Ready"), this);
     deviceCountLabel = new QLabel(tr("Devices: 0"), this);
 
-    progressBar = new QProgressBar(this);
+    // Use GradientProgressBar instead of QProgressBar
+    progressBar = new GradientProgressBar(this);
     progressBar->setVisible(false);
     progressBar->setMaximumWidth(200);
+    progressBar->setAnimated(true);
+    progressBar->setAnimationDuration(300);
+
+    // Add NetworkActivityIndicator
+    activityIndicator = new NetworkActivityIndicator(this);
+    activityIndicator->setState(NetworkActivityIndicator::Off);
+    activityIndicator->setToolTip(tr("Network Activity"));
 
     ui->statusBar->addWidget(statusLabel, 1);
     ui->statusBar->addWidget(progressBar);
+    ui->statusBar->addPermanentWidget(activityIndicator);
     ui->statusBar->addPermanentWidget(deviceCountLabel);
 }
 
@@ -319,11 +328,24 @@ void MainWindow::onScanStarted(int totalHosts) {
     // Mark all existing devices as offline before scan starts
     // Devices that are found during scan will be updated to online
     deviceTableViewModel->markAllDevicesOffline();
+
+    // Set activity indicator to blinking during scan
+    activityIndicator->setState(NetworkActivityIndicator::Blinking);
+
     Logger::info(QString("Scan starting - marked all devices as offline"));
 }
 
 void MainWindow::onScanStatusChanged(const QString& status) {
     updateStatusMessage(status);
+
+    // Update activity indicator based on status
+    if (status.contains("completed", Qt::CaseInsensitive) ||
+        status.contains("stopped", Qt::CaseInsensitive) ||
+        status.contains("Error", Qt::CaseInsensitive)) {
+        // Scan finished - turn off indicator
+        activityIndicator->setState(NetworkActivityIndicator::Off);
+        progressBar->setVisible(false);
+    }
 }
 
 void MainWindow::onDevicesUpdated() {

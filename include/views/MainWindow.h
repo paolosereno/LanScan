@@ -8,6 +8,8 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include "../models/Device.h"
+#include "../widgets/NetworkActivityIndicator.h"
+#include "../widgets/GradientProgressBar.h"
 
 class ScanController;
 class MetricsController;
@@ -111,9 +113,10 @@ private:
     // Widgets
     DeviceTableWidget* deviceTable;
     DeviceTableViewModel* deviceTableViewModel;
-    QProgressBar* progressBar;
+    GradientProgressBar* progressBar;
     QLabel* statusLabel;
     QLabel* deviceCountLabel;
+    NetworkActivityIndicator* activityIndicator;
 
     // Metrics widgets
     MetricsWidget* metricsWidget;
