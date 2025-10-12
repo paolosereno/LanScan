@@ -28,10 +28,16 @@ public:
     // Enable/disable port scanning
     void setPortScanningEnabled(bool enabled);
 
+    // Configure DNS timeout and retries
+    void setDnsTimeout(int timeoutMs);
+    void setDnsRetries(int maxRetries);
+
 private:
     HostDiscovery* m_hostDiscovery;
     DnsResolver* m_dnsResolver;
     bool m_portScanningEnabled;
+    int m_dnsTimeout;       // DNS timeout in milliseconds
+    int m_dnsMaxRetries;    // Max DNS retry attempts
 
     // Common ports to scan
     static const QList<int> COMMON_PORTS;

@@ -28,7 +28,11 @@ DeepScanStrategy::DeepScanStrategy()
     : m_hostDiscovery(new HostDiscovery())
     , m_dnsResolver(new DnsResolver())
     , m_portScanningEnabled(true)  // Default: enabled for backward compatibility
+    , m_dnsTimeout(3000)            // Default: 3 seconds (increased from 2s)
+    , m_dnsMaxRetries(2)            // Default: 2 retries
 {
+    Logger::debug(QString("DeepScanStrategy initialized (DNS timeout: %1ms, retries: %2)")
+                 .arg(m_dnsTimeout).arg(m_dnsMaxRetries));
 }
 
 DeepScanStrategy::~DeepScanStrategy()
@@ -67,11 +71,13 @@ Device DeepScanStrategy::scan(const QString& ip)
         }
     }
 
-    // Reverse DNS lookup for hostname
-    QString hostname = m_dnsResolver->resolveSync(ip, 2000);
+    // Reverse DNS lookup for hostname with configured timeout and retries
+    QString hostname = m_dnsResolver->resolveSync(ip, m_dnsTimeout, m_dnsMaxRetries);
     if (!hostname.isEmpty()) {
         device.setHostname(hostname);
-        Logger::debug(QString("Hostname: %1").arg(hostname));
+        Logger::debug(QString("Hostname resolved: %1 -> %2").arg(ip).arg(hostname));
+    } else {
+        Logger::debug(QString("No hostname found for %1").arg(ip));
     }
 
     // Scan common ports (only if enabled)
@@ -116,6 +122,19 @@ QString DeepScanStrategy::getDescription() const
 void DeepScanStrategy::setPortScanningEnabled(bool enabled)
 {
     m_portScanningEnabled = enabled;
+    Logger::debug(QString("Port scanning %1").arg(enabled ? "enabled" : "disabled"));
+}
+
+void DeepScanStrategy::setDnsTimeout(int timeoutMs)
+{
+    m_dnsTimeout = timeoutMs;
+    Logger::debug(QString("DNS timeout set to %1ms").arg(m_dnsTimeout));
+}
+
+void DeepScanStrategy::setDnsRetries(int maxRetries)
+{
+    m_dnsMaxRetries = maxRetries;
+    Logger::debug(QString("DNS max retries set to %1").arg(m_dnsMaxRetries));
 }
 
 bool DeepScanStrategy::scanPort(const QString& ip, int port)
