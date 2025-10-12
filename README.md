@@ -5,8 +5,8 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-34%20suites-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Progress](https://img.shields.io/badge/progress-92%25-blue.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-38%20suites%20%7C%20160%2B%20cases-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Progress](https://img.shields.io/badge/progress-94%25-blue.svg)](https://github.com/paolosereno/LanScan)
 [![LOC](https://img.shields.io/badge/LOC-32.7k-informational.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
@@ -411,8 +411,30 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - CMakeLists.txt updates (~25 LOC)
   - main.cpp startup language loading
 
-### 🚧 Planned (Phase 10+)
-- Extended testing and quality assurance (Phase 10)
+**Testing & Quality Assurance** (Phase 10 - 🔄 In Progress)
+- ✅ **Controller Tests** (Day 1-2 - Complete)
+  - ScanControllerTest.cpp with 20 test cases
+  - MetricsControllerTest.cpp with 15 test cases
+  - ExportControllerTest.cpp with 16 test cases
+  - Mock objects for ScanCoordinator and MetricsAggregator
+  - Test coverage for scan workflows, metrics collection, and export operations
+- ✅ **ViewModel Tests** (Day 3-4 - In Progress)
+  - DeviceTableViewModelTest.cpp with 29 test cases
+  - Tests for QAbstractTableModel interface, device management, signal emissions
+  - MetricsViewModelTest.cpp (pending)
+  - ScanConfigViewModelTest.cpp (pending)
+- 🔄 **Integration Tests** (Day 8-9 - Planned)
+  - Full scan workflow testing
+  - Monitoring and alert integration tests
+- 🔄 **Performance Tests** (Day 10-11 - Planned)
+  - Scan performance benchmarks
+  - Memory leak detection with Valgrind
+  - Database query optimization
+- 🔄 **Cross-platform Testing** (Day 12-14 - Planned)
+  - Windows 10/11 verification
+  - Linux (Ubuntu 22.04+) verification
+
+### 🚧 Planned (Phase 11+)
 - Documentation and user guides (Phase 11)
 - Release preparation and deployment (Phase 12)
 
@@ -423,7 +445,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - **Build System**: CMake 3.16+
 - **Architecture**: MVVM pattern with dependency injection
 - **Database**: SQLite with Repository pattern
-- **Testing**: Qt Test framework (34 test suites, 89+ test cases)
+- **Testing**: Qt Test framework (38 test suites, 160+ test cases)
 - **Platform**: Cross-platform (Windows, Linux, macOS)
 - **Localization**: Qt Linguist (5 languages: en, it, es, fr, de)
 
@@ -526,19 +548,30 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 9 - UI Polish & Theming ✅ **COMPLETE** (4/4 modules - 100%)
-**Next Milestone**: Phase 10 - Testing & Quality Assurance
-**Progress**: 92% (~9.0 complete phases of ~12 total)
+**Current Phase**: Phase 10 - Testing & Quality Assurance 🔄 **IN PROGRESS** (Day 1-4 of 14 - 29%)
+**Next Milestone**: Phase 11 - Documentation & Release
+**Progress**: 94% (~9.4 complete phases of ~12 total)
 **Latest Release**: [v0.9.4-phase9.4](https://github.com/paolosereno/LanScan/releases/tag/v0.9.4-phase9.4)
 
 ### Metrics
-- **Files**: 262 total
-- **Lines of Code**: ~33,292 LOC
-- **Test Coverage**: 34 suites, 89+ test cases
+- **Files**: 266 total (+4 new test files)
+- **Lines of Code**: ~34,800 LOC (+1,508 LOC in Phase 10)
+- **Test Coverage**: 38 suites, 160+ test cases (+4 suites, +71 cases)
 - **Build Size**: 61 MB (Debug build)
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-12**: Phase 10 started - Testing & Quality Assurance (Day 1-4)
+  - Created ScanControllerTest.cpp with 20 test cases for scan workflows
+  - Implemented MetricsControllerTest.cpp with 15 test cases for metrics collection
+  - Built ExportControllerTest.cpp with 16 test cases for export operations
+  - Developed DeviceTableViewModelTest.cpp with 29 test cases for UI model testing
+  - Created mock objects (MockScanCoordinator, MockMetricsAggregator) for isolated testing
+  - Updated CMakeLists.txt with 4 new test targets
+  - 4 new test files: ~1,508 LOC
+  - Total test coverage increased: 38 suites, 160+ test cases
+  - Controller test coverage target: >70% (scan, metrics, export controllers)
+  - ViewModel test coverage target: >80% (device table model)
 - **2025-10-11**: Phase 9.4 completed - Localization
   - Implemented LanguageManager singleton for multi-language support
   - Created translation files for 5 languages (English, Italian, Spanish, French, German)
@@ -704,11 +737,11 @@ Location: src/path/to/files
 - **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
 
 ### Statistics
-- **Files Created**: 262 total (Phase 9 added 24 new files)
-- **Lines of Code**: ~33,292+ lines (Phase 9 added ~4,584 LOC)
-- **Test Coverage**: 89+ tests across 34 test suites
+- **Files Created**: 266 total (Phase 10 added 4 new test files)
+- **Lines of Code**: ~34,800+ lines (Phase 10 added ~1,508 LOC)
+- **Test Coverage**: 160+ tests across 38 test suites (Phase 10: +71 tests, +4 suites)
 - **Build Time**: ~50-60 seconds (Debug, 8-12 cores)
-- **Executable Size**: 61 MB (Debug build with Phase 9 complete)
+- **Executable Size**: 61 MB (Debug build)
 - **Translation Files**: 4 languages × 17 translations = 68 translated strings
 
 ## License

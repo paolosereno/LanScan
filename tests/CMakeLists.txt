@@ -396,3 +396,139 @@ target_include_directories(ThemeManagerTest PRIVATE
 )
 target_link_libraries(ThemeManagerTest PRIVATE Qt6::Test Qt6::Core Qt6::Widgets)
 add_test(NAME ThemeManagerTest COMMAND ThemeManagerTest)
+
+# Phase 10: Controller Tests
+add_executable(ScanControllerTest
+    ScanControllerTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/controllers/ScanController.cpp
+    ${CMAKE_SOURCE_DIR}/src/coordinators/ScanCoordinator.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceCache.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(ScanControllerTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/controllers
+    ${CMAKE_SOURCE_DIR}/include/coordinators
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/utils
+)
+target_link_libraries(ScanControllerTest PRIVATE Qt6::Test Qt6::Core Qt6::Network Qt6::Sql Qt6::Concurrent)
+add_test(NAME ScanControllerTest COMMAND ScanControllerTest)
+
+add_executable(MetricsControllerTest
+    MetricsControllerTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/controllers/MetricsController.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/MetricsAggregator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PingService.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/LatencyCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/JitterCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PacketLossCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/QualityScoreCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(MetricsControllerTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/controllers
+    ${CMAKE_SOURCE_DIR}/include/network/diagnostics
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/utils
+)
+target_link_libraries(MetricsControllerTest PRIVATE Qt6::Test Qt6::Core Qt6::Network Qt6::Sql)
+add_test(NAME MetricsControllerTest COMMAND MetricsControllerTest)
+
+add_executable(ExportControllerTest
+    ExportControllerTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/controllers/ExportController.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/CsvExporter.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/JsonExporter.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/XmlExporter.cpp
+    ${CMAKE_SOURCE_DIR}/src/export/HtmlReportGenerator.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(ExportControllerTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/controllers
+    ${CMAKE_SOURCE_DIR}/include/export
+    ${CMAKE_SOURCE_DIR}/include/interfaces
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/utils
+)
+target_link_libraries(ExportControllerTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql)
+add_test(NAME ExportControllerTest COMMAND ExportControllerTest)
+
+# Phase 10: ViewModel Tests
+add_executable(DeviceTableViewModelTest
+    DeviceTableViewModelTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/viewmodels/DeviceTableViewModel.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(DeviceTableViewModelTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/viewmodels
+    ${CMAKE_SOURCE_DIR}/include/database
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/utils
+    ${CMAKE_SOURCE_DIR}/src/models
+)
+target_link_libraries(DeviceTableViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Sql Qt6::Widgets)
+add_test(NAME DeviceTableViewModelTest COMMAND DeviceTableViewModelTest)
+
+add_executable(MetricsViewModelTest
+    MetricsViewModelTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/viewmodels/MetricsViewModel.cpp
+    ${CMAKE_SOURCE_DIR}/src/controllers/MetricsController.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/MetricsAggregator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PingService.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/LatencyCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/JitterCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PacketLossCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/QualityScoreCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(MetricsViewModelTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/viewmodels
+    ${CMAKE_SOURCE_DIR}/include/controllers
+    ${CMAKE_SOURCE_DIR}/include/network/diagnostics
+    ${CMAKE_SOURCE_DIR}/include/interfaces
+    ${CMAKE_SOURCE_DIR}/include/models
+    ${CMAKE_SOURCE_DIR}/include/utils
+    ${CMAKE_SOURCE_DIR}/src/models
+)
+target_link_libraries(MetricsViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME MetricsViewModelTest COMMAND MetricsViewModelTest)
+
+add_executable(ScanConfigViewModelTest
+    ScanConfigViewModelTest.cpp
+    ${CMAKE_SOURCE_DIR}/src/viewmodels/ScanConfigViewModel.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/IpAddressValidator.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
+)
+target_include_directories(ScanConfigViewModelTest PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/viewmodels
+    ${CMAKE_SOURCE_DIR}/include/coordinators
+    ${CMAKE_SOURCE_DIR}/include/utils
+)
+target_link_libraries(ScanConfigViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+add_test(NAME ScanConfigViewModelTest COMMAND ScanConfigViewModelTest)
