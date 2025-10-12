@@ -78,13 +78,16 @@ void QualityGauge::drawNeedle(QPainter* painter) {
     int centerY = height() / 2;
     int radius = qMin(width(), height()) / 2 - 30;
 
-    // Calculate needle angle (30° to 150°)
-    double angle = 30.0 + (m_value * 120.0 / 100.0);
+    // Calculate needle angle using Qt coordinate system
+    // Qt angles: 0° = 3 o'clock, 90° = 12 o'clock (counter-clockwise)
+    // We want: 0% at 210° (7 o'clock), 100% at 330° (5 o'clock)
+    // This creates a 120° arc from bottom-left to bottom-right
+    double angle = 210.0 - (m_value * 120.0 / 100.0);
     double radians = qDegreesToRadians(angle);
 
     // Calculate needle endpoint
     int needleX = centerX + static_cast<int>(radius * qCos(radians));
-    int needleY = centerY + static_cast<int>(radius * qSin(radians));
+    int needleY = centerY - static_cast<int>(radius * qSin(radians));  // Negative because Y grows downward
 
     // Draw needle line
     painter->setPen(QPen(palette().text().color(), 3, Qt::SolidLine, Qt::RoundCap));

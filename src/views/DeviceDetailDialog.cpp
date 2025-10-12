@@ -7,6 +7,7 @@
 #include "utils/TimeFormatter.h"
 #include <QDateTime>
 #include <QMessageBox>
+#include <QVBoxLayout>
 
 DeviceDetailDialog::DeviceDetailDialog(
     const Device& device,
@@ -109,68 +110,71 @@ void DeviceDetailDialog::setupPortsTab()
 
 void DeviceDetailDialog::setupMetricsTab()
 {
-    // Create QualityGauge for visual quality indicator
-    m_qualityGauge = new QualityGauge(this);
-    m_qualityGauge->setMinimumSize(150, 150);
-    m_qualityGauge->setMaximumSize(200, 200);
-    m_qualityGauge->setValue(0);  // Will be updated with real metrics
+    // Update the UI labels with actual metrics data when available
+    // The basic UI structure is already defined in the .ui file
 
-    // Create MetricsViewModel
+    // Create and setup QualityGauge
+    m_qualityGauge = new QualityGauge(this);
+    m_qualityGauge->setValue(0);
+
+    // Insert the QualityGauge into the container widget
+    QVBoxLayout* gaugeContainerLayout = new QVBoxLayout(ui->qualityGaugeContainer);
+    gaugeContainerLayout->setContentsMargins(0, 0, 0, 0);
+    gaugeContainerLayout->addWidget(m_qualityGauge, 0, Qt::AlignCenter);
+
+    // Create MetricsViewModel for data updates
     m_metricsViewModel = new MetricsViewModel(
         m_metricsController,
         nullptr,  // DeviceRepository not needed here
         this
     );
 
-    // Create MetricsWidget
-    m_metricsWidget = new MetricsWidget(m_metricsViewModel, this);
-
-    // Create a horizontal layout for gauge and metrics
-    QHBoxLayout* metricsLayout = qobject_cast<QHBoxLayout*>(ui->metricsTab->layout());
-    if (!metricsLayout) {
-        metricsLayout = new QHBoxLayout(ui->metricsTab);
-        ui->metricsTab->setLayout(metricsLayout);
-    }
-
-    // Add quality gauge on the left
-    QVBoxLayout* gaugeLayout = new QVBoxLayout();
-    gaugeLayout->addWidget(m_qualityGauge, 0, Qt::AlignCenter);
-    gaugeLayout->addWidget(new QLabel(tr("Connection Quality"), this), 0, Qt::AlignCenter);
-    gaugeLayout->addStretch();
-
-    metricsLayout->addLayout(gaugeLayout);
-    metricsLayout->addWidget(m_metricsWidget, 1);
-
-    // Connect metrics updates to quality gauge
-    // Convert QualityScore enum to 0-100 value for gauge
+    // Connect metrics updates to UI labels and QualityGauge
     connect(m_metricsViewModel, &MetricsViewModel::metricsUpdated,
             this, [this](const NetworkMetrics& metrics) {
-                int gaugeValue = 0;
+                // Update latency (using average)
+                ui->valueLatency->setText(QString("%1 ms").arg(metrics.latencyAvg(), 0, 'f', 1));
+
+                // Update packet loss
+                ui->valuePacketLoss->setText(QString("%1%").arg(metrics.packetLoss(), 0, 'f', 1));
+
+                // Update jitter
+                ui->valueJitter->setText(QString("%1 ms").arg(metrics.jitter(), 0, 'f', 1));
+
+                // Update quality score text
+                QString qualityText;
                 switch (metrics.qualityScore()) {
                     case NetworkMetrics::Excellent:
-                        gaugeValue = 95;
+                        qualityText = tr("Excellent");
                         break;
                     case NetworkMetrics::Good:
-                        gaugeValue = 75;
+                        qualityText = tr("Good");
                         break;
                     case NetworkMetrics::Fair:
-                        gaugeValue = 55;
+                        qualityText = tr("Fair");
                         break;
                     case NetworkMetrics::Poor:
-                        gaugeValue = 35;
+                        qualityText = tr("Poor");
                         break;
                     case NetworkMetrics::Critical:
-                        gaugeValue = 15;
+                        qualityText = tr("Critical");
                         break;
                 }
+                ui->valueQualityScore->setText(qualityText);
+
+                // Update QualityGauge with numerical value (0-100)
+                int gaugeValue = convertQualityScoreToValue(metrics.qualityScore());
                 m_qualityGauge->setValue(gaugeValue);
+
+                Logger::debug(QString("DeviceDetailDialog: Updated QualityGauge to %1 (%2)")
+                             .arg(gaugeValue).arg(qualityText));
             });
 
     // Set device and start monitoring
     m_metricsViewModel->setDevice(m_device);
     m_metricsViewModel->startMonitoring();
 
-    Logger::info("DeviceDetailDialog: MetricsWidget integrated with QualityGauge and monitoring started");
+    Logger::info("DeviceDetailDialog: Metrics monitoring started with UI integration and QualityGauge");
 }
 
 void DeviceDetailDialog::setupHistoryTab()
@@ -602,5 +606,25 @@ QDateTime DeviceDetailDialog::getStartTimeForRange(int rangeIndex)
             return now.addDays(-30);
         default:
             return now.addDays(-1);
+    }
+}
+
+int DeviceDetailDialog::convertQualityScoreToValue(NetworkMetrics::QualityScore score) const
+{
+    // Convert QualityScore enum to a numerical value (0-100) for the gauge
+    // The mapping is designed to show visual differences between quality levels
+    switch (score) {
+        case NetworkMetrics::Excellent:
+            return 95;  // 90-100 range - show near top
+        case NetworkMetrics::Good:
+            return 80;  // 70-89 range - show in upper-middle
+        case NetworkMetrics::Fair:
+            return 60;  // 50-69 range - show in middle
+        case NetworkMetrics::Poor:
+            return 35;  // 0-49 range - show in lower area
+        case NetworkMetrics::Critical:
+            return 15;  // Very poor - show near bottom
+        default:
+            return 0;   // Unknown/Invalid
     }
 }

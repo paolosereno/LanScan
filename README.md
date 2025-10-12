@@ -329,6 +329,10 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Animated needle indicator with QPainter custom rendering
   - Auto-quality level detection with translatable labels
   - Theme-aware text colors
+  - **Integrated into DeviceDetailDialog Metrics Tab** (2025-10-12)
+    - Real-time quality visualization alongside text metrics
+    - Horizontal layout for optimal space usage
+    - Fixed needle angle calculation for Qt coordinate system
 - ✅ **NetworkActivityIndicator Widget**
   - LED indicator with 3 states: Off, On, Blinking
   - QTimer-based blinking animation (configurable interval)
@@ -561,6 +565,13 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-12**: QualityGauge integration into DeviceDetailDialog
+  - **Widget Integration**: QualityGauge added to Metrics Tab with horizontal layout
+  - **Real-time Updates**: Connected to MetricsViewModel for live quality visualization
+  - **Needle Fix**: Corrected angle calculation from 210° to 90° (120° arc from bottom-left to bottom-right)
+  - **UI Optimization**: Reduced dialog height from 950px to 650px for better UX
+  - **Helper Function**: Added convertQualityScoreToValue() mapping (Excellent→95, Good→80, Fair→60, Poor→35, Critical→15)
+  - 3 files modified (~50 LOC added)
 - **2025-10-12**: DNS resolution improvements and critical bug fixes
   - **DNS Cache & Retry System**: Added in-memory DNS cache (max 1000 entries) with hit/miss statistics
   - **Exponential Backoff**: Implemented retry mechanism with progressive timeouts (1x, 1.5x, 2x)

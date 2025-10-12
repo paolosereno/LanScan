@@ -112,6 +112,7 @@ private:
     // Utility methods
     QString formatTimestamp(const QDateTime& timestamp);
     QDateTime getStartTimeForRange(int rangeIndex);
+    int convertQualityScoreToValue(NetworkMetrics::QualityScore score) const;
 };
 
 #endif // DEVICEDETAILDIALOG_H

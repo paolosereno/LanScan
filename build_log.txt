@@ -3,8 +3,8 @@
 [  0%] Built target NetworkMetricsTest_autogen_timestamp_deps
 [  0%] Built target IpAddressValidatorTest_autogen_timestamp_deps
 [  0%] Built target StatisticsCalculatorTest_autogen_timestamp_deps
-[  0%] Built target SubnetCalculatorTest_autogen_timestamp_deps
 [  0%] Built target LoggerTest_autogen_timestamp_deps
+[  0%] Built target SubnetCalculatorTest_autogen_timestamp_deps
 [  0%] Built target HostDiscoveryTest_autogen_timestamp_deps
 [  0%] Built target DnsResolverTest_autogen_timestamp_deps
 [  0%] Built target ArpDiscoveryTest_autogen_timestamp_deps
@@ -33,361 +33,92 @@
 [  0%] Built target HistoryDaoTest_autogen_timestamp_deps
 [  0%] Built target MetricsDaoTest_autogen_timestamp_deps
 [  0%] Built target ThemeManagerTest_autogen_timestamp_deps
-[  0%] [34m[1mAutomatic MOC and UIC for target LanScan[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target DeviceTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target NetworkMetricsTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target IpAddressValidatorTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target StatisticsCalculatorTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target LoggerTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target SubnetCalculatorTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target HostDiscoveryTest[0m
-[  0%] [34m[1mAutomatic MOC and UIC for target DnsResolverTest[0m
-[  1%] [34m[1mAutomatic MOC and UIC for target ArpDiscoveryTest[0m
-[  1%] [34m[1mAutomatic MOC and UIC for target IpScannerTest[0m
-[  1%] [34m[1mAutomatic MOC and UIC for target PingServiceTest[0m
-[  1%] Built target LoggerTest_autogen
-[  1%] Built target DeviceTest_autogen
-[  1%] Built target NetworkMetricsTest_autogen
-[  1%] Built target StatisticsCalculatorTest_autogen
-[  1%] Built target IpAddressValidatorTest_autogen
-[  1%] Built target SubnetCalculatorTest_autogen
-[  1%] [34m[1mAutomatic MOC and UIC for target LatencyCalculatorTest[0m
-[  1%] Built target HostDiscoveryTest_autogen
-[  1%] Built target ArpDiscoveryTest_autogen
-[  1%] Built target DnsResolverTest_autogen
-[  1%] Built target IpScannerTest_autogen
-[  1%] Built target PingServiceTest_autogen
-[  1%] [34m[1mAutomatic MOC and UIC for target JitterCalculatorTest[0m
-[  1%] [34m[1mAutomatic MOC and UIC for target PacketLossCalculatorTest[0m
-[  1%] [34m[1mAutomatic MOC and UIC for target QualityScoreCalculatorTest[0m
-[  1%] [34m[1mAutomatic MOC and UIC for target DeviceRepositoryTest[0m
-[  2%] [34m[1mAutomatic MOC and UIC for target JsonExporterTest[0m
-[  2%] [34m[1mAutomatic MOC and UIC for target MacVendorLookupTest[0m
-[  2%] [34m[1mAutomatic MOC and UIC for target CsvExporterTest[0m
-[  3%] [34m[1mAutomatic MOC and UIC for target SettingsManagerTest[0m
-[  3%] [34m[1mAutomatic MOC and UIC for target TraceRouteServiceTest[0m
-[  4%] [34m[1mAutomatic MOC and UIC for target ChartViewModelTest[0m
-[  4%] Built target LanScan_autogen
-[  5%] [34m[1mAutomatic MOC and UIC for target MtuDiscoveryTest[0m
-[  5%] Built target PacketLossCalculatorTest_autogen
-[  5%] Built target LatencyCalculatorTest_autogen
-[  5%] Built target QualityScoreCalculatorTest_autogen
-[  6%] [34m[1mAutomatic MOC and UIC for target BandwidthTesterTest[0m
+[  0%] Built target NetworkMetricsTest_autogen
+[  1%] [34m[1mAutomatic MOC and UIC for target LanScan[0m
+[  2%] Built target DeviceTest_autogen
+[  2%] Built target IpAddressValidatorTest_autogen
+[  3%] Built target StatisticsCalculatorTest_autogen
+[  4%] Built target SubnetCalculatorTest_autogen
+[  4%] Built target LoggerTest_autogen
+[  4%] Built target HostDiscoveryTest_autogen
+[  4%] Built target DnsResolverTest_autogen
+[  5%] Built target ArpDiscoveryTest_autogen
+[  6%] Built target IpScannerTest_autogen
+[  6%] Built target PingServiceTest_autogen
+[  6%] Built target LatencyCalculatorTest_autogen
 [  6%] Built target JitterCalculatorTest_autogen
-[  6%] [34m[1mAutomatic MOC and UIC for target DnsDiagnosticsTest[0m
+[  6%] Built target PacketLossCalculatorTest_autogen
+[  6%] Built target DeviceRepositoryTest_autogen
+[  6%] Built target QualityScoreCalculatorTest_autogen
 [  6%] Built target CsvExporterTest_autogen
-[  7%] [34m[1mAutomatic MOC and UIC for target AlertServiceTest[0m
-[  7%] Built target JsonExporterTest_autogen
+[  6%] Built target JsonExporterTest_autogen
+[  6%] Built target SettingsManagerTest_autogen
 [  7%] Built target MacVendorLookupTest_autogen
-[  8%] [34m[1mAutomatic MOC and UIC for target HistoryServiceTest[0m
-[  8%] Built target SettingsManagerTest_autogen
-[  8%] Built target DeviceRepositoryTest_autogen
-[  8%] Built target TraceRouteServiceTest_autogen
-[  8%] [34m[1mAutomatic MOC and UIC for target MonitoringServiceTest[0m
 [  8%] Built target ChartViewModelTest_autogen
-[  9%] [34m[1mAutomatic MOC and UIC for target WakeOnLanServiceTest[0m
-[ 10%] [34m[1mAutomatic MOC and UIC for target XmlExporterTest[0m
-[ 10%] [34m[1mAutomatic MOC and UIC for target HtmlReportGeneratorTest[0m
-[ 10%] [34m[1mAutomatic MOC and UIC for target HistoryDaoTest[0m
-[ 10%] [34m[1mAutomatic MOC and UIC for target MetricsDaoTest[0m
-[ 10%] [34m[1mAutomatic MOC and UIC for target ThemeManagerTest[0m
-[ 10%] Built target MtuDiscoveryTest_autogen
-[ 10%] [34m[1mAutomatic RCC for resources/resources.qrc[0m
-[ 11%] [32mBuilding CXX object CMakeFiles/LanScan.dir/LanScan_autogen/mocs_compilation.cpp.obj[0m
-[ 11%] Built target ThemeManagerTest_autogen
-[ 11%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/main.cpp.obj[0m
-[ 11%] Built target BandwidthTesterTest_autogen
-[ 11%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/models/Device.cpp.obj[0m
-[ 11%] Built target HistoryServiceTest_autogen
-[ 11%] Built target DnsDiagnosticsTest_autogen
-[ 11%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/models/NetworkMetrics.cpp.obj[0m
-[ 12%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/models/PortInfo.cpp.obj[0m
+[  8%] Built target TraceRouteServiceTest_autogen
+[  8%] Built target MtuDiscoveryTest_autogen
+[  8%] Built target BandwidthTesterTest_autogen
+[  9%] Built target DnsDiagnosticsTest_autogen
+[ 10%] Built target AlertServiceTest_autogen
+[ 10%] Built target HistoryServiceTest_autogen
+[ 10%] Built target MonitoringServiceTest_autogen
+[ 10%] Built target WakeOnLanServiceTest_autogen
+[ 10%] Built target ThemeManagerTest_autogen
+[ 11%] Built target XmlExporterTest_autogen
 [ 12%] Built target HtmlReportGeneratorTest_autogen
-[ 12%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/models/NetworkInterface.cpp.obj[0m
-[ 12%] Built target HistoryDaoTest_autogen
-[ 12%] Built target AlertServiceTest_autogen
-[ 12%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/models/TraceRouteHop.cpp.obj[0m
-[ 12%] Built target WakeOnLanServiceTest_autogen
-[ 12%] Built target XmlExporterTest_autogen
-[ 12%] Built target MetricsDaoTest_autogen
-[ 12%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/models/Alert.cpp.obj[0m
-[ 13%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/utils/Logger.cpp.obj[0m
-[ 13%] Built target MonitoringServiceTest_autogen
-[ 13%] [32mBuilding CXX object tests/CMakeFiles/DeviceTest.dir/DeviceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 13%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/utils/IpAddressValidator.cpp.obj[0m
-[ 13%] [32mBuilding CXX object tests/CMakeFiles/NetworkMetricsTest.dir/NetworkMetricsTest_autogen/mocs_compilation.cpp.obj[0m
-[ 14%] [32mBuilding CXX object tests/CMakeFiles/DeviceTest.dir/models/DeviceTest.cpp.obj[0m
-[ 15%] [32mBuilding CXX object tests/CMakeFiles/NetworkMetricsTest.dir/models/NetworkMetricsTest.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/IpAddressValidatorTest.dir/IpAddressValidatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/DeviceTest.dir/__/src/models/Device.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/IpAddressValidatorTest.dir/utils/IpAddressValidatorTest.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/NetworkMetricsTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/IpAddressValidatorTest.dir/__/src/utils/IpAddressValidator.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/StatisticsCalculatorTest.dir/StatisticsCalculatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 16%] [32mBuilding CXX object tests/CMakeFiles/DeviceTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 17%] [32mBuilding CXX object tests/CMakeFiles/StatisticsCalculatorTest.dir/utils/StatisticsCalculatorTest.cpp.obj[0m
-[ 17%] [32mBuilding CXX object tests/CMakeFiles/LoggerTest.dir/LoggerTest_autogen/mocs_compilation.cpp.obj[0m
-[ 17%] [32mBuilding CXX object tests/CMakeFiles/DeviceTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 17%] [32mBuilding CXX object tests/CMakeFiles/LoggerTest.dir/utils/LoggerTest.cpp.obj[0m
-[ 17%] [32mBuilding CXX object tests/CMakeFiles/StatisticsCalculatorTest.dir/__/src/utils/StatisticsCalculator.cpp.obj[0m
-[ 18%] [32mBuilding CXX object tests/CMakeFiles/LoggerTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 18%] [32mBuilding CXX object tests/CMakeFiles/SubnetCalculatorTest.dir/SubnetCalculatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 18%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/utils/StringFormatter.cpp.obj[0m
-[ 18%] [32mBuilding CXX object tests/CMakeFiles/SubnetCalculatorTest.dir/network/SubnetCalculatorTest.cpp.obj[0m
-[ 18%] [32mBuilding CXX object tests/CMakeFiles/HostDiscoveryTest.dir/HostDiscoveryTest_autogen/mocs_compilation.cpp.obj[0m
-[ 19%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/utils/TimeFormatter.cpp.obj[0m
-[ 20%] [32mBuilding CXX object tests/CMakeFiles/SubnetCalculatorTest.dir/__/src/network/services/SubnetCalculator.cpp.obj[0m
-[ 21%] [32m[1mLinking CXX executable DeviceTest.exe[0m
-[ 21%] [32m[1mLinking CXX executable NetworkMetricsTest.exe[0m
-[ 21%] Built target NetworkMetricsTest
-[ 21%] [32mBuilding CXX object tests/CMakeFiles/HostDiscoveryTest.dir/network/HostDiscoveryTest.cpp.obj[0m
-[ 21%] Built target DeviceTest
-[ 21%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/utils/StatisticsCalculator.cpp.obj[0m
-[ 21%] [32mBuilding CXX object tests/CMakeFiles/SubnetCalculatorTest.dir/__/src/utils/IpAddressValidator.cpp.obj[0m
-[ 21%] [32mBuilding CXX object tests/CMakeFiles/DnsResolverTest.dir/DnsResolverTest_autogen/mocs_compilation.cpp.obj[0m
-[ 21%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/services/SubnetCalculator.cpp.obj[0m
-[ 22%] [32mBuilding CXX object tests/CMakeFiles/HostDiscoveryTest.dir/__/src/network/discovery/HostDiscovery.cpp.obj[0m
-[ 22%] [32mBuilding CXX object tests/CMakeFiles/ArpDiscoveryTest.dir/ArpDiscoveryTest_autogen/mocs_compilation.cpp.obj[0m
-[ 22%] [32m[1mLinking CXX executable StatisticsCalculatorTest.exe[0m
-[ 23%] [32mBuilding CXX object tests/CMakeFiles/ArpDiscoveryTest.dir/network/ArpDiscoveryTest.cpp.obj[0m
-[ 23%] [32m[1mLinking CXX executable LoggerTest.exe[0m
-[ 24%] [32m[1mLinking CXX executable IpAddressValidatorTest.exe[0m
-[ 24%] Built target StatisticsCalculatorTest
-[ 25%] [32mBuilding CXX object tests/CMakeFiles/DnsResolverTest.dir/network/DnsResolverTest.cpp.obj[0m
-[ 25%] [32mBuilding CXX object tests/CMakeFiles/HostDiscoveryTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 26%] Built target LoggerTest
-[ 26%] Built target IpAddressValidatorTest
-[ 26%] [32mBuilding CXX object tests/CMakeFiles/ArpDiscoveryTest.dir/__/src/network/discovery/ArpDiscovery.cpp.obj[0m
-[ 26%] [32mBuilding CXX object tests/CMakeFiles/DnsResolverTest.dir/__/src/network/discovery/DnsResolver.cpp.obj[0m
-[ 26%] [32mBuilding CXX object tests/CMakeFiles/ArpDiscoveryTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 26%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/services/NetworkInterfaceDetector.cpp.obj[0m
-[ 26%] [32mBuilding CXX object tests/CMakeFiles/DnsResolverTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 26%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/IpScannerTest_autogen/mocs_compilation.cpp.obj[0m
-[ 27%] [32mBuilding CXX object tests/CMakeFiles/PingServiceTest.dir/PingServiceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 27%] [32m[1mLinking CXX executable SubnetCalculatorTest.exe[0m
-[ 28%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/services/MacVendorLookup.cpp.obj[0m
-[ 29%] Built target SubnetCalculatorTest
-[ 30%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/network/IpScannerTest.cpp.obj[0m
-[ 30%] [32mBuilding CXX object tests/CMakeFiles/PingServiceTest.dir/network/PingServiceTest.cpp.obj[0m
-[ 30%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/services/PortServiceMapper.cpp.obj[0m
-[ 30%] [32mBuilding CXX object tests/CMakeFiles/LatencyCalculatorTest.dir/LatencyCalculatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 30%] [32m[1mLinking CXX executable HostDiscoveryTest.exe[0m
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/LatencyCalculatorTest.dir/network/LatencyCalculatorTest.cpp.obj[0m
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/scanner/IpScanner.cpp.obj[0m
-[ 31%] Built target HostDiscoveryTest
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/PingServiceTest.dir/__/src/network/diagnostics/PingService.cpp.obj[0m
-[ 31%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/sockets/TcpSocketManager.cpp.obj[0m
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/LatencyCalculatorTest.dir/__/src/network/diagnostics/LatencyCalculator.cpp.obj[0m
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/JitterCalculatorTest.dir/JitterCalculatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/JitterCalculatorTest.dir/network/JitterCalculatorTest.cpp.obj[0m
-[ 31%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/scanner/QuickScanStrategy.cpp.obj[0m
-[ 31%] [32m[1mLinking CXX executable ArpDiscoveryTest.exe[0m
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/PingServiceTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 32%] [32m[1mLinking CXX executable DnsResolverTest.exe[0m
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/PacketLossCalculatorTest.dir/PacketLossCalculatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 32%] Built target DnsResolverTest
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/JitterCalculatorTest.dir/__/src/network/diagnostics/JitterCalculator.cpp.obj[0m
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/PacketLossCalculatorTest.dir/network/PacketLossCalculatorTest.cpp.obj[0m
-[ 32%] Built target ArpDiscoveryTest
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/scanner/DeepScanStrategy.cpp.obj[0m
-[ 32%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/sockets/UdpSocketManager.cpp.obj[0m
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/PacketLossCalculatorTest.dir/__/src/network/diagnostics/PacketLossCalculator.cpp.obj[0m
-[ 32%] [32mBuilding CXX object tests/CMakeFiles/QualityScoreCalculatorTest.dir/QualityScoreCalculatorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 33%] [32mBuilding CXX object tests/CMakeFiles/QualityScoreCalculatorTest.dir/network/QualityScoreCalculatorTest.cpp.obj[0m
-[ 34%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/discovery/HostDiscovery.cpp.obj[0m
-[ 34%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/DeviceRepositoryTest_autogen/mocs_compilation.cpp.obj[0m
-[ 34%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/DeviceRepositoryTest.cpp.obj[0m
-[ 34%] [32mBuilding CXX object tests/CMakeFiles/QualityScoreCalculatorTest.dir/__/src/network/diagnostics/QualityScoreCalculator.cpp.obj[0m
-[ 35%] [32m[1mLinking CXX executable PingServiceTest.exe[0m
-[ 35%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/discovery/DnsResolver.cpp.obj[0m
-[ 35%] [32m[1mLinking CXX executable LatencyCalculatorTest.exe[0m
-[ 35%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/CsvExporterTest_autogen/mocs_compilation.cpp.obj[0m
-[ 36%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/CsvExporterTest.cpp.obj[0m
-[ 36%] Built target LatencyCalculatorTest
-[ 37%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/database/DatabaseManager.cpp.obj[0m
-[ 37%] Built target PingServiceTest
-[ 37%] [32mBuilding CXX object tests/CMakeFiles/QualityScoreCalculatorTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 38%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/services/SubnetCalculator.cpp.obj[0m
-[ 38%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/__/src/export/CsvExporter.cpp.obj[0m
-[ 39%] [32m[1mLinking CXX executable JitterCalculatorTest.exe[0m
-[ 40%] Built target JitterCalculatorTest
-[ 40%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/database/DeviceCache.cpp.obj[0m
-[ 40%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/discovery/ArpDiscovery.cpp.obj[0m
-[ 40%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/services/MacVendorLookup.cpp.obj[0m
-[ 40%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/__/src/models/Device.cpp.obj[0m
-[ 41%] [32m[1mLinking CXX executable PacketLossCalculatorTest.exe[0m
-[ 42%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/JsonExporterTest_autogen/mocs_compilation.cpp.obj[0m
-[ 42%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/database/DeviceRepository.cpp.obj[0m
-[ 42%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 42%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/JsonExporterTest.cpp.obj[0m
-[ 43%] Built target PacketLossCalculatorTest
-[ 43%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/services/PortServiceMapper.cpp.obj[0m
-[ 44%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/scanner/IpScanner.cpp.obj[0m
-[ 45%] [32m[1mLinking CXX executable QualityScoreCalculatorTest.exe[0m
-[ 45%] [32mBuilding CXX object tests/CMakeFiles/SettingsManagerTest.dir/SettingsManagerTest_autogen/mocs_compilation.cpp.obj[0m
-[ 45%] Built target QualityScoreCalculatorTest
-[ 45%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/__/src/export/JsonExporter.cpp.obj[0m
-[ 46%] [32mBuilding CXX object tests/CMakeFiles/SettingsManagerTest.dir/SettingsManagerTest.cpp.obj[0m
-[ 47%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/discovery/HostDiscovery.cpp.obj[0m
-[ 48%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 48%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/__/src/models/Device.cpp.obj[0m
-[ 49%] [32mBuilding CXX object tests/CMakeFiles/MacVendorLookupTest.dir/MacVendorLookupTest_autogen/mocs_compilation.cpp.obj[0m
-[ 49%] [32mBuilding CXX object tests/CMakeFiles/SettingsManagerTest.dir/__/src/config/SettingsManager.cpp.obj[0m
-[ 49%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/models/Device.cpp.obj[0m
-[ 49%] [32mBuilding CXX object tests/CMakeFiles/MacVendorLookupTest.dir/MacVendorLookupTest.cpp.obj[0m
-[ 49%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/scanner/QuickScanStrategy.cpp.obj[0m
-[ 49%] [32mBuilding CXX object tests/CMakeFiles/ChartViewModelTest.dir/ChartViewModelTest_autogen/mocs_compilation.cpp.obj[0m
-[ 50%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 50%] [32mBuilding CXX object tests/CMakeFiles/CsvExporterTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 50%] [32mBuilding CXX object tests/CMakeFiles/SettingsManagerTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 50%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/discovery/DnsResolver.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/MacVendorLookupTest.dir/__/src/network/services/MacVendorLookup.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/TraceRouteServiceTest.dir/TraceRouteServiceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 51%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/scanner/DeepScanStrategy.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/ChartViewModelTest.dir/ChartViewModelTest.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/discovery/ArpDiscovery.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 51%] [32mBuilding CXX object tests/CMakeFiles/MacVendorLookupTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 51%] [32m[1mLinking CXX executable SettingsManagerTest.exe[0m
-[ 51%] [32m[1mLinking CXX executable CsvExporterTest.exe[0m
-[ 51%] Built target SettingsManagerTest
-[ 52%] [32mBuilding CXX object tests/CMakeFiles/TraceRouteServiceTest.dir/TraceRouteServiceTest.cpp.obj[0m
-[ 52%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/PingService.cpp.obj[0m
-[ 52%] Built target CsvExporterTest
-[ 53%] [32mBuilding CXX object tests/CMakeFiles/ChartViewModelTest.dir/__/src/viewmodels/ChartViewModel.cpp.obj[0m
-[ 53%] [32mBuilding CXX object tests/CMakeFiles/JsonExporterTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 54%] [32mBuilding CXX object tests/CMakeFiles/DeviceRepositoryTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 54%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/LatencyCalculator.cpp.obj[0m
-[ 54%] [32mBuilding CXX object tests/CMakeFiles/MtuDiscoveryTest.dir/MtuDiscoveryTest_autogen/mocs_compilation.cpp.obj[0m
-[ 54%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/network/sockets/TcpSocketManager.cpp.obj[0m
-[ 54%] [32mBuilding CXX object tests/CMakeFiles/ChartViewModelTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 54%] [32mBuilding CXX object tests/CMakeFiles/TraceRouteServiceTest.dir/__/src/diagnostics/TraceRouteService.cpp.obj[0m
-[ 55%] [32m[1mLinking CXX executable MacVendorLookupTest.exe[0m
-[ 55%] [32mBuilding CXX object tests/CMakeFiles/BandwidthTesterTest.dir/BandwidthTesterTest_autogen/mocs_compilation.cpp.obj[0m
-[ 55%] Built target MacVendorLookupTest
-[ 56%] [32mBuilding CXX object tests/CMakeFiles/MtuDiscoveryTest.dir/MtuDiscoveryTest.cpp.obj[0m
-[ 57%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/utils/IpAddressValidator.cpp.obj[0m
-[ 57%] [32mBuilding CXX object tests/CMakeFiles/TraceRouteServiceTest.dir/__/src/models/TraceRouteHop.cpp.obj[0m
-[ 57%] [32m[1mLinking CXX executable JsonExporterTest.exe[0m
-[ 58%] [32m[1mLinking CXX executable DeviceRepositoryTest.exe[0m
-[ 58%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/JitterCalculator.cpp.obj[0m
-[ 58%] [32mBuilding CXX object tests/CMakeFiles/BandwidthTesterTest.dir/BandwidthTesterTest.cpp.obj[0m
-[ 58%] Built target JsonExporterTest
-[ 58%] [32mBuilding CXX object tests/CMakeFiles/MtuDiscoveryTest.dir/__/src/diagnostics/MtuDiscovery.cpp.obj[0m
-[ 58%] [32mBuilding CXX object tests/CMakeFiles/TraceRouteServiceTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 58%] [32mBuilding CXX object tests/CMakeFiles/ChartViewModelTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 59%] Built target DeviceRepositoryTest
-[ 59%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/PacketLossCalculator.cpp.obj[0m
-[ 59%] [32mBuilding CXX object tests/CMakeFiles/MtuDiscoveryTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 59%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 60%] [32mBuilding CXX object tests/CMakeFiles/BandwidthTesterTest.dir/__/src/diagnostics/BandwidthTester.cpp.obj[0m
-[ 61%] [32mBuilding CXX object tests/CMakeFiles/DnsDiagnosticsTest.dir/DnsDiagnosticsTest_autogen/mocs_compilation.cpp.obj[0m
-[ 62%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/QualityScoreCalculator.cpp.obj[0m
-[ 62%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/models/Device.cpp.obj[0m
-[ 62%] [32mBuilding CXX object tests/CMakeFiles/BandwidthTesterTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 62%] [32m[1mLinking CXX executable ChartViewModelTest.exe[0m
-[ 62%] [32mBuilding CXX object tests/CMakeFiles/AlertServiceTest.dir/AlertServiceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 62%] Built target ChartViewModelTest
-[ 62%] [32mBuilding CXX object tests/CMakeFiles/DnsDiagnosticsTest.dir/DnsDiagnosticsTest.cpp.obj[0m
-[ 63%] [32m[1mLinking CXX executable TraceRouteServiceTest.exe[0m
-[ 63%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/MetricsAggregator.cpp.obj[0m
-[ 63%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 63%] [32mBuilding CXX object tests/CMakeFiles/AlertServiceTest.dir/AlertServiceTest.cpp.obj[0m
-[ 64%] [32mBuilding CXX object tests/CMakeFiles/HistoryServiceTest.dir/HistoryServiceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 64%] [32mBuilding CXX object tests/CMakeFiles/DnsDiagnosticsTest.dir/__/src/diagnostics/DnsDiagnostics.cpp.obj[0m
-[ 64%] Built target TraceRouteServiceTest
-[ 65%] [32mBuilding CXX object tests/CMakeFiles/IpScannerTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 65%] [32m[1mLinking CXX executable MtuDiscoveryTest.exe[0m
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/AlertServiceTest.dir/__/src/services/AlertService.cpp.obj[0m
-[ 66%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/network/diagnostics/PortScanner.cpp.obj[0m
-[ 66%] Built target MtuDiscoveryTest
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/HistoryServiceTest.dir/HistoryServiceTest.cpp.obj[0m
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/DnsDiagnosticsTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 66%] [32m[1mLinking CXX executable BandwidthTesterTest.exe[0m
-[ 66%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/diagnostics/TraceRouteService.cpp.obj[0m
-[ 66%] Built target BandwidthTesterTest
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/HistoryServiceTest.dir/__/src/services/HistoryService.cpp.obj[0m
-[ 66%] [32m[1mLinking CXX executable IpScannerTest.exe[0m
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/AlertServiceTest.dir/__/src/models/Alert.cpp.obj[0m
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/MonitoringServiceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/HistoryServiceTest.dir/__/src/database/DatabaseManager.cpp.obj[0m
-[ 66%] Built target IpScannerTest
-[ 66%] [32mBuilding CXX object tests/CMakeFiles/AlertServiceTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 67%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/diagnostics/MtuDiscovery.cpp.obj[0m
-[ 67%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/MonitoringServiceTest.cpp.obj[0m
-[ 68%] [32mBuilding CXX object tests/CMakeFiles/HistoryServiceTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 69%] [32m[1mLinking CXX executable DnsDiagnosticsTest.exe[0m
-[ 70%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/WakeOnLanServiceTest_autogen/mocs_compilation.cpp.obj[0m
-[ 70%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/diagnostics/BandwidthTester.cpp.obj[0m
-[ 70%] Built target DnsDiagnosticsTest
-[ 70%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/WakeOnLanServiceTest.cpp.obj[0m
-[ 71%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/services/MonitoringService.cpp.obj[0m
-[ 71%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/diagnostics/DnsDiagnostics.cpp.obj[0m
-[ 71%] [32m[1mLinking CXX executable AlertServiceTest.exe[0m
-[ 71%] [32mBuilding CXX object tests/CMakeFiles/HistoryServiceTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 71%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/__/src/services/WakeOnLanService.cpp.obj[0m
-[ 71%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/XmlExporterTest_autogen/mocs_compilation.cpp.obj[0m
-[ 71%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/services/AlertService.cpp.obj[0m
-[ 72%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/XmlExporterTest.cpp.obj[0m
-[ 72%] Built target AlertServiceTest
-[ 72%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/__/src/models/Device.cpp.obj[0m
-[ 72%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/database/DatabaseManager.cpp.obj[0m
-[ 72%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/services/HistoryService.cpp.obj[0m
-[ 72%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/__/src/export/XmlExporter.cpp.obj[0m
-[ 72%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/HtmlReportGeneratorTest_autogen/mocs_compilation.cpp.obj[0m
-[ 73%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 73%] [32m[1mLinking CXX executable HistoryServiceTest.exe[0m
-[ 73%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/HtmlReportGeneratorTest.cpp.obj[0m
-[ 73%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/__/src/models/Device.cpp.obj[0m
-[ 74%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/database/DeviceCache.cpp.obj[0m
-[ 74%] Built target HistoryServiceTest
-[ 74%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/database/DatabaseManager.cpp.obj[0m
-[ 74%] [32mBuilding CXX object tests/CMakeFiles/HistoryDaoTest.dir/HistoryDaoTest_autogen/mocs_compilation.cpp.obj[0m
-[ 75%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/__/src/export/HtmlReportGenerator.cpp.obj[0m
-[ 76%] [32mBuilding CXX object tests/CMakeFiles/HistoryDaoTest.dir/HistoryDaoTest.cpp.obj[0m
-[ 76%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 76%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 76%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/database/DeviceRepository.cpp.obj[0m
-[ 77%] [32mBuilding CXX object tests/CMakeFiles/MetricsDaoTest.dir/MetricsDaoTest_autogen/mocs_compilation.cpp.obj[0m
-[ 77%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/__/src/models/Device.cpp.obj[0m
-[ 77%] [32mBuilding CXX object tests/CMakeFiles/MetricsDaoTest.dir/MetricsDaoTest.cpp.obj[0m
-[ 77%] [32mBuilding CXX object tests/CMakeFiles/HistoryDaoTest.dir/__/src/database/DatabaseManager.cpp.obj[0m
-[ 78%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/models/Alert.cpp.obj[0m
-[ 78%] [34m[1mAutomatic RCC for ../resources/resources.qrc[0m
-[ 78%] [32mBuilding CXX object tests/CMakeFiles/ThemeManagerTest.dir/ThemeManagerTest_autogen/mocs_compilation.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/WakeOnLanServiceTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/MetricsDaoTest.dir/__/src/database/DatabaseManager.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/HistoryDaoTest.dir/__/src/database/HistoryDao.cpp.obj[0m
-[ 79%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/database/HistoryDao.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/ThemeManagerTest.dir/ThemeManagerTest.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/XmlExporterTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/MetricsDaoTest.dir/__/src/database/MetricsDao.cpp.obj[0m
-[ 79%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/__/src/models/PortInfo.cpp.obj[0m
-[ 80%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/database/MetricsDao.cpp.obj[0m
-[ 80%] [32m[1mLinking CXX executable WakeOnLanServiceTest.exe[0m
-[ 80%] [32mBuilding CXX object tests/CMakeFiles/MonitoringServiceTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 80%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 80%] Built target WakeOnLanServiceTest
-[ 81%] [32mBuilding CXX object tests/CMakeFiles/ThemeManagerTest.dir/__/src/managers/ThemeManager.cpp.obj[0m
-[ 81%] [32mBuilding CXX object tests/CMakeFiles/HistoryDaoTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 81%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/export/CsvExporter.cpp.obj[0m
-[ 82%] [32mBuilding CXX object tests/CMakeFiles/HtmlReportGeneratorTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 82%] [32mBuilding CXX object tests/CMakeFiles/ThemeManagerTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 83%] [32mBuilding CXX object tests/CMakeFiles/MetricsDaoTest.dir/__/src/models/NetworkMetrics.cpp.obj[0m
-[ 83%] [32m[1mLinking CXX executable XmlExporterTest.exe[0m
-[ 83%] Built target XmlExporterTest
-[ 83%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/export/JsonExporter.cpp.obj[0m
-[ 83%] [32mBuilding CXX object tests/CMakeFiles/ThemeManagerTest.dir/ThemeManagerTest_autogen/7BV4YJK25R/qrc_resources.cpp.obj[0m
-[ 83%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/export/XmlExporter.cpp.obj[0m
-[ 83%] [32mBuilding CXX object tests/CMakeFiles/MetricsDaoTest.dir/__/src/utils/Logger.cpp.obj[0m
-[ 84%] [32m[1mLinking CXX executable MonitoringServiceTest.exe[0m
-[ 85%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/export/HtmlReportGenerator.cpp.obj[0m
-[ 86%] [32m[1mLinking CXX executable HistoryDaoTest.exe[0m
-[ 86%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/config/SettingsManager.cpp.obj[0m
+[ 13%] Built target HistoryDaoTest_autogen
+[ 13%] Built target MetricsDaoTest_autogen
+[ 15%] Built target NetworkMetricsTest
+[ 17%] Built target DeviceTest
+[ 18%] Built target IpAddressValidatorTest
+[ 19%] Built target StatisticsCalculatorTest
+[ 21%] Built target LoggerTest
+[ 22%] Built target SubnetCalculatorTest
+[ 24%] Built target HostDiscoveryTest
+[ 25%] Built target DnsResolverTest
+[ 26%] Built target ArpDiscoveryTest
+[ 28%] Built target PingServiceTest
+[ 29%] Built target LatencyCalculatorTest
+[ 30%] Built target JitterCalculatorTest
+[ 35%] Built target IpScannerTest
+[ 36%] Built target PacketLossCalculatorTest
+[ 38%] Built target QualityScoreCalculatorTest
+[ 41%] Built target DeviceRepositoryTest
+[ 43%] Built target CsvExporterTest
+[ 46%] Built target JsonExporterTest
+[ 48%] Built target SettingsManagerTest
+[ 49%] Built target MacVendorLookupTest
+[ 51%] Built target ChartViewModelTest
+[ 53%] Built target MtuDiscoveryTest
+[ 54%] Built target BandwidthTesterTest
+[ 56%] Built target TraceRouteServiceTest
+[ 57%] Built target DnsDiagnosticsTest
+[ 58%] Built target AlertServiceTest
+[ 60%] Built target HistoryServiceTest
+[ 62%] Built target XmlExporterTest
+[ 62%] [32m[1mLinking CXX executable MonitoringServiceTest.exe[0m
+[ 65%] Built target WakeOnLanServiceTest
+[ 67%] Built target HtmlReportGeneratorTest
+[ 69%] Built target HistoryDaoTest
+[ 71%] Built target MetricsDaoTest
+[ 73%] Built target ThemeManagerTest
+[ 73%] Built target LanScan_autogen
+[ 73%] [34m[1mGenerating lanscan_it.qm[0m
+[ 73%] [34m[1mGenerating lanscan_de.qm[0m
+[ 73%] [34m[1mGenerating lanscan_es.qm[0m
+[ 74%] [34m[1mGenerating lanscan_fr.qm[0m
+Updating 'D:/SwDev/LanScan/build/lanscan_de.qm'...
+Updating 'D:/SwDev/LanScan/build/lanscan_it.qm'...
+Updating 'D:/SwDev/LanScan/build/lanscan_es.qm'...
+    Generated 17 translation(s) (17 finished and 0 unfinished)
+    Generated 17 translation(s) (17 finished and 0 unfinished)
+    Generated 17 translation(s) (17 finished and 0 unfinished)
+Updating 'D:/SwDev/LanScan/build/lanscan_fr.qm'...
+    Generated 17 translation(s) (17 finished and 0 unfinished)
+[ 75%] [32mBuilding CXX object CMakeFiles/LanScan.dir/LanScan_autogen/mocs_compilation.cpp.obj[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/main.cpp.obj[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/managers/LanguageManager.cpp.obj[0m
+[ 76%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/SettingsDialog.cpp.obj[0m
 C:/Qt/Tools/mingw1310_64/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: CMakeFiles\MonitoringServiceTest.dir/objects.a(MonitoringService.cpp.obj): in function `MonitoringService::startMonitoring(MonitoringConfig const&)':
 D:/SwDev/LanScan/src/services/MonitoringService.cpp:70: undefined reference to `MetricsController::startContinuousMonitoring(QString const&, int)'
 C:/Qt/Tools/mingw1310_64/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: CMakeFiles\MonitoringServiceTest.dir/objects.a(MonitoringService.cpp.obj): in function `MonitoringService::stopMonitoring(QString const&)':
@@ -399,106 +130,12 @@ collect2.exe: error: ld returned 1 exit status
 mingw32-make.exe[2]: *** [tests\CMakeFiles\MonitoringServiceTest.dir\build.make:250: tests/MonitoringServiceTest.exe] Error 1
 mingw32-make.exe[1]: *** [CMakeFiles\Makefile2:1267: tests/CMakeFiles/MonitoringServiceTest.dir/all] Error 2
 mingw32-make.exe[1]: *** Waiting for unfinished jobs....
-[ 86%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/config/ConfigValidator.cpp.obj[0m
-[ 86%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/coordinators/ScanCoordinator.cpp.obj[0m
-[ 87%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/controllers/ScanController.cpp.obj[0m
-[ 87%] Built target HistoryDaoTest
-[ 87%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/controllers/MetricsController.cpp.obj[0m
-[ 87%] [32m[1mLinking CXX executable HtmlReportGeneratorTest.exe[0m
-[ 87%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/controllers/ExportController.cpp.obj[0m
-[ 88%] Built target HtmlReportGeneratorTest
-[ 89%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/managers/ProfileManager.cpp.obj[0m
-[ 90%] [32m[1mLinking CXX executable ThemeManagerTest.exe[0m
-[ 90%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/managers/FavoritesManager.cpp.obj[0m
-[ 90%] [32m[1mLinking CXX executable MetricsDaoTest.exe[0m
-[ 90%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/managers/ThemeManager.cpp.obj[0m
-[ 90%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/services/AlertService.cpp.obj[0m
-[ 91%] Built target ThemeManagerTest
-[ 92%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/services/HistoryService.cpp.obj[0m
-[ 92%] Built target MetricsDaoTest
-[ 92%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/services/MonitoringService.cpp.obj[0m
-[ 92%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/services/WakeOnLanService.cpp.obj[0m
-[ 92%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/viewmodels/DeviceTableViewModel.cpp.obj[0m
-[ 93%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/viewmodels/ScanConfigViewModel.cpp.obj[0m
-[ 93%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/viewmodels/ChartViewModel.cpp.obj[0m
-[ 93%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/viewmodels/MetricsViewModel.cpp.obj[0m
-[ 94%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/MainWindow.cpp.obj[0m
-[ 94%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/DeviceTableWidget.cpp.obj[0m
-[ 94%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/ScanConfigDialog.cpp.obj[0m
-[ 94%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/MetricsWidget.cpp.obj[0m
-[ 95%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/DeviceDetailDialog.cpp.obj[0m
-[ 95%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/ProfileDialog.cpp.obj[0m
-[ 95%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/FavoritesWidget.cpp.obj[0m
-[ 95%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/TrendsWidget.cpp.obj[0m
-[ 96%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/views/SettingsDialog.cpp.obj[0m
-[ 96%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/delegates/StatusDelegate.cpp.obj[0m
-[ 96%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/delegates/QualityScoreDelegate.cpp.obj[0m
-[ 97%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/charts/LatencyChart.cpp.obj[0m
-D:\SwDev\LanScan\src\views\MainWindow.cpp: In member function 'void MainWindow::setupMenuBar()':
-D:\SwDev\LanScan\src\views\MainWindow.cpp:87:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-   87 |     fileMenu->addAction(tr("&New Scan..."), this, &MainWindow::onNewScanTriggered, QKeySequence::New);
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenubar.h:8,
-                 from C:/Qt/6.9.1/mingw_64/include/QtWidgets/QMenuBar:1,
-                 from D:/SwDev/LanScan/build/LanScan_autogen/include/ui_mainwindow.h:16,
-                 from D:\SwDev\LanScan\src\views\MainWindow.cpp:2:
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:88:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-   88 |     fileMenu->addAction(tr("&Export..."), this, &MainWindow::onExportTriggered, QKeySequence::Save);
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:90:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = bool (QWidget::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-   90 |     fileMenu->addAction(tr("E&xit"), this, &QWidget::close, QKeySequence::Quit);
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:94:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-   94 |     scanMenu->addAction(tr("&Quick Scan"), this, &MainWindow::onQuickScan, QKeySequence(Qt::CTRL | Qt::Key_Q));
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:95:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-   95 |     scanMenu->addAction(tr("&Deep Scan"), this, &MainWindow::onDeepScan, QKeySequence(Qt::CTRL | Qt::Key_D));
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:96:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-   96 |     scanMenu->addAction(tr("&Stop Scan"), this, &MainWindow::onStopScanTriggered, QKeySequence(Qt::CTRL | Qt::Key_S));
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:100:24: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-  100 |     viewMenu->addAction(tr("&Refresh"), this, &MainWindow::onRefresh, QKeySequence::Refresh);
-      |     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-D:\SwDev\LanScan\src\views\MainWindow.cpp:105:25: warning: 'typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type QMenu::addAction(const QString&, const Obj*, Func1, const QKeySequence&) [with Obj = MainWindow; Func1 = void (MainWindow::*)(); typename std::enable_if<((! std::is_same<const char*, Func1>::value) && QtPrivate::IsPointerToTypeDerivedFromQObject<T*>::Value), QAction*>::type = QAction*]' is deprecated: Use addAction(text, shortcut, object, slot) instead. [-Wdeprecated-declarations]
-  105 |     toolsMenu->addAction(tr("&Settings..."), this, &MainWindow::onSettingsTriggered, QKeySequence::Preferences);
-      |     ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-C:/Qt/6.9.1/mingw_64/include/QtWidgets/qmenu.h:78:9: note: declared here
-   78 |         addAction(const QString &text, const Obj *object, Func1 slot,
-      |         ^~~~~~~~~
-[ 97%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/charts/PacketLossChart.cpp.obj[0m
-[ 97%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/charts/JitterChart.cpp.obj[0m
-[ 97%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/widgets/QualityGauge.cpp.obj[0m
-[ 98%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/widgets/NetworkActivityIndicator.cpp.obj[0m
-[ 98%] [32mBuilding CXX object CMakeFiles/LanScan.dir/src/widgets/GradientProgressBar.cpp.obj[0m
-[ 98%] [32mBuilding CXX object CMakeFiles/LanScan.dir/LanScan_autogen/3YJK5W5UP7/qrc_resources.cpp.obj[0m
-D:\SwDev\LanScan\src\widgets\GradientProgressBar.cpp: In member function 'virtual void GradientProgressBar::paintEvent(QPaintEvent*)':
-D:\SwDev\LanScan\src\widgets\GradientProgressBar.cpp:73:9: error: 'textVisible' was not declared in this scope; did you mean 'setVisible'?
-   73 |     if (textVisible()) {
-      |         ^~~~~~~~~~~
-      |         setVisible
-mingw32-make.exe[2]: *** [CMakeFiles\LanScan.dir\build.make:1265: CMakeFiles/LanScan.dir/src/widgets/GradientProgressBar.cpp.obj] Error 1
-mingw32-make.exe[2]: *** Waiting for unfinished jobs....
-mingw32-make.exe[1]: *** [CMakeFiles\Makefile2:278: CMakeFiles/LanScan.dir/all] Error 2
+[ 76%] [32m[1mLinking CXX executable LanScan.exe[0m
+[34m[1mCopying OUI database to build directory[0m
+[34m[1mCreating translations directory in build directory[0m
+[34m[1mCopying D:/SwDev/LanScan/build/lanscan_it.qm to build directory[0m
+[34m[1mCopying D:/SwDev/LanScan/build/lanscan_es.qm to build directory[0m
+[34m[1mCopying D:/SwDev/LanScan/build/lanscan_fr.qm to build directory[0m
+[34m[1mCopying D:/SwDev/LanScan/build/lanscan_de.qm to build directory[0m
+[ 97%] Built target LanScan
 mingw32-make.exe: *** [Makefile:145: all] Error 2

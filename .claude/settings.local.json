@@ -101,7 +101,8 @@
       "Bash(./ThemeManagerTest.exe -v2)",
       "Bash(./ThemeManagerTest.exe)",
       "Bash(set PATH=C:Qt6.9.1mingw_64bin)",
-      "Bash(ThemeManagerTest.exe)"
+      "Bash(ThemeManagerTest.exe)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []
