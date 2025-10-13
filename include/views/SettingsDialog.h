@@ -76,6 +76,10 @@ private:
     QSettings* settings;
     bool modified;
 
+    // Original values for cancel/revert
+    QString m_originalTheme;
+    int m_originalFontSize;
+
     // Initialization
     void setupConnections();
     void loadSettings();
@@ -96,6 +100,10 @@ private:
     // UI state management
     void setModified(bool modified);
     void updateApplyButton();
+
+    // Appearance helpers
+    void storeOriginalAppearance();
+    void restoreOriginalAppearance();
 };
 
 #endif // SETTINGSDIALOG_H

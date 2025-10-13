@@ -4,6 +4,7 @@
 #include "managers/ThemeManager.h"
 #include "managers/LanguageManager.h"
 #include <QMessageBox>
+#include <QApplication>
 
 SettingsDialog::SettingsDialog(QWidget* parent)
     : QDialog(parent)
@@ -20,6 +21,9 @@ SettingsDialog::SettingsDialog(QWidget* parent)
 
     setupConnections();
     loadSettings();
+
+    // Store original appearance settings for cancel/revert
+    storeOriginalAppearance();
 
     setModified(false);
 }
@@ -298,6 +302,21 @@ void SettingsDialog::applySettings() {
     LanguageManager::Language language = LanguageManager::codeToLanguage(languageCode);
     LanguageManager::instance().setLanguage(language);
 
+    // Apply theme change immediately
+    QString themeStr = ui->themeCombo->currentData().toString();
+    ThemeManager::Theme theme = ThemeManager::stringToTheme(themeStr);
+    ThemeManager::instance().setTheme(theme);
+    Logger::info(QString("Theme applied: %1").arg(themeStr));
+
+    // Apply font size change immediately
+    QFont appFont = qApp->font();
+    appFont.setPointSize(ui->fontSizeSpin->value());
+    qApp->setFont(appFont);
+    Logger::info(QString("Font size applied: %1 pt").arg(ui->fontSizeSpin->value()));
+
+    // Update stored values since settings were applied
+    storeOriginalAppearance();
+
     emit settingsApplied();
 
     Logger::info("Settings applied successfully");
@@ -401,6 +420,10 @@ void SettingsDialog::onCancelClicked() {
             return;
         }
     }
+
+    // Restore original appearance settings (theme preview and font changes)
+    restoreOriginalAppearance();
+
     reject();
 }
 
@@ -527,4 +550,30 @@ void SettingsDialog::onLogLevelChanged(int index) {
 void SettingsDialog::onEnableFileLoggingChanged(bool checked) {
     Q_UNUSED(checked);
     setModified(true);
+}
+
+// Appearance helper methods
+
+void SettingsDialog::storeOriginalAppearance() {
+    // Store current theme
+    m_originalTheme = settings->value("Appearance/Theme", "system").toString();
+
+    // Store current font size
+    m_originalFontSize = qApp->font().pointSize();
+
+    Logger::debug(QString("Stored original appearance: theme=%1, fontSize=%2")
+                 .arg(m_originalTheme).arg(m_originalFontSize));
+}
+
+void SettingsDialog::restoreOriginalAppearance() {
+    // Restore original theme
+    ThemeManager::Theme theme = ThemeManager::stringToTheme(m_originalTheme);
+    ThemeManager::instance().setTheme(theme);
+    Logger::info(QString("Restored original theme: %1").arg(m_originalTheme));
+
+    // Restore original font size
+    QFont appFont = qApp->font();
+    appFont.setPointSize(m_originalFontSize);
+    qApp->setFont(appFont);
+    Logger::info(QString("Restored original font size: %1 pt").arg(m_originalFontSize));
 }
