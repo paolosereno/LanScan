@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     // Load theme from settings
     QSettings settings("LanScan", "LanScan");
-    QString themeStr = settings.value("Appearance/Theme", "System").toString();
+    QString themeStr = settings.value("Appearance/Theme", "system").toString();
     ThemeManager::Theme theme = ThemeManager::stringToTheme(themeStr);
     ThemeManager::instance().setTheme(theme);
     Logger::info(QString("Theme initialized: %1").arg(themeStr));
