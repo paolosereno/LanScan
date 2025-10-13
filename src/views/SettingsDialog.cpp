@@ -130,6 +130,7 @@ void SettingsDialog::setupTabNetwork() {
 
 void SettingsDialog::setupTabAppearance() {
     // Theme options
+    ui->themeCombo->clear(); // Clear any existing items from UI file
     ui->themeCombo->addItem("System Default", "system");
     ui->themeCombo->addItem("Light", "light");
     ui->themeCombo->addItem("Dark", "dark");
@@ -309,9 +310,7 @@ void SettingsDialog::applySettings() {
     Logger::info(QString("Theme applied: %1").arg(themeStr));
 
     // Apply font size change immediately
-    QFont appFont = qApp->font();
-    appFont.setPointSize(ui->fontSizeSpin->value());
-    qApp->setFont(appFont);
+    ThemeManager::instance().setFontSize(ui->fontSizeSpin->value());
     Logger::info(QString("Font size applied: %1 pt").arg(ui->fontSizeSpin->value()));
 
     // Update stored values since settings were applied
@@ -558,8 +557,8 @@ void SettingsDialog::storeOriginalAppearance() {
     // Store current theme
     m_originalTheme = settings->value("Appearance/Theme", "system").toString();
 
-    // Store current font size
-    m_originalFontSize = qApp->font().pointSize();
+    // Store current font size from settings
+    m_originalFontSize = settings->value("Appearance/FontSize", 10).toInt();
 
     Logger::debug(QString("Stored original appearance: theme=%1, fontSize=%2")
                  .arg(m_originalTheme).arg(m_originalFontSize));
@@ -572,8 +571,6 @@ void SettingsDialog::restoreOriginalAppearance() {
     Logger::info(QString("Restored original theme: %1").arg(m_originalTheme));
 
     // Restore original font size
-    QFont appFont = qApp->font();
-    appFont.setPointSize(m_originalFontSize);
-    qApp->setFont(appFont);
+    ThemeManager::instance().setFontSize(m_originalFontSize);
     Logger::info(QString("Restored original font size: %1 pt").arg(m_originalFontSize));
 }

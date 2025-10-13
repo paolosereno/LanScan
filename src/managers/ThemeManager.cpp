@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QRegularExpression>
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -10,6 +11,7 @@
 ThemeManager::ThemeManager()
     : m_currentTheme(Theme::System)
     , m_effectiveTheme(Theme::Light)
+    , m_fontSize(10)  // Default font size
 {
     // Initialize with system theme detection
     setTheme(Theme::System);
@@ -107,6 +109,7 @@ bool ThemeManager::detectSystemDarkMode() const {
 
 void ThemeManager::applyThemeToApplication(bool isDark) {
     QString stylesheetPath = isDark ? ":/styles/dark.qss" : ":/styles/light.qss";
+    qDebug() << "ThemeManager: Attempting to load stylesheet from" << stylesheetPath;
     QString stylesheet = loadStylesheet(stylesheetPath);
 
     if (stylesheet.isEmpty()) {
@@ -116,10 +119,16 @@ void ThemeManager::applyThemeToApplication(bool isDark) {
         return;
     }
 
+    // Replace font-size in stylesheet with current font size
+    QString fontSizePattern = "font-size: \\d+pt;";
+    QString newFontSize = QString("font-size: %1pt;").arg(m_fontSize);
+    stylesheet.replace(QRegularExpression(fontSizePattern), newFontSize);
+
     // Apply stylesheet to application
     qApp->setStyleSheet(stylesheet);
-    qDebug() << "ThemeManager: Applied stylesheet from" << stylesheetPath
-             << "(" << stylesheet.length() << "chars)";
+    qDebug() << "ThemeManager: Successfully applied stylesheet from" << stylesheetPath
+             << "with font size" << m_fontSize << "pt"
+             << "(" << stylesheet.length() << " chars)";
 }
 
 QString ThemeManager::loadStylesheet(const QString& resourcePath) const {
@@ -135,6 +144,21 @@ QString ThemeManager::loadStylesheet(const QString& resourcePath) const {
     file.close();
 
     return stylesheet;
+}
+
+void ThemeManager::setFontSize(int fontSize) {
+    if (fontSize < 8 || fontSize > 24) {
+        qWarning() << "ThemeManager: Invalid font size" << fontSize << "(valid range: 8-24)";
+        return;
+    }
+
+    m_fontSize = fontSize;
+
+    // Reapply current theme with new font size
+    bool useDarkTheme = (m_effectiveTheme == Theme::Dark);
+    applyThemeToApplication(useDarkTheme);
+
+    qDebug() << "ThemeManager: Font size changed to" << fontSize << "pt";
 }
 
 QString ThemeManager::themeToString(Theme theme) {

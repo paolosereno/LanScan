@@ -53,6 +53,14 @@ public:
     void setTheme(Theme theme);
 
     /**
+     * @brief Set application font size
+     * @param fontSize Font size in points
+     *
+     * Updates the stylesheet with the new font size and reapplies current theme.
+     */
+    void setFontSize(int fontSize);
+
+    /**
      * @brief Get current theme
      * @return Current theme setting (Light/Dark/System)
      */
@@ -129,6 +137,7 @@ private:
 
     Theme m_currentTheme;    ///< User-selected theme (Light/Dark/System)
     Theme m_effectiveTheme;  ///< Actual theme being displayed (Light/Dark only)
+    int m_fontSize;          ///< Current font size in points
 };
 
 #endif // THEMEMANAGER_H

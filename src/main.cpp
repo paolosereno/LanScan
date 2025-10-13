@@ -46,9 +46,12 @@ int main(int argc, char *argv[])
     // Load theme from settings
     QSettings settings("LanScan", "LanScan");
     QString themeStr = settings.value("Appearance/Theme", "system").toString();
+    int fontSize = settings.value("Appearance/FontSize", 10).toInt();
+
     ThemeManager::Theme theme = ThemeManager::stringToTheme(themeStr);
-    ThemeManager::instance().setTheme(theme);
-    Logger::info(QString("Theme initialized: %1").arg(themeStr));
+    ThemeManager::instance().setFontSize(fontSize);  // Set font size first
+    ThemeManager::instance().setTheme(theme);        // Then apply theme
+    Logger::info(QString("Theme initialized: %1, Font size: %2 pt").arg(themeStr).arg(fontSize));
 
     // ========== Language Setup (Phase 9.4) ==========
 

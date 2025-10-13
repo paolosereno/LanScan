@@ -259,18 +259,27 @@ QComboBox:disabled {
 }
 
 QComboBox::drop-down {
-    border: none;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
     width: 20px;
+    border-left: 1px solid #cccccc;
 }
 
 QComboBox::down-arrow {
-    image: url(:/icons/arrow-down.svg);
-    width: 12px;
-    height: 12px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #1e1e1e;
+    margin-right: 5px;
+}
+
+QComboBox::down-arrow:hover {
+    border-top-color: #0078d4;
 }
 
 QComboBox::down-arrow:disabled {
-    opacity: 0.4;
+    border-top-color: #a0a0a0;
 }
 
 QComboBox QAbstractItemView {
@@ -307,8 +316,11 @@ QSpinBox:disabled, QDoubleSpinBox:disabled {
 }
 
 QSpinBox::up-button, QDoubleSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
     background-color: transparent;
     border: none;
+    border-left: 1px solid #cccccc;
     width: 16px;
 }
 
@@ -316,14 +328,51 @@ QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover {
     background-color: #e8e8e8;
 }
 
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #1e1e1e;
+    margin-right: 4px;
+}
+
+QSpinBox::up-arrow:hover, QDoubleSpinBox::up-arrow:hover {
+    border-bottom-color: #0078d4;
+}
+
+QSpinBox::up-arrow:disabled, QDoubleSpinBox::up-arrow:disabled {
+    border-bottom-color: #a0a0a0;
+}
+
 QSpinBox::down-button, QDoubleSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
     background-color: transparent;
     border: none;
+    border-left: 1px solid #cccccc;
     width: 16px;
 }
 
 QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {
     background-color: #e8e8e8;
+}
+
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #1e1e1e;
+    margin-right: 4px;
+}
+
+QSpinBox::down-arrow:hover, QDoubleSpinBox::down-arrow:hover {
+    border-top-color: #0078d4;
+}
+
+QSpinBox::down-arrow:disabled, QDoubleSpinBox::down-arrow:disabled {
+    border-top-color: #a0a0a0;
 }
 
 /* ===================================================================
@@ -687,9 +736,9 @@ QGroupBox::title {
  * QStatusBar
  * =================================================================== */
 QStatusBar {
-    background-color: #0078d4;
-    color: #ffffff;
-    border-top: 1px solid #005a9e;
+    background-color: #f3f3f3;
+    color: #1e1e1e;
+    border-top: 1px solid #cccccc;
 }
 
 QStatusBar::item {
@@ -697,7 +746,7 @@ QStatusBar::item {
 }
 
 QStatusBar QLabel {
-    color: #ffffff;
+    color: #1e1e1e;
 }
 
 /* ===================================================================
