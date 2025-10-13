@@ -440,109 +440,13 @@
        </item>
       </layout>
      </widget>
+     <!-- History Tab removed - causes crashes and requires MonitoringService
      <widget class="QWidget" name="historyTab">
       <attribute name="title">
        <string>History</string>
       </attribute>
-      <layout class="QVBoxLayout" name="historyTabLayout">
-       <item>
-        <widget class="QGroupBox" name="historyFilterGroup">
-         <property name="title">
-          <string>Time Range</string>
-         </property>
-         <layout class="QHBoxLayout" name="historyFilterLayout">
-          <item>
-           <widget class="QLabel" name="labelTimeRange">
-            <property name="text">
-             <string>Show:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="timeRangeComboBox">
-            <item>
-             <property name="text">
-              <string>Last Hour</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Last 6 Hours</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Last 24 Hours</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Last 7 Days</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Last 30 Days</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="refreshHistoryButton">
-            <property name="text">
-             <string>Refresh</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="historyFilterSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTableWidget" name="historyTableWidget">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <column>
-          <property name="text">
-           <string>Timestamp</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Event</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Description</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-      </layout>
      </widget>
+     -->
      <widget class="QWidget" name="diagnosticsTab">
       <attribute name="title">
        <string>Diagnostics</string>

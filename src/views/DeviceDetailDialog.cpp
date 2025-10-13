@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include <QMessageBox>
 #include <QVBoxLayout>
+#include <QTimer>
 
 DeviceDetailDialog::DeviceDetailDialog(
     const Device& device,
@@ -39,7 +40,7 @@ DeviceDetailDialog::DeviceDetailDialog(
     // Load device data
     loadDeviceInfo();
     loadPorts();
-    loadHistory();
+    // Note: loadHistory() is called when History tab is selected, no need to call it here
 
     Logger::info(QString("DeviceDetailDialog: Opened for device %1").arg(m_device.getIp()));
 }
@@ -64,7 +65,6 @@ void DeviceDetailDialog::setupUi()
     setupOverviewTab();
     setupPortsTab();
     setupMetricsTab();
-    setupHistoryTab();
     setupDiagnosticsTab();
 }
 
@@ -177,18 +177,6 @@ void DeviceDetailDialog::setupMetricsTab()
     Logger::info("DeviceDetailDialog: Metrics monitoring started with UI integration and QualityGauge");
 }
 
-void DeviceDetailDialog::setupHistoryTab()
-{
-    // Configure history table
-    ui->historyTableWidget->horizontalHeader()->setStretchLastSection(true);
-    ui->historyTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-    // Set default time range (Last 24 Hours)
-    ui->timeRangeComboBox->setCurrentIndex(2);
-
-    loadHistory();
-}
-
 void DeviceDetailDialog::setupDiagnosticsTab()
 {
     // Initial state
@@ -248,12 +236,6 @@ void DeviceDetailDialog::setupConnections()
         connect(m_dnsDiagnostics, &DnsDiagnostics::lookupError,
                 this, &DeviceDetailDialog::onDnsLookupError);
     }
-
-    // History connections
-    connect(ui->refreshHistoryButton, &QPushButton::clicked,
-            this, &DeviceDetailDialog::onRefreshHistoryClicked);
-    connect(ui->timeRangeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &DeviceDetailDialog::onTimeRangeChanged);
 }
 
 void DeviceDetailDialog::loadDeviceInfo()
@@ -310,47 +292,6 @@ void DeviceDetailDialog::loadPorts()
     }
 
     Logger::debug(QString("DeviceDetailDialog: Loaded %1 ports").arg(ports.size()));
-}
-
-void DeviceDetailDialog::loadHistory()
-{
-    if (!m_historyService) {
-        Logger::warn("DeviceDetailDialog: HistoryService is null, cannot load history");
-        return;
-    }
-
-    ui->historyTableWidget->setRowCount(0);
-
-    // Get time range
-    QDateTime endTime = QDateTime::currentDateTime();
-    QDateTime startTime = getStartTimeForRange(ui->timeRangeComboBox->currentIndex());
-
-    // Get events from history service
-    QList<HistoryEvent> events = m_historyService->getEventHistory(
-        m_device.getIp(),
-        startTime,
-        endTime
-    );
-
-    ui->historyTableWidget->setRowCount(events.size());
-
-    for (int i = 0; i < events.size(); ++i) {
-        const HistoryEvent& event = events[i];
-
-        // Timestamp
-        QTableWidgetItem* timeItem = new QTableWidgetItem(formatTimestamp(event.timestamp));
-        ui->historyTableWidget->setItem(i, 0, timeItem);
-
-        // Event type
-        QTableWidgetItem* typeItem = new QTableWidgetItem(event.eventType);
-        ui->historyTableWidget->setItem(i, 1, typeItem);
-
-        // Description
-        QTableWidgetItem* descItem = new QTableWidgetItem(event.description);
-        ui->historyTableWidget->setItem(i, 2, descItem);
-    }
-
-    Logger::debug(QString("DeviceDetailDialog: Loaded %1 history events").arg(events.size()));
 }
 
 // Traceroute slots
@@ -564,20 +505,6 @@ void DeviceDetailDialog::onDnsLookupError(const QString& error)
     Logger::error(QString("DeviceDetailDialog: DNS lookup error: %1").arg(error));
 }
 
-// History slots
-
-void DeviceDetailDialog::onRefreshHistoryClicked()
-{
-    loadHistory();
-    Logger::info("DeviceDetailDialog: History refreshed");
-}
-
-void DeviceDetailDialog::onTimeRangeChanged(int index)
-{
-    Q_UNUSED(index);
-    loadHistory();
-}
-
 // Utility methods
 
 QString DeviceDetailDialog::formatTimestamp(const QDateTime& timestamp)
@@ -587,26 +514,6 @@ QString DeviceDetailDialog::formatTimestamp(const QDateTime& timestamp)
     }
 
     return TimeFormatter::formatRelativeTime(timestamp);
-}
-
-QDateTime DeviceDetailDialog::getStartTimeForRange(int rangeIndex)
-{
-    QDateTime now = QDateTime::currentDateTime();
-
-    switch (rangeIndex) {
-        case 0: // Last Hour
-            return now.addSecs(-3600);
-        case 1: // Last 6 Hours
-            return now.addSecs(-6 * 3600);
-        case 2: // Last 24 Hours
-            return now.addDays(-1);
-        case 3: // Last 7 Days
-            return now.addDays(-7);
-        case 4: // Last 30 Days
-            return now.addDays(-30);
-        default:
-            return now.addDays(-1);
-    }
 }
 
 int DeviceDetailDialog::convertQualityScoreToValue(NetworkMetrics::QualityScore score) const

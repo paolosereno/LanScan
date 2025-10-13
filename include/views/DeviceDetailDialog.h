@@ -73,10 +73,6 @@ private slots:
     void onDnsLookupCompleted(const QList<DnsDiagnostics::DnsRecord>& records);
     void onDnsLookupError(const QString& error);
 
-    // History slots
-    void onRefreshHistoryClicked();
-    void onTimeRangeChanged(int index);
-
 private:
     Ui::DeviceDetailDialog *ui;
     Device m_device;
@@ -100,18 +96,15 @@ private:
     void setupOverviewTab();
     void setupPortsTab();
     void setupMetricsTab();
-    void setupHistoryTab();
     void setupDiagnosticsTab();
     void setupConnections();
 
     // Data loading methods
     void loadDeviceInfo();
     void loadPorts();
-    void loadHistory();
 
     // Utility methods
     QString formatTimestamp(const QDateTime& timestamp);
-    QDateTime getStartTimeForRange(int rangeIndex);
     int convertQualityScoreToValue(NetworkMetrics::QualityScore score) const;
 };
 
