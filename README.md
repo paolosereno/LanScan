@@ -124,13 +124,15 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Alert acknowledgment and filtering
   - Automatic data pruning (LRU for alerts, time-based for history)
   - 32 unit tests across 3 test suites (AlertService, HistoryService, MonitoringService)
-- ✅ **Device Detail Dialog with integrated diagnostics** (Phase 7.4)
-  - Five-tab interface (Overview, Ports, Metrics, History, Diagnostics)
-  - Integrated MetricsWidget for real-time monitoring
-  - Historical events with time range filtering (Last Hour/6H/24H/7D/30D)
-  - All Phase 7 diagnostic tools integrated (Traceroute, MTU, Bandwidth, DNS)
+- ✅ **Device Detail Dialog with integrated diagnostics** (Phase 7.4, updated 2025-10-13)
+  - Four-tab interface (Overview, Ports, Metrics, Diagnostics)
+  - **Overview Tab**: Device information (IP, hostname, MAC, vendor, status, first/last seen, open ports)
+  - **Ports Tab**: Open ports list with protocol, state, and service detection
+  - **Metrics Tab**: Real-time monitoring with MetricsWidget and QualityGauge visualization
+  - **Diagnostics Tab**: All Phase 7 diagnostic tools (Traceroute, MTU Discovery, Bandwidth Test, DNS Lookup)
   - Double-click and context menu support for opening dialog
-  - 3 new files: ~1,200 LOC
+  - ~~History Tab removed (2025-10-13) - caused crashes due to MonitoringService architecture mismatch~~
+  - 3 new files: ~1,000 LOC (after History tab removal)
 
 **Wake-on-LAN Support** (Phase 8.1 - ✅ Complete)
 - ✅ **Wake-on-LAN magic packet sender**
@@ -565,6 +567,15 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-13**: DeviceDetailDialog History tab removed
+  - **Issue**: History tab was causing intermittent crashes when opening Device Details Dialog
+  - **Root Cause**: History feature requires MonitoringService to be running at application level, not per-dialog
+  - **Solution**: Completely removed History tab from DeviceDetailDialog
+  - **Code Cleanup**: Removed 196 lines of code from 3 files (devicedetaildialog.ui, DeviceDetailDialog.h, DeviceDetailDialog.cpp)
+  - **Removed Components**: setupHistoryTab(), loadHistory(), onRefreshHistoryClicked(), onTimeRangeChanged(), getStartTimeForRange()
+  - **Result**: DeviceDetailDialog now has 4 tabs (Overview, Ports, Metrics, Diagnostics) and opens/closes reliably without crashes
+  - **Stability**: All device detail dialogs tested successfully with multiple devices
+  - 3 files modified (-196 LOC, +4 LOC comments)
 - **2025-10-12**: QualityGauge integration into DeviceDetailDialog
   - **Widget Integration**: QualityGauge added to Metrics Tab with horizontal layout
   - **Real-time Updates**: Connected to MetricsViewModel for live quality visualization

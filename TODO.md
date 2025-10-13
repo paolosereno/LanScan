@@ -2,7 +2,7 @@
 
 **Active Phase**: Phase 9 - UI Polish & Theming ✅ (4/4 modules - 100% COMPLETE)
 **Next Milestone**: Phase 10 - Testing & Quality Assurance
-**Last Updated**: 2025-10-12 (QualityGauge integrated into DeviceDetailDialog)
+**Last Updated**: 2025-10-13 (History tab removed from DeviceDetailDialog)
 
 ---
 
@@ -41,7 +41,7 @@
   - Minimize/Close to tray functionality
   - Tray notifications support | ~1,400 LOC
 
-- ✅ **9.2 Custom Widgets** (2025-10-11, updated 2025-10-12)
+- ✅ **9.2 Custom Widgets** (2025-10-11, updated 2025-10-12, 2025-10-13)
   - QualityGauge widget with circular gauge visualization
   - NetworkActivityIndicator with animated LED states
   - GradientProgressBar with smooth color transitions
@@ -50,6 +50,12 @@
     - Real-time updates from MetricsViewModel
     - Fixed needle angle calculation for Qt coordinate system
     - Dialog height reduced from 950px to 650px for better UX
+  - **History tab removed from DeviceDetailDialog** (2025-10-13)
+    - Removed due to intermittent crashes when opening dialog
+    - History feature requires MonitoringService at app level, not per-dialog
+    - Removed 196 lines of code from 3 files (UI, header, implementation)
+    - Dialog now has 4 tabs: Overview, Ports, Metrics, Diagnostics
+    - All dialogs open/close reliably without crashes
   - All widgets compiled and integrated | ~650 LOC
 
 - ✅ **8.1 Wake-on-LAN** (2025-10-09)
