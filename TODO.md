@@ -2,7 +2,7 @@
 
 **Active Phase**: Phase 9 - UI Polish & Theming ✅ (4/4 modules - 100% COMPLETE)
 **Next Milestone**: Phase 10 - Testing & Quality Assurance
-**Last Updated**: 2025-10-13 (History tab removed from DeviceDetailDialog)
+**Last Updated**: 2025-10-13 (Theme system fixes and UI styling improvements)
 
 ---
 
@@ -378,7 +378,7 @@
 **Actual**: ~4,584 LOC | 2 days
 **Priority**: ~~Theme System~~ → ~~Custom Widgets~~ → ~~UI Enhancements~~ → ~~Localization~~
 
-#### 9.1 Theme System (Priority: HIGH) ✅ (COMPLETED - 2025-10-10)
+#### 9.1 Theme System (Priority: HIGH) ✅ (COMPLETED - 2025-10-10, FIXED - 2025-10-13)
 - [x] Create ThemeManager singleton class
   - Enum: Light, Dark, System
   - Methods: setTheme(), applyThemeToApplication(), detectSystemTheme()
@@ -398,7 +398,16 @@
 - [x] Apply theme at application startup
   - Load from QSettings in main.cpp
   - Set initial theme before window shows
-- **Actual**: ~2,039 LOC | 1 day
+- [x] **Critical Fixes (2025-10-13)**
+  - Fixed QSS resource path issue (changed prefix from "/styles" to "/" in resources.qrc)
+  - Corrected status bar colors to neutral theme-matching colors (removed blue backgrounds)
+  - Implemented dynamic font size replacement using regex in ThemeManager
+  - Added setFontSize() method with stylesheet font-size pattern replacement
+  - Fixed missing ComboBox/SpinBox arrows with CSS triangles (border trick instead of SVG)
+  - Updated SettingsDialog to use ThemeManager::setFontSize() instead of qApp->setFont()
+  - Enhanced main.cpp to load and apply font size on startup
+  - All theme modes (Light/Dark/System) now work correctly with proper styling
+- **Actual**: ~2,039 LOC | 1 day (+ fixes on 2025-10-13)
 
 #### 9.2 Custom Widgets (Priority: MEDIUM) ✅ (COMPLETED - 2025-10-11)
 - [x] Create QualityGauge widget

@@ -296,32 +296,42 @@ Network scanner application with advanced diagnostics and metrics visualization.
 
 **UI Polish & Theming** (Phase 9 - ✅ Complete)
 
-**Theme System** (Phase 9.1 - ✅ Complete)
+**Theme System** (Phase 9.1 - ✅ Complete, Fixed 2025-10-13)
 - ✅ **ThemeManager Singleton**
   - Application-wide theme switching with Light, Dark, and System modes
   - Windows system theme auto-detection via registry (AppsUseLightTheme)
   - Runtime theme switching without application restart
   - Qt signals for theme change notifications
+  - **Dynamic font size support** with regex-based stylesheet replacement
 - ✅ **Professional Stylesheets**
   - dark.qss - Modern dark theme (658 LOC, #1e1e1e background, #0e639c accent)
   - light.qss - Clean light theme (658 LOC, #ffffff background, #0078d4 accent)
   - Complete widget coverage: QMainWindow, QMenu, QToolBar, QPushButton, QLineEdit, QComboBox, QTableView, QScrollBar, QTabWidget, etc.
   - Consistent styling across all UI components
+  - **Neutral status bar colors** (#2d2d30 dark, #f3f3f3 light)
+  - **CSS-based ComboBox/SpinBox arrows** using border triangles (no external SVG dependencies)
 - ✅ **Qt Resource System**
   - resources.qrc for embedded stylesheet resources
   - CMAKE_AUTORCC automatic compilation
-  - Embedded access via ":/styles/dark.qss" and ":/styles/light.qss"
+  - **Fixed resource paths** (prefix "/" instead of "/styles" for correct QSS loading)
 - ✅ **Integration**
-  - SettingsDialog: Theme combo with instant preview
-  - main.cpp: Automatic theme loading at startup from QSettings
-  - Persistent theme preference across sessions
+  - SettingsDialog: Theme combo with instant preview and font size control (8-24pt)
+  - main.cpp: Automatic theme and font size loading at startup from QSettings
+  - Persistent theme and font preferences across sessions
+  - **Fixed font size application** using ThemeManager::setFontSize() instead of qApp->setFont()
+- ✅ **Critical Bug Fixes (2025-10-13)**
+  - Fixed theme not applying due to incorrect QSS resource paths
+  - Removed unwanted blue backgrounds from status bar
+  - Implemented dynamic font size replacement in stylesheets
+  - Fixed missing arrows in ComboBox and SpinBox widgets
+  - All theme modes now fully functional with proper UI element visibility
 - ✅ **Unit Tests**
   - ThemeManagerTest with 9 test cases (singleton, conversion, switching, loading)
 - ✅ **Implementation**
   - 6 new files created (~2,039 LOC including stylesheets)
-  - ThemeManager.h/cpp (332 LOC)
-  - dark.qss + light.qss (1,316 LOC)
-  - resources.qrc (23 LOC)
+  - ThemeManager.h/cpp (332 LOC + setFontSize method)
+  - dark.qss + light.qss (1,316 LOC + arrow fixes)
+  - resources.qrc (23 LOC, fixed paths)
   - ThemeManagerTest.cpp (168 LOC)
 
 **Custom Widgets** (Phase 9.2 - ✅ Complete)
@@ -567,6 +577,30 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-13**: Theme system and UI styling fixes
+  - **Issue**: Multiple theme and styling problems affecting user experience
+    1. Light theme not applying due to incorrect QSS resource paths
+    2. Unwanted blue status bar backgrounds in dark/system themes
+    3. Font size settings not applying to UI elements
+    4. Missing arrows in ComboBox and SpinBox widgets
+  - **Root Causes**:
+    1. resources.qrc had prefix="/styles" with file path "styles/light.qss", creating incorrect path ":/styles/styles/light.qss"
+    2. QStatusBar had hardcoded blue colors (#007acc, #0078d4) instead of theme-neutral colors
+    3. QSS hardcoded font-size values overrode programmatic font changes via qApp->setFont()
+    4. QSS referenced missing :/icons/arrow-down.svg for ComboBox/SpinBox arrows
+  - **Solutions**:
+    1. Changed resources.qrc prefix from "/styles" to "/" for correct path ":/styles/light.qss"
+    2. Replaced status bar colors with neutral theme-matching colors (#2d2d30 dark, #f3f3f3 light)
+    3. Implemented ThemeManager::setFontSize() with regex to dynamically replace font-size in stylesheets
+    4. Replaced missing SVG arrows with pure CSS triangles using border tricks
+  - **Implementation Changes**:
+    - ThemeManager: Added setFontSize() method with QRegularExpression for dynamic font-size replacement
+    - SettingsDialog: Changed to use ThemeManager::setFontSize() instead of qApp->setFont()
+    - main.cpp: Load and apply saved font size on startup
+    - light.qss & dark.qss: Added CSS triangle arrows for ComboBox/SpinBox (no external dependencies)
+  - **Result**: All theme modes (Light/Dark/System) work correctly with proper colors, font sizes, and visible UI elements
+  - 7 files modified: ThemeManager.h/cpp, resources.qrc, light.qss, dark.qss, SettingsDialog.cpp, main.cpp
+  - Git commit: 944db77 "fix: Resolve theme application and UI styling issues"
 - **2025-10-13**: DeviceDetailDialog History tab removed
   - **Issue**: History tab was causing intermittent crashes when opening Device Details Dialog
   - **Root Cause**: History feature requires MonitoringService to be running at application level, not per-dialog
