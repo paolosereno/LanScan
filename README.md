@@ -521,6 +521,159 @@ cmake --build . -j$(nproc)
 ctest --output-on-failure
 ```
 
+## Usage Guide
+
+### Bandwidth Testing
+
+The **Bandwidth Test** feature (available in the Diagnostics tab of Device Detail Dialog) measures network download and upload speeds between your computer and a target device.
+
+#### Requirements
+
+⚠️ **IMPORTANT**: The Bandwidth Test requires a **test server** running on the target device. LanScan acts as a client and connects to this server to measure bandwidth.
+
+**Recommended Test Server: iperf3**
+
+[iperf3](https://iperf.fr/) is a modern, cross-platform network bandwidth measurement tool specifically designed for this purpose.
+
+#### Setup Instructions
+
+**Step 1: Install iperf3 on the target device**
+
+```bash
+# Windows (via Chocolatey)
+choco install iperf3
+
+# Windows (manual download)
+# Download from: https://iperf.fr/iperf-download.php
+
+# Linux (Ubuntu/Debian)
+sudo apt-get install iperf3
+
+# Linux (Red Hat/CentOS)
+sudo yum install iperf3
+
+# macOS (via Homebrew)
+brew install iperf3
+```
+
+**Step 2: Start iperf3 server on target device**
+
+```bash
+# Start server on default port 5201
+iperf3 -s
+
+# Start server on custom port (e.g., 8080)
+iperf3 -s -p 8080
+
+# Output:
+# -----------------------------------------------------------
+# Server listening on 5201
+# -----------------------------------------------------------
+```
+
+**Step 3: Run Bandwidth Test from LanScan**
+
+1. Open LanScan and scan your network
+2. Double-click a device to open Device Detail Dialog
+3. Navigate to **Diagnostics** tab
+4. In the **Bandwidth Test** section:
+   - **Target IP**: Auto-filled with device IP (e.g., 192.168.1.100)
+   - **Port**: Enter server port (default: 5201 for iperf3)
+   - **Duration**: Test duration in seconds (1-60, default: 10)
+   - **Protocol**: TCP (recommended) or UDP
+   - **Direction**:
+     - **Download**: Measures how fast you receive data from the target
+     - **Upload**: Measures how fast you send data to the target
+5. Click **Start Test**
+
+**Step 4: View Results**
+
+LanScan will display:
+- **Real-time progress** (0-100%)
+- **Current bandwidth** (Mbps) during the test
+- **Final bandwidth** (Mbps) when test completes
+- **Total bytes** transferred
+- **Test duration** (seconds)
+
+Example output:
+```
+Bandwidth: 94.5 Mbps
+Total bytes: 118.125 MB
+Duration: 10.0 seconds
+```
+
+#### Alternative Test Servers
+
+While iperf3 is recommended, you can also use:
+
+**netcat (nc)** - Simple TCP/UDP server:
+```bash
+# TCP server on port 8080
+nc -l 8080
+
+# UDP server on port 5000
+nc -u -l 5000
+```
+
+**iperf2** (classic version):
+```bash
+# Server mode
+iperf -s -p 5001
+```
+
+**Note**: LanScan's BandwidthTester is compatible with any TCP/UDP server that accepts connections and sends/receives data continuously.
+
+#### Troubleshooting
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| "Connection refused" | No server running on target | Start iperf3 server on target device |
+| "Connection timeout" | Firewall blocking port | Allow port through firewall (e.g., `ufw allow 5201` on Linux) |
+| "Host not found" | Invalid IP address | Verify target IP is correct and device is online |
+| "Network error" | Network connectivity issue | Check network cable/Wi-Fi connection |
+
+**Firewall Configuration:**
+
+```bash
+# Linux (UFW)
+sudo ufw allow 5201/tcp
+sudo ufw allow 5201/udp
+
+# Windows Firewall (PowerShell as Administrator)
+New-NetFirewallRule -DisplayName "iperf3" -Direction Inbound -Protocol TCP -LocalPort 5201 -Action Allow
+New-NetFirewallRule -DisplayName "iperf3" -Direction Inbound -Protocol UDP -LocalPort 5201 -Action Allow
+```
+
+#### Technical Details
+
+**Protocol Comparison:**
+
+| Feature | TCP | UDP |
+|---------|-----|-----|
+| **Reliability** | Guaranteed delivery | Best-effort delivery |
+| **Use Case** | Real-world bandwidth testing | Maximum throughput testing |
+| **Overhead** | Higher (ACK, flow control) | Lower (no handshake) |
+| **Recommended** | ✅ General use | ⚠️ Advanced testing |
+
+**Test Parameters:**
+
+- **Duration**: 1-60 seconds (default: 10s)
+  - Longer tests = more accurate results
+  - Shorter tests = faster feedback
+- **Packet Size**: 1 KB - 1 MB (default: 64 KB)
+  - Smaller packets = more overhead
+  - Larger packets = less overhead, higher throughput
+- **Protocol**: TCP or UDP
+  - TCP recommended for real-world scenarios
+  - UDP for maximum speed testing
+
+**Bandwidth Calculation:**
+```
+Bandwidth (Mbps) = (Total Bytes × 8 bits/byte) / (Duration in seconds) / 1,000,000
+```
+
+Example: 118,125,000 bytes in 10 seconds = 94.5 Mbps
+
 ## Database & Data Files
 
 ### OUI Database (Vendor Identification)
