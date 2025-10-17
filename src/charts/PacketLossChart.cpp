@@ -107,6 +107,7 @@ void PacketLossChart::updateChart() {
 
     // Track max packet loss for Y axis scaling
     double maxPacketLoss = 0;
+    bool allZero = true;
 
     // Add new data
     for (const auto& pair : dataPoints) {
@@ -115,6 +116,9 @@ void PacketLossChart::updateChart() {
 
         if (pair.second > maxPacketLoss) {
             maxPacketLoss = pair.second;
+        }
+        if (pair.second > 0.01) {
+            allZero = false;
         }
     }
 
@@ -125,8 +129,11 @@ void PacketLossChart::updateChart() {
     // Update Y axis range (auto-scale with margin)
     if (maxPacketLoss > 0) {
         axisY->setRange(0, maxPacketLoss * 1.2);
+        chart->setTitle("Packet Loss (%)");
     } else {
-        axisY->setRange(0, 10); // Default range
+        // When all values are zero, set a small range so the 0% bars are visible
+        axisY->setRange(0, 5); // Show 0-5% range to make 0% bars visible
+        chart->setTitle("Packet Loss (%) - No packet loss detected");
     }
 
     // Color bars based on packet loss severity

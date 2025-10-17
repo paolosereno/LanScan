@@ -16,8 +16,6 @@ LatencyChart::LatencyChart(QWidget* parent)
     setupChart();
     setupSeries();
     setupAxes();
-
-    Logger::debug("LatencyChart: Initialized with 3 line series (min/avg/max)");
 }
 
 void LatencyChart::setupChart() {
@@ -109,7 +107,6 @@ void LatencyChart::clearData() {
     avgSeries->clear();
     maxSeries->clear();
 
-    Logger::debug("LatencyChart: Data cleared");
     emit chartUpdated();
 }
 
@@ -126,8 +123,6 @@ void LatencyChart::setMaxDataPoints(int max) {
     } else {
         maxDataPointsLimit = max;
     }
-
-    Logger::debug(QString("LatencyChart: MaxDataPoints set to %1").arg(maxDataPointsLimit));
 }
 
 int LatencyChart::getMaxDataPoints() const {

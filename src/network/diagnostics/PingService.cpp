@@ -149,7 +149,7 @@ void PingService::onProcessError(QProcess::ProcessError error) {
 }
 
 void PingService::onContinuousPingTimeout() {
-    ping(currentHost, 1);
+    ping(currentHost, 4);  // Collect 4 samples for balance between speed and statistical variance
 }
 
 QStringList PingService::buildPingCommand(const QString& host, int count) {

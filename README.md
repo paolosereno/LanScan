@@ -577,6 +577,28 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-17**: Metrics visualization and monitoring fixes
+  - **Issue**: Multiple issues with metrics charts and monitoring control
+    1. Latency chart showed only red line (max) instead of three lines (min/avg/max)
+    2. Packet Loss chart showed no bars when packet loss was 0%
+    3. Stop Monitoring button did not stop ping operations
+  - **Root Causes**:
+    1. PingService collected only 1 sample per execution, causing min=avg=max mathematically
+    2. Packet Loss chart had no visual representation for 0% values (bars with height 0)
+    3. MetricsViewModel did not call stopContinuousMonitoring on MetricsController
+  - **Solutions**:
+    1. Changed ping sample count from 1 to 4 for statistical variance (PingService.cpp:152)
+    2. Added dynamic Y-axis range (0-5%) and title "No packet loss detected" for 0% values
+    3. Integrated proper start/stop monitoring calls in MetricsViewModel
+  - **Implementation Changes**:
+    - PingService: Modified onContinuousPingTimeout() to collect 4 samples instead of 1
+    - PacketLossChart: Dynamic range and title based on packet loss values
+    - MetricsViewModel: Added metricsController->startContinuousMonitoring() in startMonitoring()
+    - MetricsViewModel: Added metricsController->stopContinuousMonitoring() in stopMonitoring()
+    - MetricsController: Improved cleanupTimer() to always stop aggregator collection
+  - **Result**: All charts display correctly with proper visualization and monitoring stops immediately
+  - 4 files modified: PingService.cpp, PacketLossChart.cpp, MetricsViewModel.cpp, MetricsController.cpp
+  - Performance: Balanced speed (~4 seconds per update) with statistical accuracy
 - **2025-10-13**: Theme system and UI styling fixes
   - **Issue**: Multiple theme and styling problems affecting user experience
     1. Light theme not applying due to incorrect QSS resource paths

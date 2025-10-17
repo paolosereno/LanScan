@@ -180,6 +180,7 @@ void MetricsAggregator::calculateLatencyMetrics(
         metrics.setLatencyMax(stats.max);
         metrics.setLatencyMedian(stats.median);
     } else {
+        Logger::warn("MetricsAggregator: LatencyCalculator cast failed, using fallback");
         // Fallback: just set average
         double avg = latencyCalculator->calculate(rttValues);
         metrics.setLatencyAvg(avg);

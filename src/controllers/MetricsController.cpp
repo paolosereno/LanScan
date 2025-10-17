@@ -124,10 +124,11 @@ void MetricsController::collectMetricsForDevice(const QString& deviceId) {
         // Set current monitoring device
         currentMonitoringDevice = deviceId;
 
-        // Start collecting metrics using aggregator
-        aggregator->startContinuousCollection(deviceId);
-
-        Logger::debug(QString("Started metrics collection for device %1").arg(deviceId));
+        // Only start continuous collection if not already collecting
+        if (!aggregator->isCollecting()) {
+            // Start collecting metrics using aggregator
+            aggregator->startContinuousCollection(deviceId);
+        }
 
         // Note: Metrics will be emitted via metricsUpdated signal
         // We'll handle saving in the onMetricsUpdated slot if needed
@@ -159,11 +160,12 @@ void MetricsController::cleanupTimer(const QString& deviceId) {
         timer->deleteLater();
     }
 
-    // Stop aggregator collection if this is the current device
-    if (aggregator && aggregator->isCollecting() && currentMonitoringDevice == deviceId) {
-        aggregator->stopContinuousCollection();
+    // Always stop aggregator collection when stopping monitoring
+    if (aggregator && currentMonitoringDevice == deviceId) {
+        if (aggregator->isCollecting()) {
+            aggregator->stopContinuousCollection();
+        }
         currentMonitoringDevice.clear();
-        Logger::debug(QString("Stopped metrics collection for device %1").arg(deviceId));
     }
 }
 

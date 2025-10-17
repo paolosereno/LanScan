@@ -111,9 +111,9 @@ void MetricsViewModel::startMonitoring(int intervalMs) {
     monitoringInterval = intervalMs;
     monitoring = true;
 
-    // Start the timer
-    monitoringTimer->setInterval(monitoringInterval);
-    monitoringTimer->start();
+    // Start continuous monitoring in MetricsController
+    // MetricsController manages its own timer and calls to PingService
+    metricsController->startContinuousMonitoring(deviceIdentifier, monitoringInterval);
 
     Logger::info(QString("MetricsViewModel: Monitoring started for device %1 (%2) with interval %3ms")
                      .arg(currentDevice.hostname())
@@ -121,9 +121,6 @@ void MetricsViewModel::startMonitoring(int intervalMs) {
                      .arg(monitoringInterval));
 
     emit monitoringStarted();
-
-    // Collect first metrics immediately
-    onMonitoringTimerTimeout();
 }
 
 void MetricsViewModel::stopMonitoring() {
@@ -132,7 +129,14 @@ void MetricsViewModel::stopMonitoring() {
     }
 
     monitoring = false;
-    monitoringTimer->stop();
+
+    // Stop continuous monitoring in MetricsController
+    if (metricsController) {
+        QString deviceIdentifier = currentDevice.getId().isEmpty() ? currentDevice.getIp() : currentDevice.getId();
+        if (!deviceIdentifier.isEmpty()) {
+            metricsController->stopContinuousMonitoring(deviceIdentifier);
+        }
+    }
 
     Logger::info("MetricsViewModel: Monitoring stopped");
     emit monitoringStopped();
