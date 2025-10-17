@@ -43,29 +43,30 @@ NetworkMetrics MetricsAggregator::aggregate(const QVector<PingService::PingResul
     // Extract RTT values from successful pings
     QVector<double> rttValues = extractRttValues(results);
 
+    // Calculate packet loss first (always available even if all pings failed)
+    int totalPackets = results.size();
+    int successfulPackets = rttValues.size();
+    double lossPercentage = ((totalPackets - successfulPackets) / static_cast<double>(totalPackets)) * 100.0;
+    metrics.setPacketLoss(lossPercentage);
+
     if (rttValues.isEmpty()) {
-        Logger::warn("MetricsAggregator: No successful pings in results");
+        // All pings failed - set 100% packet loss, no latency/jitter data
+        Logger::warn("MetricsAggregator: No successful pings in results (100% packet loss)");
+        metrics.setLatencyMin(0.0);
+        metrics.setLatencyAvg(0.0);
+        metrics.setLatencyMax(0.0);
+        metrics.setLatencyMedian(0.0);
+        metrics.setJitter(0.0);
+        metrics.calculateQualityScore();
         return metrics;
     }
 
-    // Calculate latency metrics
+    // Calculate latency metrics (only if we have successful pings)
     calculateLatencyMetrics(results, metrics);
 
     // Calculate jitter
     double jitter = jitterCalculator->calculate(rttValues);
     metrics.setJitter(jitter);
-
-    // Calculate packet loss
-    QVector<bool> successVector = extractSuccessVector(results);
-    double packetLoss = packetLossCalculator->calculate(
-        QVector<double>(successVector.size(), 1.0).toList().toVector()
-    );
-
-    // Convert success vector to packet loss percentage
-    int totalPackets = results.size();
-    int successfulPackets = rttValues.size();
-    double lossPercentage = ((totalPackets - successfulPackets) / static_cast<double>(totalPackets)) * 100.0;
-    metrics.setPacketLoss(lossPercentage);
 
     // Calculate quality score
     metrics.calculateQualityScore();

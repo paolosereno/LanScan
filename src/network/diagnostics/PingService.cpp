@@ -180,9 +180,22 @@ QVector<PingService::PingResult> PingService::parsePingOutput(const QString& out
             result = parseUnixPing(line);
         }
 
-        if (result.success) {
+        // Include both successful and failed pings for packet loss calculation
+        if (result.success || !result.errorMessage.isEmpty()) {
             result.host = currentHost;
             results.append(result);
+        }
+    }
+
+    // If we expected results but got none (e.g., all pings timed out),
+    // create failed results for accurate packet loss calculation
+    if (results.isEmpty() && currentCount > 0) {
+        for (int i = 0; i < currentCount; ++i) {
+            PingResult failedResult;
+            failedResult.host = currentHost;
+            failedResult.success = false;
+            failedResult.errorMessage = "No response";
+            results.append(failedResult);
         }
     }
 

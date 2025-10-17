@@ -577,6 +577,23 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-17**: Packet loss detection for offline devices
+  - **Issue**: Packet Loss chart showed no data when monitoring offline/powered-off devices
+  - **Root Cause**:
+    - PingService filtered out failed pings (success=false) in parsePingOutput()
+    - MetricsAggregator returned empty metrics without emitting signals when all pings failed
+    - Charts never received updates for 100% packet loss scenarios
+  - **Solution**:
+    - Modified parsePingOutput() to include both successful and failed ping results
+    - Added fallback logic to create failed results when no responses detected
+    - Updated MetricsAggregator::aggregate() to always calculate and emit packet loss metrics
+    - Set latency/jitter to 0 when all pings fail (100% packet loss)
+  - **Implementation Changes**:
+    - PingService.cpp: Include failed pings in results, create fallback failed results for timeouts
+    - MetricsAggregator.cpp: Calculate packet loss first, emit metrics even with 0 successful pings
+  - **Result**: Packet Loss chart now correctly displays 100% (red bars) for offline devices
+  - 2 files modified: PingService.cpp, MetricsAggregator.cpp
+  - Behavior: Comprehensive packet loss tracking for all device states (online/offline/intermittent)
 - **2025-10-17**: Metrics visualization and monitoring fixes
   - **Issue**: Multiple issues with metrics charts and monitoring control
     1. Latency chart showed only red line (max) instead of three lines (min/avg/max)
