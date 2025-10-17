@@ -62,9 +62,11 @@ QVariant DeviceTableViewModel::data(const QModelIndex& index, int role) const {
         }
     }
     else if (role == Qt::ForegroundRole) {
+        // Quality Score column always uses its specific color (even when offline)
         if (index.column() == QualityScore) {
             return QColor(getQualityColor(device.getMetrics().getQualityScore()));
         }
+        // Other columns become gray when device is offline
         if (!device.isOnline()) {
             return QColor(Qt::gray);
         }
@@ -213,11 +215,20 @@ QString DeviceTableViewModel::getStatusIcon(bool isOnline) const {
 }
 
 QColor DeviceTableViewModel::getQualityColor(int score) const {
-    if (score >= 80) return QColor(0, 200, 0);      // Green - Excellent
-    if (score >= 60) return QColor(150, 200, 0);    // Yellow-Green - Good
-    if (score >= 40) return QColor(255, 165, 0);    // Orange - Fair
-    if (score >= 20) return QColor(255, 100, 0);    // Dark Orange - Poor
-    return QColor(255, 0, 0);                        // Red - Bad
+    // Map enum values to colors
+    switch (score) {
+        case NetworkMetrics::Excellent:  // 0
+            return QColor(0, 200, 0);         // Green
+        case NetworkMetrics::Good:           // 1
+            return QColor(150, 200, 0);       // Yellow-Green
+        case NetworkMetrics::Fair:           // 2
+            return QColor(255, 165, 0);       // Orange
+        case NetworkMetrics::Poor:           // 3
+            return QColor(255, 100, 0);       // Dark Orange
+        case NetworkMetrics::Critical:       // 4
+        default:
+            return QColor(255, 0, 0);         // Red
+    }
 }
 
 QString DeviceTableViewModel::formatOpenPorts(const QList<PortInfo>& ports) const {

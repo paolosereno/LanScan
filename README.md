@@ -577,6 +577,25 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-17**: Quality column color visualization fix
+  - **Issue**: Quality column in device table showed gray text instead of quality-specific colors (green/yellow/orange/red)
+  - **Root Cause**:
+    - QualityScoreDelegate expected format "Excellent (95)" with numeric score in parentheses
+    - NetworkMetrics.getQualityScoreString() returned only "Excellent", "Good", "Poor", "Critical" without numbers
+    - Delegate returned -1 for parseQualityScore() when no number found, triggering gray text rendering
+    - Initial fix attempt used wrong mapping (0-100 score vs enum values 0-4)
+  - **Solution**:
+    - Simplified QualityScoreDelegate to render text-only display instead of progress bars
+    - Removed complex bar rendering logic (gradient fills, score calculation)
+    - Added direct quality string to color mapping (Excellent→Green, Good→Yellow-Green, Fair→Orange, Poor→Dark Orange, Critical→Red)
+    - Made text bold for better visibility
+  - **Implementation Changes**:
+    - DeviceTableViewModel.cpp: Changed getQualityColor() from score-based (0-100) to enum-based mapping (0-4)
+    - QualityScoreDelegate.cpp: Completely rewrote paintQualityBar() to simple text rendering with color
+    - QualityScoreDelegate.cpp: Updated getColorForQuality() to include "Critical" case
+  - **Result**: Quality column now displays colored text (Excellent=green, Good=yellow-green, Fair=orange, Poor=dark orange, Critical=red) with bold font
+  - **UI Impact**: Cleaner, more readable quality display without overly long horizontal bars
+  - 2 files modified: DeviceTableViewModel.cpp, QualityScoreDelegate.cpp (~60 LOC changed)
 - **2025-10-17**: Packet loss detection for offline devices
   - **Issue**: Packet Loss chart showed no data when monitoring offline/powered-off devices
   - **Root Cause**:

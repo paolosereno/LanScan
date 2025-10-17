@@ -32,53 +32,15 @@ void QualityScoreDelegate::paintQualityBar(QPainter* painter, const QRect& rect,
     painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
 
-    // Parse quality score (format: "Excellent (95)" or "N/A")
-    int score = parseQualityScore(quality);
-
-    if (score < 0) {
-        // Draw "N/A" text for invalid scores
-        painter->setPen(QColor(100, 100, 100));
-        painter->drawText(rect, Qt::AlignCenter, quality);
-        painter->restore();
-        return;
-    }
-
-    // Calculate bar dimensions
-    int barWidth = rect.width() - 20;
-    int barHeight = 16;
-    int barX = rect.x() + 10;
-    int barY = rect.center().y() - barHeight/2;
-    QRect barRect(barX, barY, barWidth, barHeight);
-
-    // Draw background bar
-    painter->setBrush(QColor(230, 230, 230));
-    painter->setPen(QPen(QColor(180, 180, 180), 1));
-    painter->drawRoundedRect(barRect, 3, 3);
-
-    // Calculate filled portion
-    int fillWidth = (barWidth * score) / 100;
-    QRect fillRect(barX, barY, fillWidth, barHeight);
-
     // Get color based on quality
-    QColor fillColor = getColorForQuality(quality);
+    QColor textColor = getColorForQuality(quality);
 
-    // Draw filled bar with gradient
-    QLinearGradient gradient(fillRect.topLeft(), fillRect.bottomLeft());
-    gradient.setColorAt(0.0, fillColor.lighter(120));
-    gradient.setColorAt(0.5, fillColor);
-    gradient.setColorAt(1.0, fillColor.darker(110));
-
-    painter->setBrush(QBrush(gradient));
-    painter->setPen(QPen(fillColor.darker(120), 1));
-    painter->drawRoundedRect(fillRect, 3, 3);
-
-    // Draw score text
-    painter->setPen(QColor(60, 60, 60));
+    // Draw quality text with appropriate color
+    painter->setPen(textColor);
     QFont font = painter->font();
-    font.setPointSize(8);
     font.setBold(true);
     painter->setFont(font);
-    painter->drawText(barRect, Qt::AlignCenter, QString::number(score));
+    painter->drawText(rect, Qt::AlignCenter, quality);
 
     painter->restore();
 }
@@ -92,7 +54,7 @@ QColor QualityScoreDelegate::getColorForQuality(const QString& quality) const {
         return QColor(255, 165, 0);     // Orange
     } else if (quality.contains("Poor")) {
         return QColor(255, 100, 0);     // Dark Orange
-    } else if (quality.contains("Bad")) {
+    } else if (quality.contains("Critical") || quality.contains("Bad")) {
         return QColor(255, 0, 0);       // Red
     }
     return QColor(150, 150, 150);       // Gray (N/A)
