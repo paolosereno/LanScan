@@ -6,10 +6,11 @@
 #include "network/discovery/DnsResolver.h"
 #include "network/discovery/ArpDiscovery.h"
 #include "network/sockets/TcpSocketManager.h"
+#include "network/diagnostics/PingService.h"
 
 /**
  * Deep scan strategy - comprehensive host analysis
- * - Ping for host discovery
+ * - Ping for host discovery with latency measurement
  * - DNS reverse lookup for hostname
  * - MAC address from ARP
  * - Common port scanning
@@ -35,6 +36,7 @@ public:
 private:
     HostDiscovery* m_hostDiscovery;
     DnsResolver* m_dnsResolver;
+    PingService* m_pingService;
     bool m_portScanningEnabled;
     int m_dnsTimeout;       // DNS timeout in milliseconds
     int m_dnsMaxRetries;    // Max DNS retry attempts

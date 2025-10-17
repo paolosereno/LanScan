@@ -3,6 +3,8 @@
 #include "network/services/PortServiceMapper.h"
 #include "utils/Logger.h"
 #include "models/PortInfo.h"
+#include "models/NetworkMetrics.h"
+#include <QDateTime>
 
 // Common ports to scan
 const QList<int> DeepScanStrategy::COMMON_PORTS = {
@@ -27,6 +29,7 @@ const QList<int> DeepScanStrategy::COMMON_PORTS = {
 DeepScanStrategy::DeepScanStrategy()
     : m_hostDiscovery(new HostDiscovery())
     , m_dnsResolver(new DnsResolver())
+    , m_pingService(new PingService())
     , m_portScanningEnabled(true)  // Default: enabled for backward compatibility
     , m_dnsTimeout(3000)            // Default: 3 seconds (increased from 2s)
     , m_dnsMaxRetries(2)            // Default: 2 retries
@@ -37,6 +40,7 @@ DeepScanStrategy::DeepScanStrategy()
 
 DeepScanStrategy::~DeepScanStrategy()
 {
+    delete m_pingService;
     delete m_hostDiscovery;
     delete m_dnsResolver;
 }
@@ -47,17 +51,43 @@ Device DeepScanStrategy::scan(const QString& ip)
     device.setIp(ip);
     device.setOnline(false);
 
-    // Check if host is alive
-    bool alive = m_hostDiscovery->isHostAlive(ip, 1000);
+    // Use PingService to check if host is alive AND collect latency metrics
+    PingService::PingResult pingResult = m_pingService->pingSync(ip, 2000);
 
-    if (!alive) {
+    if (!pingResult.success) {
+        // Host is offline - return device with default metrics (0 latency, 0 quality)
+        NetworkMetrics metrics;
+        metrics.setTimestamp(QDateTime::currentDateTime());
+        metrics.setLatencyAvg(0.0);
+        metrics.setLatencyMin(0.0);
+        metrics.setLatencyMax(0.0);
+        metrics.setPacketLoss(100.0);
+        metrics.setJitter(0.0);
+        metrics.calculateQualityScore();  // Will be 0 due to 100% packet loss
+        device.setMetrics(metrics);
         return device;
     }
 
+    // Host is online
     device.setOnline(true);
     device.setLastSeen(QDateTime::currentDateTime());
 
-    Logger::debug(QString("Deep scan: %1 is online").arg(ip));
+    // Create basic metrics from ping result
+    NetworkMetrics metrics;
+    metrics.setTimestamp(QDateTime::currentDateTime());
+    metrics.setLatencyAvg(pingResult.latency);
+    metrics.setLatencyMin(pingResult.latency);
+    metrics.setLatencyMax(pingResult.latency);
+    metrics.setLatencyMedian(pingResult.latency);
+    metrics.setPacketLoss(0.0);  // Single successful ping = 0% loss
+    metrics.setJitter(0.0);      // Need multiple pings to calculate jitter
+    metrics.calculateQualityScore();
+    device.setMetrics(metrics);
+
+    Logger::debug(QString("Deep scan: %1 is online (latency: %2ms, quality: %3)")
+                  .arg(ip)
+                  .arg(pingResult.latency, 0, 'f', 1)
+                  .arg(metrics.getQualityScore()));
 
     // Get MAC address from ARP cache
     QString mac = ArpDiscovery::getMacAddress(ip);
