@@ -176,8 +176,8 @@
    <item>
     <widget class="QLabel" name="infoLabel">
      <property name="text">
-      <string>Note: Ensure iperf3 server is running on target device:
-iperf3 -s -p &lt;port&gt;</string>
+      <string>⚠️ Note: Requires custom LanScan server on target device (under development).
+Not compatible with iperf3 or standard tools.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
