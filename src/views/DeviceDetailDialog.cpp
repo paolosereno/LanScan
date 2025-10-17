@@ -1,6 +1,7 @@
 #include "views/DeviceDetailDialog.h"
 #include "ui_devicedetaildialog.h"
 #include "views/MetricsWidget.h"
+#include "views/BandwidthTestDialog.h"
 #include "viewmodels/MetricsViewModel.h"
 #include "controllers/MetricsController.h"
 #include "utils/Logger.h"
@@ -412,21 +413,49 @@ void DeviceDetailDialog::onTestBandwidthClicked()
         return;
     }
 
-    ui->bandwidthResultLabel->setText(tr("Speed: Testing..."));
-    ui->testBandwidthButton->setEnabled(false);
+    // Show configuration dialog
+    BandwidthTestDialog dialog(m_device.getIp(), this);
 
-    // Test download speed on port 80 (HTTP)
-    bool started = m_bandwidthTester->testDownloadSpeed(
-        m_device.getIp(), 80, 5, BandwidthTester::TCP
-    );
+    if (dialog.exec() == QDialog::Accepted) {
+        // Get configured parameters
+        BandwidthTestDialog::TestConfig config = dialog.getConfig();
 
-    if (!started) {
-        ui->bandwidthResultLabel->setText(tr("Speed: Error"));
-        ui->testBandwidthButton->setEnabled(true);
+        ui->bandwidthResultLabel->setText(tr("Speed: Testing..."));
+        ui->testBandwidthButton->setEnabled(false);
+
+        // Set packet size if configured
+        m_bandwidthTester->setPacketSize(config.packetSizeKB * 1024); // Convert KB to bytes
+
+        // Start test based on direction
+        bool started = false;
+        if (config.direction == BandwidthTester::Download) {
+            started = m_bandwidthTester->testDownloadSpeed(
+                config.targetIp,
+                config.port,
+                config.durationSeconds,
+                config.protocol
+            );
+        } else {
+            started = m_bandwidthTester->testUploadSpeed(
+                config.targetIp,
+                config.port,
+                config.durationSeconds,
+                config.protocol
+            );
+        }
+
+        if (!started) {
+            ui->bandwidthResultLabel->setText(tr("Speed: Error"));
+            ui->testBandwidthButton->setEnabled(true);
+        }
+
+        Logger::info(QString("DeviceDetailDialog: Started %1 %2 bandwidth test to %3:%4 for %5s")
+                     .arg(config.protocol == BandwidthTester::TCP ? "TCP" : "UDP")
+                     .arg(config.direction == BandwidthTester::Download ? "download" : "upload")
+                     .arg(config.targetIp)
+                     .arg(config.port)
+                     .arg(config.durationSeconds));
     }
-
-    Logger::info(QString("DeviceDetailDialog: Started bandwidth test for %1")
-                 .arg(m_device.getIp()));
 }
 
 void DeviceDetailDialog::onBandwidthTestCompleted(double bandwidth)

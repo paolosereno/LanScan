@@ -201,6 +201,7 @@ set(VIEW_SOURCES
     src/views/FavoritesWidget.cpp
     src/views/TrendsWidget.cpp
     src/views/SettingsDialog.cpp
+    src/views/BandwidthTestDialog.cpp
 )
 
 # Delegate sources (Phase 5)
@@ -256,6 +257,7 @@ set(HEADERS
     include/views/FavoritesWidget.h
     include/views/TrendsWidget.h
     include/views/SettingsDialog.h
+    include/views/BandwidthTestDialog.h
     include/database/HistoryDao.h
     include/database/MetricsDao.h
     include/delegates/StatusDelegate.h
@@ -282,10 +284,11 @@ set(UI_SOURCES
     ui/devicedetaildialog.ui
     ui/profiledialog.ui
     ui/settingsdialog.ui
+    src/views/bandwidthtestdialog.ui
 )
 
 # Set AUTOUIC search paths for UI files
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui)
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR}/ui ${CMAKE_SOURCE_DIR}/src/views)
 
 # Qt Resource files (Phase 9.1)
 set(RESOURCE_FILES
