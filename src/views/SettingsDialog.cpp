@@ -313,6 +313,22 @@ void SettingsDialog::applySettings() {
     ThemeManager::instance().setFontSize(ui->fontSizeSpin->value());
     Logger::info(QString("Font size applied: %1 pt").arg(ui->fontSizeSpin->value()));
 
+    // Apply logging settings immediately
+    int logLevel = ui->logLevelCombo->currentData().toInt();
+    Logger::setLogLevel(static_cast<Logger::Level>(logLevel));
+
+    bool enableFileLogging = ui->logToFileCheck->isChecked();
+    if (enableFileLogging) {
+        Logger::setLogFile("lanscan.log");
+    } else {
+        Logger::setLogFile("");  // Disable file logging
+    }
+
+    QString logLevelName = ui->logLevelCombo->currentText();
+    Logger::info(QString("Logging settings applied: Level=%1, FileLogging=%2")
+                 .arg(logLevelName)
+                 .arg(enableFileLogging ? "enabled" : "disabled"));
+
     // Update stored values since settings were applied
     storeOriginalAppearance();
 

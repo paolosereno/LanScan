@@ -37,15 +37,23 @@ int main(int argc, char *argv[])
     app.setApplicationVersion("0.5.0-phase5");
     app.setOrganizationName("Paolo Sereno");
 
-    // Initialize logger
-    Logger::setLogLevel(Logger::DEBUG);  // Enable DEBUG logging
-    Logger::setLogFile("lanscan.log");   // Write logs to file
+    // ========== Logger Setup ==========
+
+    // Load logging settings from QSettings
+    QSettings settings("LanScan", "LanScan");
+    int logLevel = settings.value("Advanced/LogLevel", static_cast<int>(Logger::INFO)).toInt();
+    bool enableFileLogging = settings.value("Advanced/EnableFileLogging", true).toBool();
+
+    // Apply logger configuration
+    Logger::setLogLevel(static_cast<Logger::Level>(logLevel));
+    if (enableFileLogging) {
+        Logger::setLogFile("lanscan.log");
+    }
     Logger::info("LanScan v0.5.0-phase5 starting...");
 
     // ========== Theme Setup (Phase 9.1) ==========
 
-    // Load theme from settings
-    QSettings settings("LanScan", "LanScan");
+    // Load theme from settings (reuse settings object)
     QString themeStr = settings.value("Appearance/Theme", "system").toString();
     int fontSize = settings.value("Appearance/FontSize", 10).toInt();
 
