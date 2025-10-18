@@ -99,7 +99,7 @@ void DeviceTableWidget::setupTableView() {
 void DeviceTableWidget::setupContextMenu() {
     contextMenu = new QMenu(this);
 
-    contextMenu->addAction(tr("Ping Device"), this, &DeviceTableWidget::onPingDevice);
+    contextMenu->addAction(tr("Device Metrics"), this, &DeviceTableWidget::onPingDevice);
     contextMenu->addAction(tr("Show Details"), this, &DeviceTableWidget::onShowDetails);
     contextMenu->addSeparator();
     contextMenu->addAction(tr("Wake on LAN"), this, &DeviceTableWidget::onWakeOnLan);

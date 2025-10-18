@@ -711,6 +711,29 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-18**: Device Metrics dock widget UI improvements
+  - **Issue**: Device Metrics dock had usability issues
+    1. No way to close the dock when monitoring was not needed
+    2. Dock could be made floating via double-click (inconsistent UI)
+    3. Opening dock from View menu used last device instead of selected device
+    4. Context menu label "Ping Device" didn't match View menu "Device Metrics"
+  - **Solutions**:
+    1. Added custom toggle action in View menu (since NoDockWidgetFeatures disables built-in toggleViewAction)
+    2. Set dock to NoDockWidgetFeatures (no close button, not movable, not floatable)
+    3. Implemented device selection logic when opening from View menu
+    4. Renamed context menu from "Ping Device" to "Device Metrics" for consistency
+    5. Added automatic monitoring stop when dock is hidden
+  - **Implementation Changes**:
+    - MainWindow.cpp: Custom QAction for dock toggle with device selection logic
+    - MainWindow.cpp: Connect visibilityChanged signal to stopMonitoring()
+    - DeviceTableWidget.cpp: Renamed context menu action text
+  - **Result**:
+    - Dock is fixed in position (Right area), closable only via View menu
+    - Opening from View menu now monitors currently selected device
+    - Monitoring automatically stops when dock is hidden (saves resources)
+    - Consistent naming across UI (Device Metrics everywhere)
+  - 2 files modified: MainWindow.cpp (~40 LOC), DeviceTableWidget.cpp (1 LOC)
+  - UI/UX: Cleaner, more predictable dock behavior with proper resource management
 - **2025-10-17**: Quality column color visualization fix
   - **Issue**: Quality column in device table showed gray text instead of quality-specific colors (green/yellow/orange/red)
   - **Root Cause**:

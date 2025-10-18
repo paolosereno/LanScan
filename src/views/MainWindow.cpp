@@ -110,6 +110,7 @@ void MainWindow::setupMenuBar() {
     QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(tr("&Refresh"), this, &MainWindow::onRefresh, QKeySequence::Refresh);
     viewMenu->addAction(tr("&Clear Results"), this, &MainWindow::onClearResults);
+    viewMenu->addSeparator();
 
     // Tools Menu
     QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
@@ -185,10 +186,62 @@ void MainWindow::setupMetricsWidget() {
     metricsDock->setWidget(metricsWidget);
     metricsDock->setAllowedAreas(Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 
+    // Fixed dock - no close button, not movable, not floatable (only closable via View menu)
+    metricsDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+
     addDockWidget(Qt::RightDockWidgetArea, metricsDock);
 
     // Initially hidden
     metricsDock->hide();
+
+    // Create custom toggle action for the dock (since NoDockWidgetFeatures disables the built-in one)
+    QAction* toggleMetricsAction = new QAction(tr("Device &Metrics"), this);
+    toggleMetricsAction->setCheckable(true);
+    toggleMetricsAction->setChecked(false); // Initially hidden
+
+    connect(toggleMetricsAction, &QAction::triggered, this, [this, toggleMetricsAction](bool checked) {
+        if (checked) {
+            // When opening dock from menu, use currently selected device
+            Device selectedDevice = deviceTable->getSelectedDevice();
+            if (!selectedDevice.getIp().isEmpty()) {
+                // Set device and start monitoring
+                QList<Device> devices = {selectedDevice};
+                metricsWidget->setDevices(devices);
+                metricsWidget->setDevice(selectedDevice);
+                metricsWidget->startMonitoring(1000);
+                Logger::info("Metrics dock opened from menu - monitoring device: " + selectedDevice.getIp());
+            } else {
+                Logger::info("Metrics dock opened from menu - no device selected");
+            }
+            metricsDock->show();
+        } else {
+            metricsDock->hide();
+        }
+    });
+
+    // Update action state when dock visibility changes
+    connect(metricsDock, &QDockWidget::visibilityChanged, toggleMetricsAction, &QAction::setChecked);
+
+    // Add toggle action to View menu
+    QList<QAction*> actions = menuBar()->actions();
+    for (QAction* action : actions) {
+        if (action->text() == tr("&View")) {
+            QMenu* viewMenu = action->menu();
+            if (viewMenu) {
+                viewMenu->addAction(toggleMetricsAction);
+            }
+            break;
+        }
+    }
+
+    // Connect visibility changed to stop monitoring when dock is hidden
+    connect(metricsDock, &QDockWidget::visibilityChanged, this, [this](bool visible) {
+        if (!visible) {
+            // Stop monitoring when dock is hidden
+            metricsWidget->stopMonitoring();
+            Logger::info("Metrics dock hidden - monitoring stopped");
+        }
+    });
 
     Logger::info("MetricsWidget setup completed");
 }
