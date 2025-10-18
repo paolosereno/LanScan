@@ -63,6 +63,19 @@ public:
     };
 
     /**
+     * @brief Protocol state for LanScan bandwidth test protocol
+     */
+    enum ProtocolState {
+        Idle,                       ///< No test running
+        Connecting,                 ///< Connecting to server
+        WaitingHandshakeResponse,   ///< Waiting for server OK/ERROR response
+        DataTransfer,               ///< Transferring data
+        WaitingResults,             ///< Waiting for server results
+        Completed,                  ///< Test completed successfully
+        Error                       ///< Error state
+    };
+
+    /**
      * @brief Constructs a BandwidthTester service
      * @param parent The parent QObject
      */
@@ -208,6 +221,26 @@ private:
      */
     void completeTest();
 
+    /**
+     * @brief Generates the LanScan protocol handshake message
+     * @return Handshake message in protocol format
+     */
+    QByteArray generateHandshake() const;
+
+    /**
+     * @brief Parses the server's handshake response
+     * @param data Response data from server
+     * @return true if server responded OK, false on error
+     */
+    bool parseHandshakeResponse(const QByteArray& data);
+
+    /**
+     * @brief Parses the server's results message
+     * @param data Results data from server
+     * @return true if parsing successful
+     */
+    bool parseResults(const QByteArray& data);
+
     QTcpSocket* m_tcpSocket;          ///< TCP socket for testing
     QUdpSocket* m_udpSocket;          ///< UDP socket for testing
     QElapsedTimer m_timer;            ///< Timer for measuring duration
@@ -226,6 +259,10 @@ private:
 
     double m_measuredBandwidth;       ///< Final measured bandwidth
     bool m_isRunning;                 ///< Test in progress flag
+
+    // Protocol state management
+    ProtocolState m_protocolState;    ///< Current protocol state
+    QByteArray m_receiveBuffer;       ///< Buffer for receiving protocol messages
 };
 
 #endif // BANDWIDTHTESTER_H

@@ -17,6 +17,7 @@ BandwidthTester::BandwidthTester(QObject* parent)
     , m_packetSize(65536)  // 64 KB default
     , m_measuredBandwidth(0.0)
     , m_isRunning(false)
+    , m_protocolState(Idle)
 {
     // Configure progress timer (update every 500ms)
     m_progressTimer->setInterval(500);
@@ -114,6 +115,8 @@ bool BandwidthTester::startTest(const QString& target, quint16 port, int duratio
     m_totalBytes = 0;
     m_measuredBandwidth = 0.0;
     m_isRunning = true;
+    m_protocolState = Connecting;
+    m_receiveBuffer.clear();
 
     Logger::info(QString("BandwidthTester: Starting %1 %2 test to %3:%4 for %5 seconds")
                  .arg(protocol == TCP ? "TCP" : "UDP")
@@ -178,17 +181,50 @@ bool BandwidthTester::startTest(const QString& target, quint16 port, int duratio
 
 void BandwidthTester::onTcpConnected()
 {
-    Logger::debug("BandwidthTester: TCP connected");
+    Logger::debug("BandwidthTester: TCP connected, sending handshake");
 
-    // If upload test, start sending data
-    if (m_direction == Upload) {
-        sendData();
-    }
-    // For download test, just wait for data (server should start sending)
+    // Send protocol handshake
+    QByteArray handshake = generateHandshake();
+    m_tcpSocket->write(handshake);
+    m_tcpSocket->flush();
+
+    m_protocolState = WaitingHandshakeResponse;
 }
 
 void BandwidthTester::onTcpError(QAbstractSocket::SocketError error)
 {
+    Logger::debug(QString("BandwidthTester: onTcpError called - error=%1, state=%2, socketState=%3")
+                 .arg(error)
+                 .arg(m_protocolState)
+                 .arg(m_tcpSocket ? m_tcpSocket->state() : -1));
+
+    // If we're waiting for results and get RemoteHostClosedError, check if there's data to read first
+    if (error == QAbstractSocket::RemoteHostClosedError &&
+        (m_protocolState == WaitingResults || m_protocolState == DataTransfer)) {
+        Logger::debug("BandwidthTester: Remote host closed, checking for pending data");
+
+        // Check if there's still data available to read
+        if (m_tcpSocket && m_tcpSocket->bytesAvailable() > 0) {
+            Logger::debug(QString("BandwidthTester: %1 bytes still available, processing them")
+                         .arg(m_tcpSocket->bytesAvailable()));
+            // Let the readyRead handler process the remaining data
+            onTcpReadyRead();
+
+            // If we completed successfully, don't treat this as an error
+            if (m_protocolState == Completed) {
+                Logger::debug("BandwidthTester: Successfully processed remaining data after remote close");
+                return;
+            }
+        }
+
+        // If we're in WaitingResults state, don't treat remote close as an error yet
+        // Let the timeout handle it if results don't arrive
+        if (m_protocolState == WaitingResults) {
+            Logger::debug("BandwidthTester: Remote closed while waiting for results, relying on timeout");
+            return;
+        }
+    }
+
     QString errorMsg;
     switch (error) {
         case QAbstractSocket::ConnectionRefusedError:
@@ -213,26 +249,121 @@ void BandwidthTester::onTcpError(QAbstractSocket::SocketError error)
 
     Logger::error(QString("BandwidthTester: TCP error: %1").arg(errorMsg));
     m_isRunning = false;
+    m_protocolState = Error;
     emit testError(errorMsg);
 }
 
 void BandwidthTester::onTcpReadyRead()
 {
-    if (!m_tcpSocket || m_direction != Download) {
+    if (!m_tcpSocket) {
         return;
     }
 
-    // Read all available data
-    QByteArray data = m_tcpSocket->readAll();
-    m_totalBytes += data.size();
+    if (m_protocolState == WaitingHandshakeResponse) {
+        // Accumulate data in receive buffer
+        m_receiveBuffer.append(m_tcpSocket->readAll());
 
-    Logger::debug(QString("BandwidthTester: Received %1 bytes (total: %2)")
-                  .arg(data.size()).arg(m_totalBytes));
+        // Check if we have complete response (ends with "READY\n" for OK or contains "ERROR:" for error)
+        if (m_receiveBuffer.contains("READY\n") || m_receiveBuffer.contains("LANSCAN_BW_ERROR")) {
+            if (parseHandshakeResponse(m_receiveBuffer)) {
+                Logger::debug("BandwidthTester: Handshake successful, starting data transfer");
+                m_protocolState = DataTransfer;
+                m_receiveBuffer.clear();
+
+                // Reset timer for data transfer phase
+                m_timer.restart();
+
+                // Start data transfer
+                if (m_direction == Upload) {
+                    sendData();
+                }
+                // For download, just wait for server to send data
+            } else {
+                // Error in handshake, cancel test
+                cancel();
+            }
+        }
+    }
+    else if (m_protocolState == DataTransfer) {
+        if (m_direction == Download) {
+            // Read all available data
+            QByteArray data = m_tcpSocket->readAll();
+
+            // Check if data contains results marker
+            if (data.contains("LANSCAN_BW_RESULTS")) {
+                // Split data and results
+                int resultsStart = data.indexOf("LANSCAN_BW_RESULTS");
+                QByteArray testData = data.left(resultsStart);
+                QByteArray resultsData = data.mid(resultsStart);
+
+                // Count only test data
+                m_totalBytes += testData.size();
+
+                Logger::debug(QString("BandwidthTester: Received %1 bytes + results message (total: %2)")
+                              .arg(testData.size()).arg(m_totalBytes));
+
+                // Process results immediately
+                m_receiveBuffer = resultsData;
+                m_protocolState = WaitingResults;
+
+                // Process the results
+                if (m_receiveBuffer.contains("END\n")) {
+                    if (parseResults(m_receiveBuffer)) {
+                        Logger::debug("BandwidthTester: Results parsed successfully");
+                    }
+                    m_protocolState = Completed;
+                    completeTest();
+                }
+            } else {
+                m_totalBytes += data.size();
+                Logger::debug(QString("BandwidthTester: Received %1 bytes (total: %2)")
+                              .arg(data.size()).arg(m_totalBytes));
+            }
+        }
+    }
+    else if (m_protocolState == WaitingResults) {
+        // Read new data
+        QByteArray newData = m_tcpSocket->readAll();
+        Logger::debug(QString("BandwidthTester: WaitingResults - received %1 bytes").arg(newData.size()));
+        m_receiveBuffer.append(newData);
+
+        // Look for the results marker
+        if (m_receiveBuffer.contains("LANSCAN_BW_RESULTS")) {
+            // Found results marker, extract results message
+            int resultsStart = m_receiveBuffer.indexOf("LANSCAN_BW_RESULTS");
+            QByteArray resultsMessage = m_receiveBuffer.mid(resultsStart);
+
+            Logger::debug(QString("BandwidthTester: Found results marker at position %1 (discarded %2 bytes of test data)")
+                         .arg(resultsStart).arg(resultsStart));
+
+            // Check if we have complete results (ends with "END\n")
+            if (resultsMessage.contains("END\n")) {
+                Logger::debug(QString("BandwidthTester: Received complete results message (%1 bytes)")
+                             .arg(resultsMessage.size()));
+                if (parseResults(resultsMessage)) {
+                    Logger::info("BandwidthTester: Results parsed successfully");
+                }
+                m_protocolState = Completed;
+                completeTest();
+            } else {
+                Logger::debug(QString("BandwidthTester: Partial results message, waiting for END (results size: %1)")
+                             .arg(resultsMessage.size()));
+                // Keep only the results message
+                m_receiveBuffer = resultsMessage;
+            }
+        } else {
+            // No results marker yet, keep accumulating (but log if buffer gets too large)
+            if (m_receiveBuffer.size() > 1048576) { // > 1MB
+                Logger::warn(QString("BandwidthTester: Still no results marker after receiving %1 bytes")
+                            .arg(m_receiveBuffer.size()));
+            }
+        }
+    }
 }
 
 void BandwidthTester::onTcpBytesWritten(qint64 bytes)
 {
-    if (m_direction != Upload) {
+    if (m_direction != Upload || m_protocolState != DataTransfer) {
         return;
     }
 
@@ -299,6 +430,49 @@ void BandwidthTester::onProgressTimerTick()
 
 void BandwidthTester::onTestTimeout()
 {
+    if (m_protocolState == DataTransfer && m_protocol == TCP) {
+        // Test duration completed, now wait for server results asynchronously
+        Logger::info("BandwidthTester: Test duration completed, waiting for server results");
+        m_protocolState = WaitingResults;
+        m_receiveBuffer.clear();
+
+        if (m_tcpSocket && m_tcpSocket->state() == QAbstractSocket::ConnectedState) {
+            // Check if results are already available in the buffer
+            qint64 available = m_tcpSocket->bytesAvailable();
+            Logger::debug(QString("BandwidthTester: Socket state=%1, bytesAvailable=%2")
+                         .arg(m_tcpSocket->state()).arg(available));
+
+            if (available > 0) {
+                Logger::debug(QString("BandwidthTester: %1 bytes already available, processing now")
+                             .arg(available));
+                // Trigger readyRead handler to process available data
+                onTcpReadyRead();
+
+                // If we successfully completed, return
+                if (m_protocolState == Completed) {
+                    return;
+                }
+            }
+
+            // Start a long timeout timer (30 seconds) to wait for results
+            // The onTcpReadyRead() signal will process results when they arrive
+            Logger::debug("BandwidthTester: Waiting asynchronously for server results (30 second timeout)");
+            m_testTimer->start(30000);
+        } else {
+            Logger::warn(QString("BandwidthTester: Socket not connected (state=%1), completing without results")
+                        .arg(m_tcpSocket ? m_tcpSocket->state() : -1));
+            completeTest();
+        }
+        return;
+    }
+    else if (m_protocolState == WaitingResults) {
+        // Timeout while waiting for results
+        Logger::error("BandwidthTester: Timeout waiting for server results after 30 seconds");
+        completeTest();
+        return;
+    }
+
+    // For UDP or other cases, complete immediately
     Logger::info("BandwidthTester: Test duration completed");
     completeTest();
 }
@@ -324,7 +498,10 @@ void BandwidthTester::completeTest()
     m_progressTimer->stop();
     m_testTimer->stop();
 
-    m_measuredBandwidth = calculateBandwidth();
+    // Use measured bandwidth if not already set by server results
+    if (m_measuredBandwidth == 0.0) {
+        m_measuredBandwidth = calculateBandwidth();
+    }
 
     Logger::info(QString("BandwidthTester: Test completed - %1 Mbps (%2 bytes in %3 ms)")
                  .arg(m_measuredBandwidth, 0, 'f', 2)
@@ -345,5 +522,102 @@ void BandwidthTester::completeTest()
     }
 
     m_isRunning = false;
+    m_protocolState = Idle;
     emit testCompleted(m_measuredBandwidth);
+}
+
+QByteArray BandwidthTester::generateHandshake() const
+{
+    QString handshake = QString("LANSCAN_BW_TEST\n"
+                               "VERSION:1.0\n"
+                               "PROTOCOL:%1\n"
+                               "DIRECTION:%2\n"
+                               "DURATION:%3\n"
+                               "PACKET_SIZE:%4\n"
+                               "END\n")
+                        .arg(m_protocol == TCP ? "TCP" : "UDP")
+                        .arg(m_direction == Download ? "DOWNLOAD" : "UPLOAD")
+                        .arg(m_durationMs / 1000)
+                        .arg(m_packetSize);
+
+    return handshake.toUtf8();
+}
+
+bool BandwidthTester::parseHandshakeResponse(const QByteArray& data)
+{
+    QString response = QString::fromUtf8(data);
+    Logger::debug(QString("BandwidthTester: Received handshake response (%1 bytes): %2")
+                  .arg(data.size()).arg(response.left(100)));
+
+    QStringList lines = response.split('\n', Qt::SkipEmptyParts);
+
+    if (lines.isEmpty()) {
+        Logger::error("BandwidthTester: Empty handshake response");
+        return false;
+    }
+
+    Logger::debug(QString("BandwidthTester: First line: '%1'").arg(lines.first()));
+
+    // Check for OK or ERROR response
+    if (lines.first() == "LANSCAN_BW_OK") {
+        Logger::debug("BandwidthTester: Handshake OK received");
+        return true;
+    }
+    else if (lines.first() == "LANSCAN_BW_ERROR") {
+        // Parse error message
+        QString errorMsg = "Unknown error";
+        for (const QString& line : lines) {
+            if (line.startsWith("ERROR:")) {
+                errorMsg = line.mid(6).trimmed();
+                break;
+            }
+        }
+        Logger::error(QString("BandwidthTester: Server error: %1").arg(errorMsg));
+        emit testError(QString("Server error: %1").arg(errorMsg));
+        return false;
+    }
+    else {
+        Logger::error(QString("BandwidthTester: Invalid handshake response: %1").arg(lines.first()));
+        return false;
+    }
+}
+
+bool BandwidthTester::parseResults(const QByteArray& data)
+{
+    QString response = QString::fromUtf8(data);
+    Logger::debug(QString("BandwidthTester: Received results (%1 bytes): %2")
+                  .arg(data.size()).arg(response.left(200)));
+
+    QStringList lines = response.split('\n', Qt::SkipEmptyParts);
+
+    if (lines.isEmpty() || lines.first() != "LANSCAN_BW_RESULTS") {
+        Logger::error(QString("BandwidthTester: Invalid results message. First line: %1")
+                      .arg(lines.isEmpty() ? "(empty)" : lines.first()));
+        return false;
+    }
+
+    // Parse result fields
+    qint64 bytes = 0;
+    double throughputMbps = 0.0;
+    qint64 durationMs = 0;
+
+    for (const QString& line : lines) {
+        if (line.startsWith("BYTES:")) {
+            bytes = line.mid(6).trimmed().toLongLong();
+        }
+        else if (line.startsWith("THROUGHPUT_MBPS:")) {
+            throughputMbps = line.mid(16).trimmed().toDouble();
+        }
+        else if (line.startsWith("DURATION_MS:")) {
+            durationMs = line.mid(12).trimmed().toLongLong();
+        }
+    }
+
+    Logger::info(QString("BandwidthTester: Server results - %1 bytes, %2 Mbps, %3 ms")
+                 .arg(bytes).arg(throughputMbps, 0, 'f', 2).arg(durationMs));
+
+    // Use server's calculated throughput
+    m_measuredBandwidth = throughputMbps;
+
+    return true;
 }

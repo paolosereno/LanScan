@@ -525,32 +525,59 @@ ctest --output-on-failure
 
 ### Bandwidth Testing
 
-The **Bandwidth Test** feature (available in the Diagnostics tab of Device Detail Dialog) measures network download and upload speeds between your computer and a target device.
+The **Bandwidth Test** feature (available in the Diagnostics tab of Device Detail Dialog) measures network download and upload speeds between your computer and a target device using the **LanScan Bandwidth Test Protocol**.
 
 #### Requirements
 
-⚠️ **IMPORTANT**: The Bandwidth Test requires a **custom test server** running on the target device. LanScan acts as a client and connects to this server to measure bandwidth.
+✅ **READY**: The bandwidth test requires the **LanScan-BandwidthServer** running on the target device. The server is included in the `LanScan-BandwidthServer` repository.
 
-**⚠️ COMPATIBILITY NOTE**: LanScan's bandwidth testing uses a proprietary protocol and is **NOT compatible with iperf3 or other standard bandwidth testing tools**. A custom server implementation will be provided in a future release.
+**⚠️ COMPATIBILITY NOTE**: LanScan uses a custom protocol and is **NOT compatible with iperf3 or other standard bandwidth testing tools**. You must use the LanScan-BandwidthServer.
 
-#### Current Status
+#### Server Setup
 
-🚧 **Under Development**: A custom bandwidth test server is currently under development and will be released in a future version of LanScan.
+**LanScan-BandwidthServer** is a lightweight Qt-based server that handles bandwidth test requests from LanScan clients.
 
-Until the server is available, the bandwidth test feature can be configured but will not successfully connect to standard tools like iperf3, netcat, or similar utilities.
+**Building the Server:**
+```bash
+cd LanScan-BandwidthServer
+mkdir build && cd build
+cmake -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:/Qt/6.9.1/mingw_64" ..
+mingw32-make -j16
+```
 
-#### How It Will Work (Future Release)
+**Running the Server:**
+```bash
+# Default port 5201
+./LanScan-BandwidthServer.exe
 
-Once the custom server is released:
+# Custom port
+./LanScan-BandwidthServer.exe --port 8080
 
-1. **Install the LanScan Bandwidth Server** on the target device
-2. **Start the server** with desired port (e.g., 5201)
-3. **Run Bandwidth Test from LanScan**:
+# Custom max duration (default: 60 seconds)
+./LanScan-BandwidthServer.exe --max-duration 120
+```
+
+**Server Features:**
+- TCP and UDP protocol support
+- Configurable maximum test duration (protection against long-running tests)
+- Multi-client support (handles one client at a time per connection)
+- Automatic buffer management (100 MB max buffer to ensure result delivery)
+- Detailed logging with millisecond-precision timestamps
+- Cross-platform (Windows, Linux, macOS)
+
+#### Running a Bandwidth Test
+
+1. **Start the server** on the target device:
+   ```bash
+   ./LanScan-BandwidthServer.exe
+   ```
+
+2. **Run test from LanScan client**:
    - Open LanScan and scan your network
    - Double-click a device to open Device Detail Dialog
    - Navigate to **Diagnostics** tab
    - Click **Test Bandwidth** button
-   - Configure test parameters in the dialog:
+   - Configure test parameters:
      - **Target IP**: Auto-filled with device IP
      - **Port**: Server port (default: 5201)
      - **Duration**: Test duration (1-60 seconds, default: 10)
@@ -559,29 +586,74 @@ Once the custom server is released:
      - **Packet Size**: 1-1024 KB (default: 64)
    - Click **OK** to start the test
 
-4. **View Results**:
+3. **View Results**:
    - Real-time progress during the test
-   - Final bandwidth in Mbps
+   - Final bandwidth in Mbps (calculated by server)
    - Total bytes transferred
    - Test duration
 
-#### Technical Details
+#### Protocol Details
 
-The bandwidth test will measure network throughput using the following configurable parameters:
+The **LanScan Bandwidth Test Protocol** is a custom text-based protocol with the following workflow:
 
-**Protocol Options:**
-- **TCP**: Reliable, connection-oriented (recommended for real-world testing)
-- **UDP**: Connectionless, lower overhead (for maximum speed testing)
+**1. Handshake Phase:**
+```
+Client → Server:
+LANSCAN_BW_TEST
+VERSION:1.0
+PROTOCOL:TCP
+DIRECTION:DOWNLOAD
+DURATION:10
+PACKET_SIZE:65536
+END
 
-**Test Parameters:**
-- **Duration**: 1-60 seconds (default: 10s) - Longer tests provide more accurate results
-- **Packet Size**: 1-1024 KB (default: 64 KB) - Larger packets reduce overhead
-- **Direction**: Download (receive) or Upload (send)
+Server → Client:
+LANSCAN_BW_OK
+VERSION:1.0
+READY
+```
+
+**2. Data Transfer Phase:**
+- **DOWNLOAD**: Server sends test data to client as fast as possible
+- **UPLOAD**: Client sends test data to server as fast as possible
+- Buffer management: 100 MB maximum to prevent memory overflow
+- Duration: Specified in handshake (1-60 seconds)
+
+**3. Results Phase:**
+```
+Server → Client:
+LANSCAN_BW_RESULTS
+BYTES:4833214464
+THROUGHPUT_MBPS:3866.57
+DURATION_MS:10000
+END
+```
+
+**Key Features:**
+- **Server-side calculation**: Server calculates throughput for accuracy
+- **Buffer draining**: Server waits for buffer to empty before sending results
+- **Client timeout**: 30-second timeout for result reception
+- **Marker-based parsing**: Client searches for `LANSCAN_BW_RESULTS` marker to identify results
+- **Residual data handling**: Client automatically discards test data to find results message
 
 **Bandwidth Calculation:**
 ```
-Bandwidth (Mbps) = (Total Bytes × 8) / (Duration in seconds) / 1,000,000
+Bandwidth (Mbps) = (Total Bytes × 8) / (Duration in milliseconds) × 1000 / 1,000,000
 ```
+
+#### Performance Characteristics
+
+**Tested Performance (Local Loopback):**
+- TCP Download: 3.5-4 Gbps typical
+- Buffer management ensures result delivery even with 100+ MB residual data
+- Result delivery time: 10-20 seconds for buffer draining after test completes
+- Client processes and displays server-calculated throughput
+
+**Limitations:**
+- One test per server instance at a time
+- Maximum test duration: 60 seconds (configurable on server)
+- TCP buffer: Limited to 100 MB to ensure timely result delivery
+- Not compatible with iperf3, netperf, or other standard tools
 
 ## Database & Data Files
 

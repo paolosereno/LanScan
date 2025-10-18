@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 
     // Initialize logger
     Logger::setLogLevel(Logger::DEBUG);  // Enable DEBUG logging
+    Logger::setLogFile("lanscan.log");   // Write logs to file
     Logger::info("LanScan v0.5.0-phase5 starting...");
 
     // ========== Theme Setup (Phase 9.1) ==========
