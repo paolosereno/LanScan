@@ -5,6 +5,7 @@
 #include "views/MetricsWidget.h"
 #include "views/DeviceDetailDialog.h"
 #include "views/SettingsDialog.h"
+#include "views/AboutDialog.h"
 #include "viewmodels/DeviceTableViewModel.h"
 #include "viewmodels/ScanConfigViewModel.h"
 #include "viewmodels/MetricsViewModel.h"
@@ -327,12 +328,8 @@ void MainWindow::onSettingsTriggered() {
 }
 
 void MainWindow::onAboutTriggered() {
-    QMessageBox::about(this, tr("About LanScan"),
-        tr("<h3>LanScan - Network Scanner</h3>"
-           "<p>Version 0.5.0-phase5</p>"
-           "<p>Cross-platform network scanning and diagnostic tool.</p>"
-           "<p>Built with Qt 6.9.1 and C++17</p>"
-           "<p>Copyright © 2025 Paolo Sereno</p>"));
+    AboutDialog dialog(this);
+    dialog.exec();
 }
 
 void MainWindow::onQuickScan() {

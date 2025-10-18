@@ -711,6 +711,24 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
+- **2025-10-18**: AboutDialog implementation with System Validation
+  - **Feature**: Professional 3-tab About dialog with LanScan branding
+    - **About Tab**: Application information, version, features list, copyright
+    - **System Information Tab**: Comprehensive system details (OS, CPU, memory, Qt version, compiler, OpenGL)
+    - **System Validation Tab**: 11 validation checks for system compatibility
+  - **System Validators**:
+    - Standard checks: OS, Memory (2GB min), Disk (200MB min), Screen (1024x768 min), Qt version, OpenGL, File permissions, Locale, Network connectivity
+    - LanScan-specific: Network capabilities (admin/root for raw sockets), Database access (QSQLITE driver)
+  - **Validation Severity**: INFO, WARNING, ERROR, CRITICAL levels with color-coded display
+  - **Export Features**: Copy system info and validation reports to clipboard
+  - **Windows Compatibility**: Fixed macro conflicts (ERROR, interface) with #undef directives
+  - **Integration**: Replaced QMessageBox::about() with full AboutDialog in Help menu
+  - **Source**: Adapted from IdeoRift project with LanScan customization
+  - 6 new files created: ~1,800 LOC
+    - AboutDialog.h/cpp with 3 tabs and clipboard export
+    - SystemValidator.h/cpp with 11 validation methods and HTML/text reports
+    - SystemInfoCollector.h/cpp with cross-platform system information gathering
+  - Full Qt Linguist support with tr() for all UI strings
 - **2025-10-18**: Device Metrics dock widget UI improvements
   - **Issue**: Device Metrics dock had usability issues
     1. No way to close the dock when monitoring was not needed

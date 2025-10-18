@@ -63,3 +63,6 @@ settings.ini
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Working notes and documentation drafts
+informazioni.md

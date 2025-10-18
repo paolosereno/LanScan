@@ -167,12 +167,14 @@ set(MANAGER_SOURCES
     src/managers/LanguageManager.cpp
 )
 
-# Service sources (Phase 7.3 + Phase 8.1)
+# Service sources (Phase 7.3 + Phase 8.1 + AboutDialog)
 set(SERVICE_SOURCES
     src/services/AlertService.cpp
     src/services/HistoryService.cpp
     src/services/MonitoringService.cpp
     src/services/WakeOnLanService.cpp
+    src/services/SystemInfoCollector.cpp
+    src/services/SystemValidator.cpp
 )
 
 # ViewModel sources (Phase 5-6)
@@ -190,7 +192,7 @@ set(CHART_SOURCES
     src/charts/JitterChart.cpp
 )
 
-# View sources (Phase 5-6-8)
+# View sources (Phase 5-6-8 + AboutDialog)
 set(VIEW_SOURCES
     src/views/MainWindow.cpp
     src/views/DeviceTableWidget.cpp
@@ -202,6 +204,7 @@ set(VIEW_SOURCES
     src/views/TrendsWidget.cpp
     src/views/SettingsDialog.cpp
     src/views/BandwidthTestDialog.cpp
+    src/views/AboutDialog.cpp
 )
 
 # Delegate sources (Phase 5)
@@ -270,6 +273,9 @@ set(HEADERS
     include/services/HistoryService.h
     include/services/MonitoringService.h
     include/services/WakeOnLanService.h
+    src/services/SystemInfoCollector.h
+    src/services/SystemValidator.h
+    src/views/AboutDialog.h
     include/widgets/QualityGauge.h
     include/widgets/NetworkActivityIndicator.h
     include/widgets/GradientProgressBar.h
