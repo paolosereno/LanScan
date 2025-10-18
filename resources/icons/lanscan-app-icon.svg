@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for the background circle -->
+    <radialGradient id="bgGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Gradient for radar sweep -->
+    <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#10b981;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Gradient for nodes -->
+    <radialGradient id="nodeGradient" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cbd5e1;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGradient)"/>
+
+  <!-- Radar sweep effect (arc) -->
+  <path d="M 256 256 L 256 80 A 176 176 0 0 1 381 165 Z"
+        fill="url(#radarGradient)" opacity="0.7"/>
+
+  <!-- Radar rings -->
+  <circle cx="256" cy="256" r="176" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.4"/>
+  <circle cx="256" cy="256" r="132" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+  <circle cx="256" cy="256" r="88" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.6"/>
+  <circle cx="256" cy="256" r="44" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.7"/>
+
+  <!-- Central node (main computer/scanner) -->
+  <circle cx="256" cy="256" r="28" fill="url(#nodeGradient)" stroke="#1e40af" stroke-width="3"/>
+  <circle cx="256" cy="256" r="16" fill="#3b82f6" opacity="0.8"/>
+
+  <!-- Network nodes (discovered devices) -->
+  <!-- Top node -->
+  <circle cx="256" cy="100" r="18" fill="url(#nodeGradient)" stroke="#10b981" stroke-width="2.5"/>
+  <circle cx="256" cy="100" r="10" fill="#10b981" opacity="0.9"/>
+  <line x1="256" y1="228" x2="256" y2="118" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Top-right node -->
+  <circle cx="360" cy="152" r="18" fill="url(#nodeGradient)" stroke="#10b981" stroke-width="2.5"/>
+  <circle cx="360" cy="152" r="10" fill="#10b981" opacity="0.9"/>
+  <line x1="256" y1="256" x2="360" y2="152" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Right node -->
+  <circle cx="400" cy="256" r="18" fill="url(#nodeGradient)" stroke="#f59e0b" stroke-width="2.5"/>
+  <circle cx="400" cy="256" r="10" fill="#f59e0b" opacity="0.9"/>
+  <line x1="284" y1="256" x2="382" y2="256" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Bottom-right node -->
+  <circle cx="360" cy="360" r="18" fill="url(#nodeGradient)" stroke="#8b5cf6" stroke-width="2.5"/>
+  <circle cx="360" cy="360" r="10" fill="#8b5cf6" opacity="0.9"/>
+  <line x1="256" y1="256" x2="360" y2="360" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Bottom node -->
+  <circle cx="256" cy="412" r="18" fill="url(#nodeGradient)" stroke="#ec4899" stroke-width="2.5"/>
+  <circle cx="256" cy="412" r="10" fill="#ec4899" opacity="0.9"/>
+  <line x1="256" y1="284" x2="256" y2="394" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Bottom-left node -->
+  <circle cx="152" cy="360" r="18" fill="url(#nodeGradient)" stroke="#06b6d4" stroke-width="2.5"/>
+  <circle cx="152" cy="360" r="10" fill="#06b6d4" opacity="0.9"/>
+  <line x1="256" y1="256" x2="152" y2="360" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Left node -->
+  <circle cx="112" cy="256" r="18" fill="url(#nodeGradient)" stroke="#10b981" stroke-width="2.5"/>
+  <circle cx="112" cy="256" r="10" fill="#10b981" opacity="0.9"/>
+  <line x1="228" y1="256" x2="130" y2="256" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Top-left node -->
+  <circle cx="152" cy="152" r="18" fill="url(#nodeGradient)" stroke="#f59e0b" stroke-width="2.5"/>
+  <circle cx="152" cy="152" r="10" fill="#f59e0b" opacity="0.9"/>
+  <line x1="256" y1="256" x2="152" y2="152" stroke="#60a5fa" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Pulse effect on central node -->
+  <circle cx="256" cy="256" r="36" fill="none" stroke="#10b981" stroke-width="2" opacity="0.4">
+    <animate attributeName="r" from="28" to="50" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>
