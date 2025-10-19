@@ -50,6 +50,12 @@ public:
     static QString getIconPath(const QString& iconName);
 
     /**
+     * @brief Gets the appropriate icon color based on current theme
+     * @return QColor to use for icons (white for dark theme, dark gray for light theme)
+     */
+    static QColor getIconColor();
+
+    /**
      * @brief Common icon sizes
      */
     enum IconSize {

@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(LanScan VERSION 1.0.0 LANGUAGES CXX)
+# Version is defined here and propagated to the code
+project(LanScan VERSION 0.10.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Generate version header
+configure_file(
+    "${CMAKE_SOURCE_DIR}/src/version.h.in"
+    "${CMAKE_BINARY_DIR}/version.h"
+    @ONLY
+)
 
 # MSVC specific: Enable proper C++17 __cplusplus macro and strict conformance
 if(MSVC)
@@ -29,6 +37,7 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 # Include directories
 include_directories(
+    ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/models
     ${CMAKE_SOURCE_DIR}/include/utils

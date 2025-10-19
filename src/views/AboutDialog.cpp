@@ -1,12 +1,17 @@
 #include "AboutDialog.h"
 #include "../services/SystemInfoCollector.h"
 #include "../services/SystemValidator.h"
+#include "../utils/IconLoader.h"
+#include "version.h"
 #include <QApplication>
 #include <QClipboard>
 #include <QMessageBox>
 #include <QFont>
 #include <QPixmap>
 #include <QCoreApplication>
+#include <QSvgRenderer>
+#include <QPainter>
+#include <QFrame>
 
 AboutDialog::AboutDialog(QWidget *parent)
     : QDialog(parent)
@@ -58,51 +63,66 @@ void AboutDialog::setupAboutTab()
 {
     m_aboutTab = new QWidget;
     auto* layout = new QVBoxLayout(m_aboutTab);
-    
+
+    // Add spacing at the top
+    layout->addSpacing(20);
+
     // Logo/Icon area
     m_logoLabel = new QLabel;
     m_logoLabel->setAlignment(Qt::AlignCenter);
-    m_logoLabel->setMinimumHeight(80);
-    
-    // Load application icon from resources
-    QPixmap iconPixmap(":/app/resources/app/icon.svg");
+    m_logoLabel->setMinimumHeight(120);
+
+    // Load application icon from resources using IconLoader
+    QPixmap iconPixmap = IconLoader::loadPixmap("lanscan-app-icon", QSize(96, 96));
+
     if (!iconPixmap.isNull()) {
-        // Scale the icon to an appropriate size (64x64)
-        iconPixmap = iconPixmap.scaled(64, 64, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         m_logoLabel->setPixmap(iconPixmap);
     } else {
-        // Fallback to text if icon can't be loaded
-        m_logoLabel->setStyleSheet("QLabel { background-color: #2c3e50; color: white; font-size: 24px; font-weight: bold; }");
-        m_logoLabel->setText("LanScan");
+        // Fallback: try loading directly from resources
+        QString iconPath = ":/icons/lanscan-app-icon.svg";
+        QSvgRenderer renderer(iconPath);
+        if (renderer.isValid()) {
+            QPixmap pixmap(96, 96);
+            pixmap.fill(Qt::transparent);
+            QPainter painter(&pixmap);
+            renderer.render(&painter);
+            m_logoLabel->setPixmap(pixmap);
+        } else {
+            // Last fallback to text if icon can't be loaded
+            m_logoLabel->setStyleSheet("QLabel { background-color: #2c3e50; color: white; font-size: 32px; font-weight: bold; padding: 20px; border-radius: 8px; }");
+            m_logoLabel->setText("LanScan");
+        }
     }
     layout->addWidget(m_logoLabel);
+
+    layout->addSpacing(10);
     
     // Application information
     m_appInfoLabel = new QLabel;
     m_appInfoLabel->setAlignment(Qt::AlignCenter);
-    QFont headerFont = m_appInfoLabel->font();
-    headerFont.setPointSize(12);
-    headerFont.setBold(true);
-    m_appInfoLabel->setFont(headerFont);
-    
-    QString appInfo = tr("<h2>LanScan 0.5.0-phase10</h2>"
-                        "<p><b>Cross-platform network scanning and diagnostic tool</b></p>"
-                        "<p>Built with Qt %1 and C++17</p>"
-                        "<p>Compiled on %2 %3</p>")
-                     .arg(QT_VERSION_STR)
-                     .arg(__DATE__)
-                     .arg(__TIME__);
+    m_appInfoLabel->setWordWrap(true);
+    m_appInfoLabel->setTextFormat(Qt::RichText);
+
+    QString appInfo = tr("<h1 style='margin-bottom: 5px;'>LanScan</h1>"
+                        "<p style='font-size: 11pt; color: gray; margin-top: 0px;'>Version %1</p>"
+                        "<p style='font-size: 10pt; margin-top: 15px;'><b>Cross-platform network scanning and diagnostic tool</b></p>"
+                        "<p style='font-size: 9pt; color: gray; margin-top: 10px;'>Built with Qt %2 and C++17</p>")
+                     .arg(LANSCAN_VERSION)
+                     .arg(QT_VERSION_STR);
     m_appInfoLabel->setText(appInfo);
     m_appInfoLabel->setOpenExternalLinks(true);
     layout->addWidget(m_appInfoLabel);
+
+    layout->addSpacing(15);
     
     // Features list
     m_featuresText = new QTextEdit;
     m_featuresText->setReadOnly(true);
-    m_featuresText->setMaximumHeight(200);
-    
-    QString features = tr("<h3>Key Features:</h3>"
-                         "<ul>"
+    m_featuresText->setMaximumHeight(220);
+    m_featuresText->setFrameShape(QFrame::NoFrame);
+
+    QString features = tr("<h3 style='color: #2c3e50;'>Key Features</h3>"
+                         "<ul style='line-height: 1.6;'>"
                          "<li>Network device discovery with IP, hostname, and MAC detection</li>"
                          "<li>Multi-threaded IP range scanning</li>"
                          "<li>Real-time latency, jitter, and packet loss monitoring</li>"
@@ -116,16 +136,18 @@ void AboutDialog::setupAboutTab()
                          "</ul>");
     m_featuresText->setHtml(features);
     layout->addWidget(m_featuresText);
+
+    layout->addSpacing(10);
     
     // Copyright and links
     auto* copyrightLabel = new QLabel;
     copyrightLabel->setAlignment(Qt::AlignCenter);
-    copyrightLabel->setText(tr("<p>© 2025 Paolo Sereno</p>"
-                              "<p>Built with Qt 6.9.1 and C++17</p>"
-                              "<p>Licensed under MIT License</p>"));
+    copyrightLabel->setTextFormat(Qt::RichText);
+    copyrightLabel->setText(tr("<p style='font-size: 9pt; color: gray;'>© 2025 Paolo Sereno</p>"
+                              "<p style='font-size: 8pt; color: gray;'>Licensed under MIT License</p>"));
     layout->addWidget(copyrightLabel);
-    
-    layout->addStretch();
+
+    layout->addSpacing(10);
     m_tabWidget->addTab(m_aboutTab, tr("About"));
 }
 

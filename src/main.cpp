@@ -1,4 +1,8 @@
 #include <QApplication>
+#include <QIcon>
+#include <QFile>
+#include <QDir>
+#include "version.h"
 #include "views/MainWindow.h"
 #include "controllers/ScanController.h"
 #include "controllers/MetricsController.h"
@@ -30,14 +34,19 @@
 #include "../managers/LanguageManager.h"
 #include <QSettings>
 
+// Forward declare the resource initialization function
+extern int qInitResources_resources();
+extern int qCleanupResources_resources();
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
     app.setApplicationName("LanScan");
-    app.setApplicationVersion("0.5.0-phase5");
+    app.setApplicationVersion(LANSCAN_VERSION);
     app.setOrganizationName("Paolo Sereno");
 
-    // ========== Logger Setup ==========
+    // ========== Logger Setup (move it up for debugging) ==========
 
     // Load logging settings from QSettings
     QSettings settings("LanScan", "LanScan");
@@ -49,7 +58,13 @@ int main(int argc, char *argv[])
     if (enableFileLogging) {
         Logger::setLogFile("lanscan.log");
     }
-    Logger::info("LanScan v0.5.0-phase5 starting...");
+    Logger::info(QString("LanScan v%1 starting...").arg(LANSCAN_VERSION));
+
+    // Initialize Qt resources
+    qInitResources_resources();
+
+    // Set application icon
+    app.setWindowIcon(QIcon(":/icons/lanscan-app-icon.svg"));
 
     // ========== Theme Setup (Phase 9.1) ==========
 

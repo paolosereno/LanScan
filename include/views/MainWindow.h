@@ -69,6 +69,9 @@ private slots:
     void onRefresh();
     void onClearResults();
 
+    // Theme management
+    void onThemeChanged();
+
     // Controller signals
     void onScanStarted(int totalHosts);
     void onScanStatusChanged(const QString& status);
@@ -138,6 +141,7 @@ private:
     void setupSystemTray();
     void updateStatusMessage(const QString& message);
     void loadTraySettings();
+    void updateIcons();
 };
 
 #endif // MAINWINDOW_H

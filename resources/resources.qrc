@@ -3,9 +3,7 @@
     <qresource prefix="/">
         <file>styles/dark.qss</file>
         <file>styles/light.qss</file>
-    </qresource>
-    <!-- Phase 9.3: SVG Icons -->
-    <qresource prefix="/icons">
+        <!-- Phase 9.3: SVG Icons -->
         <file>icons/scan.svg</file>
         <file>icons/stop.svg</file>
         <file>icons/export.svg</file>
@@ -17,5 +15,6 @@
         <file>icons/power.svg</file>
         <file>icons/refresh.svg</file>
         <file>icons/clear.svg</file>
+        <file>icons/lanscan-app-icon.svg</file>
     </qresource>
 </RCC>

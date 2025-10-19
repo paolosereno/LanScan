@@ -22,6 +22,7 @@
 #include "services/WakeOnLanService.h"
 #include "../utils/Logger.h"
 #include "utils/IconLoader.h"
+#include "managers/ThemeManager.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressBar>
@@ -96,26 +97,46 @@ MainWindow::~MainWindow() {
 void MainWindow::setupMenuBar() {
     // File Menu
     QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(tr("&New Scan..."), this, &MainWindow::onNewScanTriggered, QKeySequence::New);
-    fileMenu->addAction(tr("&Export..."), this, &MainWindow::onExportTriggered, QKeySequence::Save);
+
+    QAction* newScanMenuAction = fileMenu->addAction(IconLoader::loadIcon("scan"), tr("&New Scan..."), this, &MainWindow::onNewScanTriggered, QKeySequence::New);
+    newScanMenuAction->setProperty("iconName", "scan");
+
+    QAction* exportMenuAction = fileMenu->addAction(IconLoader::loadIcon("export"), tr("&Export..."), this, &MainWindow::onExportTriggered, QKeySequence::Save);
+    exportMenuAction->setProperty("iconName", "export");
+
     fileMenu->addSeparator();
-    fileMenu->addAction(tr("E&xit"), this, &QWidget::close, QKeySequence::Quit);
+
+    QAction* exitMenuAction = fileMenu->addAction(IconLoader::loadIcon("power"), tr("E&xit"), this, &QWidget::close, QKeySequence::Quit);
+    exitMenuAction->setProperty("iconName", "power");
 
     // Scan Menu
     QMenu* scanMenu = menuBar()->addMenu(tr("&Scan"));
-    scanMenu->addAction(tr("&Quick Scan"), this, &MainWindow::onQuickScan, QKeySequence(Qt::CTRL | Qt::Key_Q));
-    scanMenu->addAction(tr("&Deep Scan"), this, &MainWindow::onDeepScan, QKeySequence(Qt::CTRL | Qt::Key_D));
-    scanMenu->addAction(tr("&Stop Scan"), this, &MainWindow::onStopScanTriggered, QKeySequence(Qt::CTRL | Qt::Key_S));
+
+    QAction* quickScanMenuAction = scanMenu->addAction(IconLoader::loadIcon("scan"), tr("&Quick Scan"), this, &MainWindow::onQuickScan, QKeySequence(Qt::CTRL | Qt::Key_Q));
+    quickScanMenuAction->setProperty("iconName", "scan");
+
+    QAction* deepScanMenuAction = scanMenu->addAction(IconLoader::loadIcon("scan"), tr("&Deep Scan"), this, &MainWindow::onDeepScan, QKeySequence(Qt::CTRL | Qt::Key_D));
+    deepScanMenuAction->setProperty("iconName", "scan");
+
+    QAction* stopScanMenuAction = scanMenu->addAction(IconLoader::loadIcon("stop"), tr("&Stop Scan"), this, &MainWindow::onStopScanTriggered, QKeySequence(Qt::CTRL | Qt::Key_S));
+    stopScanMenuAction->setProperty("iconName", "stop");
 
     // View Menu
     QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
-    viewMenu->addAction(tr("&Refresh"), this, &MainWindow::onRefresh, QKeySequence::Refresh);
-    viewMenu->addAction(tr("&Clear Results"), this, &MainWindow::onClearResults);
+
+    QAction* refreshMenuAction = viewMenu->addAction(IconLoader::loadIcon("refresh"), tr("&Refresh"), this, &MainWindow::onRefresh, QKeySequence::Refresh);
+    refreshMenuAction->setProperty("iconName", "refresh");
+
+    QAction* clearMenuAction = viewMenu->addAction(IconLoader::loadIcon("clear"), tr("&Clear Results"), this, &MainWindow::onClearResults);
+    clearMenuAction->setProperty("iconName", "clear");
+
     viewMenu->addSeparator();
 
     // Tools Menu
     QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
-    toolsMenu->addAction(tr("&Settings..."), this, &MainWindow::onSettingsTriggered, QKeySequence::Preferences);
+
+    QAction* settingsMenuAction = toolsMenu->addAction(IconLoader::loadIcon("settings"), tr("&Settings..."), this, &MainWindow::onSettingsTriggered, QKeySequence::Preferences);
+    settingsMenuAction->setProperty("iconName", "settings");
 
     // Help Menu
     QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -128,17 +149,27 @@ void MainWindow::setupToolBar() {
     toolbar->setIconSize(QSize(24, 24));
 
     // Scan actions
-    QAction* newScanAction = toolbar->addAction(tr("New Scan"));
+    QAction* newScanAction = toolbar->addAction(IconLoader::loadIcon("scan"), tr("New Scan"));
+    newScanAction->setProperty("iconName", "scan");
     connect(newScanAction, &QAction::triggered, this, &MainWindow::onNewScanTriggered);
 
-    QAction* stopScanAction = toolbar->addAction(tr("Stop Scan"));
+    QAction* stopScanAction = toolbar->addAction(IconLoader::loadIcon("stop"), tr("Stop Scan"));
+    stopScanAction->setProperty("iconName", "stop");
     connect(stopScanAction, &QAction::triggered, this, &MainWindow::onStopScanTriggered);
 
     toolbar->addSeparator();
 
     // Export action
-    QAction* exportAction = toolbar->addAction(tr("Export"));
+    QAction* exportAction = toolbar->addAction(IconLoader::loadIcon("export"), tr("Export"));
+    exportAction->setProperty("iconName", "export");
     connect(exportAction, &QAction::triggered, this, &MainWindow::onExportTriggered);
+
+    toolbar->addSeparator();
+
+    // Settings action
+    QAction* settingsAction = toolbar->addAction(IconLoader::loadIcon("settings"), tr("Settings"));
+    settingsAction->setProperty("iconName", "settings");
+    connect(settingsAction, &QAction::triggered, this, &MainWindow::onSettingsTriggered);
 }
 
 void MainWindow::setupStatusBar() {
@@ -197,7 +228,8 @@ void MainWindow::setupMetricsWidget() {
     metricsDock->hide();
 
     // Create custom toggle action for the dock (since NoDockWidgetFeatures disables the built-in one)
-    QAction* toggleMetricsAction = new QAction(tr("Device &Metrics"), this);
+    QAction* toggleMetricsAction = new QAction(IconLoader::loadIcon("details"), tr("Device &Metrics"), this);
+    toggleMetricsAction->setProperty("iconName", "details");
     toggleMetricsAction->setCheckable(true);
     toggleMetricsAction->setChecked(false); // Initially hidden
 
@@ -272,6 +304,10 @@ void MainWindow::setupConnections() {
             [this](int count) {
                 deviceCountLabel->setText(tr("Devices: %1").arg(count));
             });
+
+    // Theme manager signal
+    connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
+            this, &MainWindow::onThemeChanged);
 }
 
 void MainWindow::onNewScanTriggered() {
@@ -485,16 +521,19 @@ void MainWindow::setupSystemTray() {
     trayMenu = new QMenu(this);
 
     QAction* showHideAction = trayMenu->addAction(IconLoader::loadIcon("scan"), tr("Show/Hide"));
+    showHideAction->setProperty("iconName", "scan");
     connect(showHideAction, &QAction::triggered, this, &MainWindow::onShowHideAction);
 
     trayMenu->addSeparator();
 
     QAction* quickScanAction = trayMenu->addAction(IconLoader::loadIcon("scan"), tr("Quick Scan"));
+    quickScanAction->setProperty("iconName", "scan");
     connect(quickScanAction, &QAction::triggered, this, &MainWindow::onTrayQuickScan);
 
     trayMenu->addSeparator();
 
     QAction* exitAction = trayMenu->addAction(IconLoader::loadIcon("power"), tr("Exit"));
+    exitAction->setProperty("iconName", "power");
     connect(exitAction, &QAction::triggered, qApp, &QApplication::quit);
 
     trayIcon->setContextMenu(trayMenu);
@@ -589,4 +628,33 @@ void MainWindow::changeEvent(QEvent* event) {
     }
 
     QMainWindow::changeEvent(event);
+}
+
+void MainWindow::onThemeChanged() {
+    Logger::info("Theme changed - updating icons");
+    updateIcons();
+}
+
+void MainWindow::updateIcons() {
+    // Find all QActions in the window and update their icons
+    QList<QAction*> actions = findChildren<QAction*>();
+
+    for (QAction* action : actions) {
+        // Check if action has iconName property
+        QVariant iconNameVar = action->property("iconName");
+        if (iconNameVar.isValid()) {
+            QString iconName = iconNameVar.toString();
+            action->setIcon(IconLoader::loadIcon(iconName));
+        }
+    }
+
+    // Update tray icon
+    if (trayIcon) {
+        trayIcon->setIcon(IconLoader::loadIcon("scan", QSize(22, 22)));
+    }
+
+    // Update application icon
+    qApp->setWindowIcon(QIcon(":/icons/lanscan-app-icon.svg"));
+
+    Logger::info("Icons updated for current theme");
 }
