@@ -509,8 +509,11 @@ cmake --build . --config Release -j12
 
 #### Linux
 ```bash
-# Install dependencies
+# Install Qt and build dependencies
 sudo apt-get install qt6-base-dev qt6-charts-dev cmake build-essential
+
+# Install network tools (required for LanScan features)
+sudo apt-get install net-tools traceroute iputils-ping
 
 # Configure and build
 mkdir build && cd build
@@ -519,6 +522,23 @@ cmake --build . -j$(nproc)
 
 # Run tests
 ctest --output-on-failure
+```
+
+**Required Linux Network Tools:**
+- `net-tools` - Provides `arp` command for ARP table parsing
+- `traceroute` - Provides `traceroute` command for route tracing
+- `iputils-ping` - Provides `ping` command (usually pre-installed)
+
+**Installation on different distributions:**
+```bash
+# Debian/Ubuntu
+sudo apt-get install net-tools traceroute iputils-ping
+
+# Fedora/RHEL/CentOS
+sudo dnf install net-tools traceroute iputils
+
+# Arch Linux
+sudo pacman -S net-tools traceroute iputils
 ```
 
 ## Usage Guide
@@ -711,335 +731,54 @@ Location: src/path/to/files
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
-- **2025-10-18**: AboutDialog implementation with System Validation
-  - **Feature**: Professional 3-tab About dialog with LanScan branding
-    - **About Tab**: Application information, version, features list, copyright
-    - **System Information Tab**: Comprehensive system details (OS, CPU, memory, Qt version, compiler, OpenGL)
-    - **System Validation Tab**: 11 validation checks for system compatibility
-  - **System Validators**:
-    - Standard checks: OS, Memory (2GB min), Disk (200MB min), Screen (1024x768 min), Qt version, OpenGL, File permissions, Locale, Network connectivity
-    - LanScan-specific: Network capabilities (admin/root for raw sockets), Database access (QSQLITE driver)
-  - **Validation Severity**: INFO, WARNING, ERROR, CRITICAL levels with color-coded display
-  - **Export Features**: Copy system info and validation reports to clipboard
-  - **Windows Compatibility**: Fixed macro conflicts (ERROR, interface) with #undef directives
-  - **Integration**: Replaced QMessageBox::about() with full AboutDialog in Help menu
-  - **Source**: Adapted from IdeoRift project with LanScan customization
-  - 6 new files created: ~1,800 LOC
-    - AboutDialog.h/cpp with 3 tabs and clipboard export
-    - SystemValidator.h/cpp with 11 validation methods and HTML/text reports
-    - SystemInfoCollector.h/cpp with cross-platform system information gathering
-  - Full Qt Linguist support with tr() for all UI strings
+
+For complete project history, see [CHANGELOG.md](CHANGELOG.md).
+
+#### Latest (October 2025)
+
+- **2025-10-18**: AboutDialog with System Validation
+  - Professional 3-tab About dialog (About, System Information, System Validation)
+  - 11 validation checks for system compatibility
+  - Export system info and validation reports to clipboard
+  - 6 new files: ~1,800 LOC
+
 - **2025-10-18**: Device Metrics dock widget UI improvements
-  - **Issue**: Device Metrics dock had usability issues
-    1. No way to close the dock when monitoring was not needed
-    2. Dock could be made floating via double-click (inconsistent UI)
-    3. Opening dock from View menu used last device instead of selected device
-    4. Context menu label "Ping Device" didn't match View menu "Device Metrics"
-  - **Solutions**:
-    1. Added custom toggle action in View menu (since NoDockWidgetFeatures disables built-in toggleViewAction)
-    2. Set dock to NoDockWidgetFeatures (no close button, not movable, not floatable)
-    3. Implemented device selection logic when opening from View menu
-    4. Renamed context menu from "Ping Device" to "Device Metrics" for consistency
-    5. Added automatic monitoring stop when dock is hidden
-  - **Implementation Changes**:
-    - MainWindow.cpp: Custom QAction for dock toggle with device selection logic
-    - MainWindow.cpp: Connect visibilityChanged signal to stopMonitoring()
-    - DeviceTableWidget.cpp: Renamed context menu action text
-  - **Result**:
-    - Dock is fixed in position (Right area), closable only via View menu
-    - Opening from View menu now monitors currently selected device
-    - Monitoring automatically stops when dock is hidden (saves resources)
-    - Consistent naming across UI (Device Metrics everywhere)
-  - 2 files modified: MainWindow.cpp (~40 LOC), DeviceTableWidget.cpp (1 LOC)
-  - UI/UX: Cleaner, more predictable dock behavior with proper resource management
+  - Fixed dock usability issues (closing, floating, device selection)
+  - Automatic monitoring stop when dock is hidden
+  - Consistent naming across UI
+
 - **2025-10-17**: Quality column color visualization fix
-  - **Issue**: Quality column in device table showed gray text instead of quality-specific colors (green/yellow/orange/red)
-  - **Root Cause**:
-    - QualityScoreDelegate expected format "Excellent (95)" with numeric score in parentheses
-    - NetworkMetrics.getQualityScoreString() returned only "Excellent", "Good", "Poor", "Critical" without numbers
-    - Delegate returned -1 for parseQualityScore() when no number found, triggering gray text rendering
-    - Initial fix attempt used wrong mapping (0-100 score vs enum values 0-4)
-  - **Solution**:
-    - Simplified QualityScoreDelegate to render text-only display instead of progress bars
-    - Removed complex bar rendering logic (gradient fills, score calculation)
-    - Added direct quality string to color mapping (Excellent→Green, Good→Yellow-Green, Fair→Orange, Poor→Dark Orange, Critical→Red)
-    - Made text bold for better visibility
-  - **Implementation Changes**:
-    - DeviceTableViewModel.cpp: Changed getQualityColor() from score-based (0-100) to enum-based mapping (0-4)
-    - QualityScoreDelegate.cpp: Completely rewrote paintQualityBar() to simple text rendering with color
-    - QualityScoreDelegate.cpp: Updated getColorForQuality() to include "Critical" case
-  - **Result**: Quality column now displays colored text (Excellent=green, Good=yellow-green, Fair=orange, Poor=dark orange, Critical=red) with bold font
-  - **UI Impact**: Cleaner, more readable quality display without overly long horizontal bars
-  - 2 files modified: DeviceTableViewModel.cpp, QualityScoreDelegate.cpp (~60 LOC changed)
+  - Simplified delegate to text-only rendering with color mapping
+  - Quality displays as colored bold text (green/yellow/orange/red)
+
 - **2025-10-17**: Packet loss detection for offline devices
-  - **Issue**: Packet Loss chart showed no data when monitoring offline/powered-off devices
-  - **Root Cause**:
-    - PingService filtered out failed pings (success=false) in parsePingOutput()
-    - MetricsAggregator returned empty metrics without emitting signals when all pings failed
-    - Charts never received updates for 100% packet loss scenarios
-  - **Solution**:
-    - Modified parsePingOutput() to include both successful and failed ping results
-    - Added fallback logic to create failed results when no responses detected
-    - Updated MetricsAggregator::aggregate() to always calculate and emit packet loss metrics
-    - Set latency/jitter to 0 when all pings fail (100% packet loss)
-  - **Implementation Changes**:
-    - PingService.cpp: Include failed pings in results, create fallback failed results for timeouts
-    - MetricsAggregator.cpp: Calculate packet loss first, emit metrics even with 0 successful pings
-  - **Result**: Packet Loss chart now correctly displays 100% (red bars) for offline devices
-  - 2 files modified: PingService.cpp, MetricsAggregator.cpp
-  - Behavior: Comprehensive packet loss tracking for all device states (online/offline/intermittent)
+  - Fixed chart to display 100% packet loss for offline devices
+  - Comprehensive tracking for all device states
+
 - **2025-10-17**: Metrics visualization and monitoring fixes
-  - **Issue**: Multiple issues with metrics charts and monitoring control
-    1. Latency chart showed only red line (max) instead of three lines (min/avg/max)
-    2. Packet Loss chart showed no bars when packet loss was 0%
-    3. Stop Monitoring button did not stop ping operations
-  - **Root Causes**:
-    1. PingService collected only 1 sample per execution, causing min=avg=max mathematically
-    2. Packet Loss chart had no visual representation for 0% values (bars with height 0)
-    3. MetricsViewModel did not call stopContinuousMonitoring on MetricsController
-  - **Solutions**:
-    1. Changed ping sample count from 1 to 4 for statistical variance (PingService.cpp:152)
-    2. Added dynamic Y-axis range (0-5%) and title "No packet loss detected" for 0% values
-    3. Integrated proper start/stop monitoring calls in MetricsViewModel
-  - **Implementation Changes**:
-    - PingService: Modified onContinuousPingTimeout() to collect 4 samples instead of 1
-    - PacketLossChart: Dynamic range and title based on packet loss values
-    - MetricsViewModel: Added metricsController->startContinuousMonitoring() in startMonitoring()
-    - MetricsViewModel: Added metricsController->stopContinuousMonitoring() in stopMonitoring()
-    - MetricsController: Improved cleanupTimer() to always stop aggregator collection
-  - **Result**: All charts display correctly with proper visualization and monitoring stops immediately
-  - 4 files modified: PingService.cpp, PacketLossChart.cpp, MetricsViewModel.cpp, MetricsController.cpp
-  - Performance: Balanced speed (~4 seconds per update) with statistical accuracy
+  - Fixed latency chart to show min/avg/max lines (increased ping samples to 4)
+  - Added dynamic Y-axis for 0% packet loss visualization
+  - Fixed Stop Monitoring button functionality
+
 - **2025-10-13**: Theme system and UI styling fixes
-  - **Issue**: Multiple theme and styling problems affecting user experience
-    1. Light theme not applying due to incorrect QSS resource paths
-    2. Unwanted blue status bar backgrounds in dark/system themes
-    3. Font size settings not applying to UI elements
-    4. Missing arrows in ComboBox and SpinBox widgets
-  - **Root Causes**:
-    1. resources.qrc had prefix="/styles" with file path "styles/light.qss", creating incorrect path ":/styles/styles/light.qss"
-    2. QStatusBar had hardcoded blue colors (#007acc, #0078d4) instead of theme-neutral colors
-    3. QSS hardcoded font-size values overrode programmatic font changes via qApp->setFont()
-    4. QSS referenced missing :/icons/arrow-down.svg for ComboBox/SpinBox arrows
-  - **Solutions**:
-    1. Changed resources.qrc prefix from "/styles" to "/" for correct path ":/styles/light.qss"
-    2. Replaced status bar colors with neutral theme-matching colors (#2d2d30 dark, #f3f3f3 light)
-    3. Implemented ThemeManager::setFontSize() with regex to dynamically replace font-size in stylesheets
-    4. Replaced missing SVG arrows with pure CSS triangles using border tricks
-  - **Implementation Changes**:
-    - ThemeManager: Added setFontSize() method with QRegularExpression for dynamic font-size replacement
-    - SettingsDialog: Changed to use ThemeManager::setFontSize() instead of qApp->setFont()
-    - main.cpp: Load and apply saved font size on startup
-    - light.qss & dark.qss: Added CSS triangle arrows for ComboBox/SpinBox (no external dependencies)
-  - **Result**: All theme modes (Light/Dark/System) work correctly with proper colors, font sizes, and visible UI elements
-  - 7 files modified: ThemeManager.h/cpp, resources.qrc, light.qss, dark.qss, SettingsDialog.cpp, main.cpp
-  - Git commit: 944db77 "fix: Resolve theme application and UI styling issues"
+  - Fixed light theme not applying (QSS resource paths)
+  - Implemented dynamic font size with regex replacement
+  - Added CSS triangle arrows for ComboBox/SpinBox
+
 - **2025-10-13**: DeviceDetailDialog History tab removed
-  - **Issue**: History tab was causing intermittent crashes when opening Device Details Dialog
-  - **Root Cause**: History feature requires MonitoringService to be running at application level, not per-dialog
-  - **Solution**: Completely removed History tab from DeviceDetailDialog
-  - **Code Cleanup**: Removed 196 lines of code from 3 files (devicedetaildialog.ui, DeviceDetailDialog.h, DeviceDetailDialog.cpp)
-  - **Removed Components**: setupHistoryTab(), loadHistory(), onRefreshHistoryClicked(), onTimeRangeChanged(), getStartTimeForRange()
-  - **Result**: DeviceDetailDialog now has 4 tabs (Overview, Ports, Metrics, Diagnostics) and opens/closes reliably without crashes
-  - **Stability**: All device detail dialogs tested successfully with multiple devices
-  - 3 files modified (-196 LOC, +4 LOC comments)
-- **2025-10-12**: QualityGauge integration into DeviceDetailDialog
-  - **Widget Integration**: QualityGauge added to Metrics Tab with horizontal layout
-  - **Real-time Updates**: Connected to MetricsViewModel for live quality visualization
-  - **Needle Fix**: Corrected angle calculation from 210° to 90° (120° arc from bottom-left to bottom-right)
-  - **UI Optimization**: Reduced dialog height from 950px to 650px for better UX
-  - **Helper Function**: Added convertQualityScoreToValue() mapping (Excellent→95, Good→80, Fair→60, Poor→35, Critical→15)
-  - 3 files modified (~50 LOC added)
-- **2025-10-12**: DNS resolution improvements and critical bug fixes
-  - **DNS Cache & Retry System**: Added in-memory DNS cache (max 1000 entries) with hit/miss statistics
-  - **Exponential Backoff**: Implemented retry mechanism with progressive timeouts (1x, 1.5x, 2x)
-  - **Configurable Timeouts**: DNS timeout increased from 2s to 3s (default), configurable per scan
-  - **Enhanced Logging**: Detailed cache statistics, attempt tracking, and failure diagnostics
-  - **Critical Race Condition Fix**: Fixed bug where different IPs showed same hostname
-    - Root cause: Shared `m_currentIp` variable overwritten in concurrent DNS lookups
-    - Solution: Added `QMap<lookupId, IP>` for thread-safe IP-to-callback tracking
-    - Result: Each hostname now correctly associated with its IP address
-  - **Hostname Persistence Fix**: Fixed bug where hostnames were lost in database
-    - Root cause: Device updates during port scanning overwrote hostnames with empty strings
-    - Solution: Data merging in `updateInDatabase()` - preserve existing values if new data has empty fields
-    - Result: All resolved hostnames now properly saved and retained in database
-  - **Performance Improvements**: First scan 85-95% hostname recognition, cached scans 98-100%
-  - **Documentation**: Created docs/dns-improvements.md with detailed analysis and examples
-  - 5 files modified, 4 commits: DNS improvements, race condition fix, persistence fix
-- **2025-10-12**: Phase 10 started - Testing & Quality Assurance (Day 1-4)
-  - Created ScanControllerTest.cpp with 20 test cases for scan workflows
-  - Implemented MetricsControllerTest.cpp with 15 test cases for metrics collection
-  - Built ExportControllerTest.cpp with 16 test cases for export operations
-  - Developed DeviceTableViewModelTest.cpp with 29 test cases for UI model testing
-  - Created mock objects (MockScanCoordinator, MockMetricsAggregator) for isolated testing
-  - Updated CMakeLists.txt with 4 new test targets
-  - 4 new test files: ~1,508 LOC
-  - Total test coverage increased: 38 suites, 160+ test cases
-  - Controller test coverage target: >70% (scan, metrics, export controllers)
-  - ViewModel test coverage target: >80% (device table model)
-- **2025-10-11**: Phase 9.4 completed - Localization
-  - Implemented LanguageManager singleton for multi-language support
-  - Created translation files for 5 languages (English, Italian, Spanish, French, German)
-  - Integrated Qt6::LinguistTools with CMake for .qm file generation
-  - Added language selection in SettingsDialog with persistent storage
-  - Implemented automatic language loading at application startup
-  - 17 translations per language file (MainWindow menus, QualityGauge levels)
-  - Post-build commands to copy translation files to build directory
-  - ~545 LOC added (LanguageManager + 4 translation files)
-  - **Phase 9 (UI Polish & Theming) now 100% complete!**
-- **2025-10-11**: Phase 9.3 completed - UI Enhancements
-  - Created 10 SVG icons with IconLoader utility class
-  - Implemented System Tray integration with notifications
-  - Added AnimationHelper for smooth UI transitions
-  - Created TooltipHelper for rich HTML tooltips
-  - ~1,400 LOC added
-- **2025-10-11**: Phase 9.2 completed - Custom Widgets
-  - Implemented QualityGauge, NetworkActivityIndicator, GradientProgressBar
-  - All widgets with custom QPainter rendering
-  - ~600 LOC added
-- **2025-10-10**: Phase 9.1 completed - Theme System
-  - Implemented ThemeManager singleton for application-wide theme control
-  - Created professional dark.qss and light.qss stylesheets (1,316 LOC total)
-  - Built Qt Resource System integration for embedded stylesheet resources
-  - Added Windows system theme auto-detection via registry (AppsUseLightTheme)
-  - Implemented runtime theme switching without application restart
-  - Integrated theme selection in SettingsDialog with instant preview
-  - Added automatic theme loading at startup from QSettings
-  - Created ThemeManagerTest with 9 comprehensive test cases
-  - 6 new files created (~2,039 LOC including stylesheets)
-  - Modified CMakeLists.txt, main.cpp, and SettingsDialog.cpp for integration
-  - **Phase 9 (UI Polish & Theming) now 25% complete!**
+  - Removed crash-prone History tab
+  - Dialog now stable with 4 tabs (Overview, Ports, Metrics, Diagnostics)
 
-- **2025-10-10**: Phase 8.5 completed - Settings Dialog
-  - Implemented comprehensive SettingsDialog with 5 configuration tabs (General/Network/Appearance/Notifications/Advanced)
-  - Integrated QSettings for persistent platform-specific storage (Windows registry)
-  - Created General tab with startup options (start with system, minimize/close to tray) and language selection (5 languages)
-  - Built Network tab with scan configuration (timeout, threads, subnet CIDR, ping settings)
-  - Added Appearance tab with theme selection (System/Light/Dark) and font size control
-  - Implemented Notifications tab with alert toggles and configurable thresholds (latency, packet loss, jitter)
-  - Created Advanced tab with database retention settings (history/metrics days) and logging configuration
-  - Added input validation with user feedback (subnet CIDR format check)
-  - Implemented modified state tracking with Apply button management
-  - Built Apply/OK/Cancel/Restore Defaults button handling with confirmation dialogs
-  - Created settingsApplied() signal for MainWindow integration and future theme/font reloading
-  - Added dependent control enable/disable (alert thresholds auto-enable with alerts checkbox)
-  - Integrated dialog into MainWindow Tools menu, replacing placeholder implementation
-  - 3 new files created (~625 LOC total)
-  - Successfully tested all tabs and settings persistence
-  - **Phase 8 (Advanced Features) now 100% complete!**
+- **2025-10-12**: DNS resolution improvements
+  - Added in-memory DNS cache (max 1000 entries)
+  - Fixed race condition causing hostname mismatches
+  - Fixed hostname persistence in database
+  - Performance: 85-95% recognition (first scan), 98-100% (cached)
 
-- **2025-10-10**: Phase 8.4 completed - History & Database
-  - Implemented HistoryDao for event persistence with JSON metadata support
-  - Created HistoryEvent model with event types (scan, status_change, alert, user_action)
-  - Built MetricsDao for network metrics temporal tracking and statistical aggregation
-  - Added specialized query methods: getAverageMetrics(), getMaxLatency(), getMinLatency(), getAveragePacketLoss(), getAverageJitter()
-  - Implemented batch insert with transaction support for both DAOs
-  - Created TrendsWidget for temporal metrics visualization with LatencyChart integration
-  - Added configurable time ranges: 1h, 6h, 24h, 7d, 30d, 90d, and custom date picker
-  - Implemented real-time statistics display (data points, latency min/avg/max, packet loss, jitter, quality score)
-  - Added CSV export functionality for trend data
-  - Extended DatabaseManager with database() method for transaction support
-  - Created database indices for query optimization (device_id, event_type, timestamp)
-  - Implemented cleanup methods: deleteOlderThan(), deleteByDevice() for data retention
-  - Built comprehensive unit tests: HistoryDaoTest (11 test cases), MetricsDaoTest (13 test cases)
-  - 8 new files created: ~1,433 LOC
-  - Extended CMakeLists.txt with DAO test configuration (+32 LOC)
-- **2025-10-10**: Phase 8.3 completed - Profile & Favorites
-  - Extended ProfileManager with export/import functionality and JSON file support
-  - Created three template profiles: Home Network (6 ports), Enterprise Network (25 ports), Security Audit (62 ports)
-  - Implemented usage statistics tracking (last used date, usage count)
-  - Built ProfileDialog with split view (30% list, 70% details panel)
-  - Added template buttons for quick profile creation from predefined configurations
-  - Extended FavoritesManager with group management (create, delete, organize)
-  - Implemented notes system for devices (add, view, remove notes)
-  - Added custom icons support (PNG, JPG, SVG) with theme-based fallback
-  - Created FavoritesWidget with tree view organized by groups
-  - Implemented real-time search filtering (by name and IP address)
-  - Added group filter dropdown with device counts
-  - Built context menu with device-specific and group-specific actions
-  - Implemented Quick Connect via double-click
-  - 6 new files: ~1,850 LOC (ProfileDialog, FavoritesWidget)
-  - ProfileManager: 9 new methods (~165 LOC)
-  - FavoritesManager: 16 new methods (~233 LOC)
-  - Extended JSON persistence for groups, notes, and custom icons
-- **2025-10-09**: Phase 8.2 completed - Advanced Export (XML, HTML)
-  - Implemented XmlExporter with structured XML output and QXmlStreamWriter
-  - Created HtmlReportGenerator with professional CSS styling and responsive design
-  - Added gradient summary cards and color-coded quality indicators
-  - Integrated XML and HTML formats into ExportController
-  - Updated MainWindow file dialog with all 4 format filters (CSV, JSON, XML, HTML)
-  - 14 unit tests (XmlExporter: 6, HtmlReportGenerator: 8)
-  - 4 new files: ~800 LOC
-- **2025-10-09**: Phase 8.1 completed - Wake-on-LAN Support
-  - Implemented WakeOnLanService with magic packet builder (6 bytes 0xFF + 16x MAC address)
-  - MAC address validation with regex (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX formats)
-  - UDP broadcast on port 9 (standard Wake-on-LAN port)
-  - Cross-platform support (Windows/Linux/macOS)
-  - DeviceTableWidget integration: "Wake on LAN" context menu item
-  - Confirmation dialog with device details before sending
-  - Error handling for missing MAC addresses or unavailable service
-  - Qt signals for async notifications (packetSent, sendError)
-  - MainWindow and main.cpp integration with dependency injection
-  - Unit tests: WakeOnLanServiceTest with 12 test cases (all passing)
-  - 3 new files: 551 lines of code (WakeOnLanService.h/cpp, WakeOnLanServiceTest.cpp)
-- **2025-10-09**: Phase 7.4 completed - Device Detail Dialog
-  - Comprehensive five-tab interface for device information (Overview, Ports, Metrics, History, Diagnostics)
-  - Overview tab with device details, Ports tab with open ports list
-  - Metrics tab with integrated MetricsWidget for real-time monitoring
-  - History tab with historical events and time range filtering (Last Hour/6H/24H/7D/30D)
-  - Diagnostics tab with all Phase 7 tools (Traceroute, MTU, Bandwidth, DNS)
-  - Double-click and context menu support for opening dialog
-  - Signal/slot connections for all diagnostic services with real-time updates
-  - 3 new files: ~1,200 LOC (DeviceDetailDialog.h/cpp, devicedetaildialog.ui)
-- **2025-10-09**: Phase 7.3 completed - Monitoring Service with Alerts and History
-  - Implemented Alert model with severity levels (Info, Warning, Critical) and types
-  - Created AlertService for alert management with acknowledgment and filtering
-  - Built HistoryService for metrics and events persistence in SQLite
-  - Designed MonitoringService for continuous device monitoring with threshold-based alerts
-  - Device status change detection (online/offline transitions) with automatic alerts
-  - Configurable monitoring intervals and alert thresholds per device
-  - Automatic data pruning: LRU for alerts (max 1000), time-based for history (30 days default)
-  - 32 unit tests created across 3 test suites (AlertService, HistoryService, MonitoringService)
-  - 8 new files: ~1,500 lines of code
-- **2025-10-09**: Phase 7.2 completed - Advanced Diagnostics (MTU, Bandwidth, DNS)
-  - Implemented MtuDiscovery with binary search algorithm (576-9000 bytes)
-  - Cross-platform ping with Don't Fragment flag for MTU discovery
-  - Created BandwidthTester with TCP/UDP support for download/upload speed testing
-  - Implemented DnsDiagnostics with multiple record types (A, AAAA, MX, NS, TXT, CNAME, PTR, SRV)
-  - Forward and reverse DNS lookups with custom nameserver support
-  - Query time measurement and structured DnsRecord result type
-  - 36 unit tests created across 3 test suites (100% passing)
-  - 9 new files: 2,671 lines of code
-- **2025-10-09**: Phase 7.1 completed - Traceroute Service
-  - Implemented cross-platform traceroute with Windows tracert and Linux/macOS traceroute support
-  - Created TraceRouteHop model with RTT statistics (min/max/avg calculations)
-  - Built TraceRouteService with asynchronous QProcess execution
-  - Real-time hop discovery with Qt signals (hopDiscovered, traceCompleted, traceError, progressUpdated)
-  - Platform-specific output parsing with regex for Windows and Unix formats
-  - Comprehensive error handling and cancellation support
-  - 11 unit tests created (100% passing)
-  - 5 new files: 1029 lines of code
-- **2025-10-07**: Phase 7.0 completed - Advanced diagnostics improvements
-  - Enhanced MetricsController with currentMonitoringDevice tracking
-  - Improved onMetricsUpdated to emit metricsCollected signal with device context
-  - Added proper cleanup logic to stop collection only for current device
-  - Enhanced PingService with multi-language support (Italian, German, French, Spanish)
-  - Improved error message detection for timeout and unreachable states in ping parsing
-- **2025-10-07**: Phase 6 completed - QtCharts integration with real-time metrics visualization
-  - Implemented ChartViewModel base class with template helper methods
-  - Created 3 chart widgets: LatencyChart (line), PacketLossChart (bar), JitterChart (spline)
-  - Built MetricsViewModel with timer-based monitoring and history management
-  - Designed MetricsWidget with Qt Designer UI, summary panel, and chart tabs
-  - All charts feature auto-scaling, data pruning, and color-coded visualization
-- **2025-10-05**: Added IEEE OUI database integration (38,169 vendors) with LAA detection
-- **2025-10-05**: Fixed DNS hostname validation and local interface MAC detection
-- **2025-10-05**: Implemented singleton pattern for efficient vendor lookup
-- **2025-10-04**: Phase 5 completed - MVVM-based Qt GUI with ViewModels, Views, and custom delegates
-- **2025-10-04**: Phase 4 completed - Application layer with multi-threaded controllers and management services
-- **2025-10-04**: Phase 3 completed - Database persistence, export functionality, and settings management
-- **2025-10-03**: Phase 2 completed - Added metrics calculation, ping service, and port scanning
-- **2025-10-03**: Phase 1 completed - Implemented network discovery and IP scanning
-- **2025-10-03**: Phase 0 completed - Project foundation and infrastructure
+- **2025-10-12**: Phase 10 started - Testing & Quality Assurance
+  - 4 new test suites: ScanController, MetricsController, ExportController, DeviceTableViewModel
+  - 71 new test cases (~1,508 LOC)
+  - Total: 38 test suites, 160+ test cases
 
 ### Statistics
 - **Files Created**: 266 total (Phase 10 added 4 new test files)
