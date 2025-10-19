@@ -510,7 +510,7 @@ cmake --build . --config Release -j12
 #### Linux
 ```bash
 # Install Qt and build dependencies
-sudo apt-get install qt6-base-dev qt6-charts-dev cmake build-essential
+sudo apt-get install qt6-base-dev qt6-charts-dev qt6-svg-dev cmake build-essential
 
 # Install network tools (required for LanScan features)
 sudo apt-get install net-tools traceroute iputils-ping
@@ -524,6 +524,11 @@ cmake --build . -j$(nproc)
 ctest --output-on-failure
 ```
 
+**Required Qt Components:**
+- `qt6-base-dev` - Qt base development files
+- `qt6-charts-dev` - Qt Charts for metrics visualization
+- `qt6-svg-dev` - Qt SVG for icon rendering (required for UI)
+
 **Required Linux Network Tools:**
 - `net-tools` - Provides `arp` command for ARP table parsing
 - `traceroute` - Provides `traceroute` command for route tracing
@@ -532,12 +537,15 @@ ctest --output-on-failure
 **Installation on different distributions:**
 ```bash
 # Debian/Ubuntu
+sudo apt-get install qt6-base-dev qt6-charts-dev qt6-svg-dev cmake build-essential
 sudo apt-get install net-tools traceroute iputils-ping
 
 # Fedora/RHEL/CentOS
+sudo dnf install qt6-qtbase-devel qt6-qtcharts-devel qt6-qtsvg-devel cmake gcc-c++
 sudo dnf install net-tools traceroute iputils
 
 # Arch Linux
+sudo pacman -S qt6-base qt6-charts qt6-svg cmake base-devel
 sudo pacman -S net-tools traceroute iputils
 ```
 
