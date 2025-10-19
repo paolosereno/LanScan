@@ -18,6 +18,141 @@
 
 ---
 
+## 🚨 CRITICAL: Alert System Frontend Integration
+
+**Priority**: HIGHEST - MUST BE COMPLETED BEFORE PHASE 10
+**Status**: ❌ Backend OK, Frontend Missing (50% complete)
+**Discovered**: 2025-10-19
+**Estimated**: ~400-600 LOC | 1-2 days
+
+### Problem Summary
+The alert system was implemented in Phase 7.3 but **alerts are invisible to users**:
+- ✅ Backend fully functional (AlertService, MonitoringService)
+- ✅ Alerts generated correctly (high latency, packet loss, jitter, device offline/online)
+- ❌ No UI to display alerts to users
+- ❌ No connection between MonitoringService signals and UI
+- ❌ Settings saved but not loaded/applied
+- ❌ Alert sound option exists but not implemented
+
+### Alert Generation Status
+MonitoringService generates alerts when:
+- **High Latency**: Latency > threshold (src/services/MonitoringService.cpp:259-271)
+- **Packet Loss**: Loss > threshold (line 274-286)
+- **High Jitter**: Jitter > threshold (line 289-301)
+- **Device Status**: Device goes offline/online (line 316-335)
+
+Signal emitted: `alertTriggered(deviceId, alert)` - **NOT CONNECTED TO ANY UI**
+
+### Tasks Required
+
+#### 1. Connect MonitoringService to MainWindow (HIGH)
+- [ ] Add signal/slot connection in MainWindow constructor
+  - `connect(monitoringService, &MonitoringService::alertTriggered, this, &MainWindow::onAlertTriggered)`
+- [ ] Implement `onAlertTriggered(const QString& deviceId, const Alert& alert)` slot
+- [ ] Store alerts in memory (QList<Alert> or AlertQueue)
+- **Files**: src/views/MainWindow.cpp, include/views/MainWindow.h
+- **Estimated**: ~50 LOC
+
+#### 2. Create Alert Notification UI (HIGH)
+Choose ONE approach:
+
+**Option A: System Tray Notifications** (RECOMMENDED - Quick & Easy)
+- [ ] Use existing `QSystemTrayIcon* trayIcon` in MainWindow
+- [ ] Call `trayIcon->showMessage()` in `onAlertTriggered()`
+- [ ] Format message with alert severity and details
+- [ ] Add icon based on severity (Info/Warning/Critical)
+- **Files**: src/views/MainWindow.cpp
+- **Estimated**: ~30 LOC
+
+**Option B: Alert Widget/Dialog** (Better UX but more work)
+- [ ] Create AlertWidget or AlertDialog class
+- [ ] Display alert list with icons, severity colors, timestamps
+- [ ] Allow acknowledgment and dismissal
+- [ ] Add "View Alerts" menu item or status bar button
+- **Files**: include/views/AlertWidget.h, src/views/AlertWidget.cpp, ui/alertwidget.ui
+- **Estimated**: ~300-400 LOC
+
+**Option C: Both** (Best but most work)
+- [ ] Implement both tray notifications AND alert widget
+- [ ] Tray notifications for immediate alerts
+- [ ] Alert widget for alert history and management
+- **Estimated**: ~350-450 LOC
+
+#### 3. Load Alert Settings from QSettings (MEDIUM)
+- [ ] Read alert settings in MainWindow constructor or dedicated method:
+  - `bool enableAlerts = settings.value("Notifications/EnableAlerts", true).toBool()`
+  - `int latencyThreshold = settings.value("Notifications/HighLatencyThreshold", 100).toInt()`
+  - `int packetLossThreshold = settings.value("Notifications/PacketLossThreshold", 10).toInt()`
+  - `int jitterThreshold = settings.value("Notifications/HighJitterThreshold", 20).toInt()`
+- [ ] Apply settings to MonitoringService when starting monitoring:
+  - `MonitoringConfig config;`
+  - `config.enableAlerts = enableAlerts;`
+  - `config.alertLatencyThreshold = latencyThreshold;`
+  - `config.alertPacketLossThreshold = packetLossThreshold;`
+  - `config.alertJitterThreshold = jitterThreshold;`
+- [ ] Connect SettingsDialog::settingsApplied signal to reload settings
+- **Files**: src/views/MainWindow.cpp, include/views/MainWindow.h
+- **Estimated**: ~80 LOC
+
+#### 4. Implement Alert Sound (LOW - OPTIONAL)
+- [ ] Add QSoundEffect or QMediaPlayer to MainWindow
+- [ ] Load alert sound file (WAV or MP3)
+- [ ] Play sound in `onAlertTriggered()` if enabled
+- [ ] Read "Notifications/AlertSound" setting from QSettings
+- [ ] Add sound files to resources (optional)
+- **Files**: src/views/MainWindow.cpp, include/views/MainWindow.h, resources/sounds/*.wav
+- **Estimated**: ~50 LOC + sound file
+
+#### 5. Update Settings Dialog Integration (LOW)
+- [ ] Ensure all notification settings are properly saved (already done)
+- [ ] Test that settings persist and load correctly
+- [ ] Add tooltips explaining each threshold
+- **Files**: src/views/SettingsDialog.cpp (verification only)
+- **Estimated**: ~10 LOC (tooltips)
+
+### Integration Points
+- **MonitoringService**: Already emits `alertTriggered` signal (no changes needed)
+- **AlertService**: Already creates alerts (no changes needed)
+- **MainWindow**: Needs signal connections and UI integration
+- **SettingsDialog**: Already saves settings (needs loading in MainWindow)
+- **System Tray**: Already exists (just needs showMessage calls)
+
+### Testing Checklist
+- [ ] Generate alerts by setting low thresholds
+- [ ] Verify alerts appear in UI (tray notifications or widget)
+- [ ] Test "Enable alerts" toggle in Settings
+- [ ] Test threshold changes in Settings
+- [ ] Test alert sound playback (if implemented)
+- [ ] Verify alerts for all types: HighLatency, PacketLoss, HighJitter, DeviceOffline, DeviceOnline
+
+### Files to Create (if Option B or C chosen)
+```
+include/views/AlertWidget.h        (~100 LOC)
+src/views/AlertWidget.cpp          (~250 LOC)
+ui/alertwidget.ui                  (Qt Designer UI)
+resources/sounds/alert.wav         (Optional sound file)
+```
+
+### Files to Modify
+```
+include/views/MainWindow.h         (+15 LOC: slot declaration, alert storage)
+src/views/MainWindow.cpp           (+100-200 LOC: signal connection, alert handling, settings loading)
+src/views/SettingsDialog.cpp       (+10 LOC: tooltips)
+```
+
+### Recommendation
+**Start with Option A (System Tray)** for quick implementation:
+1. Connect signal/slot (30 min)
+2. Load settings from QSettings (30 min)
+3. Show tray notifications (20 min)
+4. Test with different alert types (20 min)
+
+**Total time**: ~2 hours for basic alert visibility
+
+Then optionally add AlertWidget in Phase 10 or later for better UX.
+
+---
+
 ## 🎯 Phase 9 - UI Polish & Theming ✅ COMPLETE
 
 ### Completed
