@@ -86,6 +86,9 @@ void DeviceTableWidget::setupTableView() {
     ui->tableView->setSortingEnabled(true);
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    // Enable editing for the Comments column (double-click to edit)
+    ui->tableView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked);
+
     // Column sizing
     ui->tableView->horizontalHeader()->setStretchLastSection(true);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);

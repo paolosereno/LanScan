@@ -51,6 +51,7 @@ void XmlExporter::writeDevice(QXmlStreamWriter& writer, const Device& device) {
     writer.writeTextElement("Vendor", device.getVendor());
     writer.writeTextElement("Status", device.isOnline() ? "Online" : "Offline");
     writer.writeTextElement("LastSeen", device.getLastSeen().toString(Qt::ISODate));
+    writer.writeTextElement("Comments", device.getComments());
 
     // Network metrics
     writeMetrics(writer, device.getMetrics());

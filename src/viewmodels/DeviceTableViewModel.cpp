@@ -47,6 +47,8 @@ QVariant DeviceTableViewModel::data(const QModelIndex& index, int role) const {
                 return formatLatency(device.getMetrics());
             case QualityScore:
                 return device.getMetrics().getQualityScoreString();
+            case Comments:
+                return device.getComments().isEmpty() ? tr("") : device.getComments();
             default:
                 return QVariant();
         }
@@ -93,6 +95,7 @@ QVariant DeviceTableViewModel::headerData(int section, Qt::Orientation orientati
             case OpenPorts:     return tr("Open Ports");
             case Latency:       return tr("Latency");
             case QualityScore:  return tr("Quality");
+            case Comments:      return tr("Comments");
             default:            return QVariant();
         }
     }
@@ -106,6 +109,13 @@ void DeviceTableViewModel::loadDevices() {
     if (repository) {
         devices = repository->findAll();
         Logger::info("Loaded " + QString::number(devices.count()) + " devices from repository");
+
+        // Debug: Check if loaded devices have IDs
+        for (const Device& dev : devices) {
+            Logger::info(QString("  Device loaded: IP=%1, ID='%2'")
+                        .arg(dev.getIp())
+                        .arg(dev.getId()));
+        }
     } else {
         devices.clear();
         Logger::warn("Repository is null, cannot load devices");
@@ -143,7 +153,22 @@ void DeviceTableViewModel::updateDevice(const Device& device) {
         return;
     }
 
-    devices[row] = device;
+    // Preserve ID and comments from existing device (they don't come from network scan)
+    Device updatedDevice = device;
+
+    // Preserve ID - critical for database updates!
+    if (updatedDevice.getId().isEmpty() && !devices[row].getId().isEmpty()) {
+        updatedDevice.setId(devices[row].getId());
+        Logger::debug("DeviceTableViewModel: Preserving ID for " + device.getIp());
+    }
+
+    // Preserve comments
+    if (updatedDevice.getComments().isEmpty() && !devices[row].getComments().isEmpty()) {
+        updatedDevice.setComments(devices[row].getComments());
+        Logger::debug("DeviceTableViewModel: Preserving comments for " + device.getIp());
+    }
+
+    devices[row] = updatedDevice;
 
     // Notify view that this row has changed
     QModelIndex topLeft = index(row, 0);
@@ -257,4 +282,57 @@ QString DeviceTableViewModel::formatLatency(const NetworkMetrics& metrics) const
     }
 
     return QString::number(avgLatency, 'f', 1) + " ms";
+}
+
+bool DeviceTableViewModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if (!index.isValid() || index.row() >= devices.count())
+        return false;
+
+    if (role != Qt::EditRole)
+        return false;
+
+    // Solo la colonna Comments è editabile
+    if (index.column() != Comments)
+        return false;
+
+    Device& device = devices[index.row()];
+    QString newComments = value.toString();
+
+    Logger::info(QString("setData - BEFORE update - Device ID: '%1', IP: %2, Current Comments: '%3'")
+                 .arg(device.getId())
+                 .arg(device.getIp())
+                 .arg(device.getComments()));
+
+    // Aggiorna il commento nel device
+    device.setComments(newComments);
+
+    Logger::info(QString("setData - AFTER setComments - Device ID: '%1', New Comments: '%2'")
+                 .arg(device.getId())
+                 .arg(newComments));
+
+    // Salva nel database
+    if (repository) {
+        repository->update(device);
+        Logger::info(QString("Comments updated for device %1: %2")
+                    .arg(device.getIp())
+                    .arg(newComments.isEmpty() ? "(empty)" : newComments));
+    }
+
+    // Notifica la view del cambiamento
+    emit dataChanged(index, index, {Qt::DisplayRole, Qt::EditRole});
+
+    return true;
+}
+
+Qt::ItemFlags DeviceTableViewModel::flags(const QModelIndex& index) const {
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    // La colonna Comments è editabile
+    if (index.column() == Comments) {
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    }
+
+    // Altre colonne sono solo selezionabili
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }

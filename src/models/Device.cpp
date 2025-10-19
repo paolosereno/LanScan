@@ -2,6 +2,7 @@
 
 Device::Device()
     : m_isOnline(false)
+    , m_comments("")
 {
 }
 
@@ -9,6 +10,7 @@ Device::Device(const QString& ip, const QString& hostname)
     : m_ip(ip)
     , m_hostname(hostname)
     , m_isOnline(false)
+    , m_comments("")
 {
 }
 
@@ -36,6 +38,9 @@ QList<PortInfo> Device::openPorts() const { return m_openPorts; }
 
 NetworkMetrics Device::getMetrics() const { return m_metrics; }
 NetworkMetrics Device::metrics() const { return m_metrics; }
+
+QString Device::getComments() const { return m_comments; }
+QString Device::comments() const { return m_comments; }
 
 // Setters
 void Device::setId(const QString& id) { m_id = id; }
@@ -78,6 +83,11 @@ void Device::setOpenPorts(const QList<PortInfo>& ports)
 void Device::setMetrics(const NetworkMetrics& metrics)
 {
     m_metrics = metrics;
+}
+
+void Device::setComments(const QString& comments)
+{
+    m_comments = comments;
 }
 
 // Utility methods

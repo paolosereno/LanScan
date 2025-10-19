@@ -140,6 +140,7 @@ bool DatabaseManager::createDevicesTable() {
             vendor TEXT,
             is_online INTEGER,
             last_seen DATETIME,
+            comments TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )

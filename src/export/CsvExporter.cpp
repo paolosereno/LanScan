@@ -28,7 +28,7 @@ bool CsvExporter::exportData(const QList<Device>& devices, const QString& filepa
 }
 
 QString CsvExporter::buildHeader() {
-    return "IP,Hostname,MAC Address,Vendor,Status,Last Seen,Open Ports,Latency (ms),Packet Loss (%),Jitter (ms),Quality";
+    return "IP,Hostname,MAC Address,Vendor,Status,Last Seen,Open Ports,Latency (ms),Packet Loss (%),Jitter (ms),Quality,Comments";
 }
 
 QString CsvExporter::buildCsvRow(const Device& device) {
@@ -48,6 +48,9 @@ QString CsvExporter::buildCsvRow(const Device& device) {
     fields << QString::number(metrics.getPacketLoss(), 'f', 2);
     fields << QString::number(metrics.getJitter(), 'f', 2);
     fields << escapeField(metrics.getQualityScoreString());
+
+    // Comments
+    fields << escapeField(device.getComments());
 
     return fields.join(",");
 }

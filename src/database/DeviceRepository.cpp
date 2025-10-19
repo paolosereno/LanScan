@@ -3,6 +3,7 @@
 #include <QSqlError>
 #include <QDateTime>
 #include <QVariant>
+#include <QUuid>
 
 DeviceRepository::DeviceRepository(DatabaseManager* dbManager)
     : db(dbManager), cacheEnabled(true) {
@@ -16,9 +17,15 @@ void DeviceRepository::save(const Device& device) {
         // Device exists, update it
         Device updatedDevice = device;
         updatedDevice.setId(existing.getId());  // Keep the same ID
+
+        // Preserve existing comments if new device doesn't have them
+        if (updatedDevice.getComments().isEmpty() && !existing.getComments().isEmpty()) {
+            updatedDevice.setComments(existing.getComments());
+        }
+
         update(updatedDevice);
 
-        // Update cache
+        // Update cache with merged device
         if (cacheEnabled) {
             cache.put(updatedDevice.getId(), updatedDevice);
         }
@@ -202,6 +209,7 @@ Device DeviceRepository::mapFromQuery(const QSqlQuery& query) {
     device.setVendor(query.value("vendor").toString());
     device.setOnline(query.value("is_online").toBool());
     device.setLastSeen(query.value("last_seen").toDateTime());
+    device.setComments(query.value("comments").toString());
 
     // Load ports for this device
     QSqlQuery portsQuery = db->prepareQuery(
@@ -240,19 +248,29 @@ Device DeviceRepository::mapFromQuery(const QSqlQuery& query) {
 }
 
 void DeviceRepository::saveToDatabase(const Device& device) {
+    // Generate UUID if device doesn't have one
+    Device deviceToSave = device;
+    if (deviceToSave.getId().isEmpty()) {
+        QString newId = QUuid::createUuid().toString();
+        deviceToSave.setId(newId);
+        Logger::info(QString("DeviceRepository: Generated new ID for device %1: %2")
+                    .arg(device.getIp()).arg(newId));
+    }
+
     QString query = R"(
-        INSERT INTO devices (id, ip, hostname, mac_address, vendor, is_online, last_seen)
-        VALUES (:id, :ip, :hostname, :mac, :vendor, :online, :last_seen)
+        INSERT INTO devices (id, ip, hostname, mac_address, vendor, is_online, last_seen, comments)
+        VALUES (:id, :ip, :hostname, :mac, :vendor, :online, :last_seen, :comments)
     )";
 
     QSqlQuery sqlQuery = db->prepareQuery(query);
-    sqlQuery.bindValue(":id", device.getId());
-    sqlQuery.bindValue(":ip", device.getIp());
-    sqlQuery.bindValue(":hostname", device.getHostname());
-    sqlQuery.bindValue(":mac", device.getMacAddress());
-    sqlQuery.bindValue(":vendor", device.getVendor());
-    sqlQuery.bindValue(":online", device.isOnline() ? 1 : 0);
-    sqlQuery.bindValue(":last_seen", device.getLastSeen());
+    sqlQuery.bindValue(":id", deviceToSave.getId());
+    sqlQuery.bindValue(":ip", deviceToSave.getIp());
+    sqlQuery.bindValue(":hostname", deviceToSave.getHostname());
+    sqlQuery.bindValue(":mac", deviceToSave.getMacAddress());
+    sqlQuery.bindValue(":vendor", deviceToSave.getVendor());
+    sqlQuery.bindValue(":online", deviceToSave.isOnline() ? 1 : 0);
+    sqlQuery.bindValue(":last_seen", deviceToSave.getLastSeen());
+    sqlQuery.bindValue(":comments", deviceToSave.getComments());
 
     if (!sqlQuery.exec()) {
         Logger::error("DeviceRepository: Failed to save device: " + sqlQuery.lastError().text());
@@ -268,6 +286,12 @@ void DeviceRepository::saveToDatabase(const Device& device) {
 void DeviceRepository::updateInDatabase(const Device& device) {
     // Get existing device to merge data (preserve hostname if new device doesn't have it)
     Device existing = findById(device.getId());
+
+    Logger::info(QString("DeviceRepository::updateInDatabase - Device ID: %1, IP: %2, New Comments: '%3', Existing Comments: '%4'")
+                 .arg(device.getId())
+                 .arg(device.getIp())
+                 .arg(device.getComments())
+                 .arg(existing.getComments()));
 
     // Merge: keep existing hostname if new device has empty hostname
     QString hostname = device.getHostname();
@@ -288,10 +312,20 @@ void DeviceRepository::updateInDatabase(const Device& device) {
         vendor = existing.getVendor();
     }
 
+    // Merge: keep existing comments if new device doesn't have them
+    QString comments = device.getComments();
+    if (comments.isEmpty() && !existing.getComments().isEmpty()) {
+        comments = existing.getComments();
+        Logger::info(QString("DeviceRepository: Preserving existing comments for %1").arg(device.getIp()));
+    }
+
+    Logger::info(QString("DeviceRepository::updateInDatabase - Final comments to save: '%1'").arg(comments));
+
     QString query = R"(
         UPDATE devices
         SET ip = :ip, hostname = :hostname, mac_address = :mac,
             vendor = :vendor, is_online = :online, last_seen = :last_seen,
+            comments = :comments,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = :id
     )";
@@ -304,11 +338,17 @@ void DeviceRepository::updateInDatabase(const Device& device) {
     sqlQuery.bindValue(":vendor", vendor);      // Use merged vendor
     sqlQuery.bindValue(":online", device.isOnline() ? 1 : 0);
     sqlQuery.bindValue(":last_seen", device.getLastSeen());
+    sqlQuery.bindValue(":comments", comments);  // Use merged comments
 
     if (!sqlQuery.exec()) {
         Logger::error("DeviceRepository: Failed to update device: " + sqlQuery.lastError().text());
         return;
     }
+
+    int rowsAffected = sqlQuery.numRowsAffected();
+    Logger::info(QString("DeviceRepository: UPDATE query executed, rows affected: %1, comments saved: '%2'")
+                 .arg(rowsAffected)
+                 .arg(comments));
 
     // Delete old ports and save new ones (only if device has ports)
     if (!device.getOpenPorts().isEmpty()) {

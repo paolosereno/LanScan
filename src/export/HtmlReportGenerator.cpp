@@ -221,6 +221,7 @@ QString HtmlReportGenerator::generateDeviceTable(const QList<Device>& devices) {
     html += "                <th>Jitter (ms)</th>\n";
     html += "                <th>Quality</th>\n";
     html += "                <th>Open Ports</th>\n";
+    html += "                <th>Comments</th>\n";
     html += "            </tr>\n";
     html += "        </thead>\n";
     html += "        <tbody>\n";
@@ -260,6 +261,7 @@ QString HtmlReportGenerator::generateDeviceRow(const Device& device) {
     html += "                <td class=\"metric\">" + QString::number(metrics.getJitter(), 'f', 2) + "</td>\n";
     html += "                <td class=\"" + qualityClass + "\">" + qualityString + "</td>\n";
     html += "                <td class=\"ports-list\">" + formatPortsList(device.getOpenPorts()) + "</td>\n";
+    html += "                <td>" + (device.getComments().isEmpty() ? "-" : device.getComments()) + "</td>\n";
     html += "            </tr>\n";
 
     return html;

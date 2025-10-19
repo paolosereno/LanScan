@@ -96,10 +96,10 @@ void MetricsViewModel::startMonitoring(int intervalMs) {
         intervalMs = 60000;
     }
 
-    // Check if device has either ID or IP
-    QString deviceIdentifier = currentDevice.getId().isEmpty() ? currentDevice.getIp() : currentDevice.getId();
-    if (deviceIdentifier.isEmpty()) {
-        Logger::warn("MetricsViewModel: Cannot start monitoring without a device (no ID or IP)");
+    // Check if device has IP (required for ping operations)
+    QString deviceIp = currentDevice.getIp();
+    if (deviceIp.isEmpty()) {
+        Logger::warn("MetricsViewModel: Cannot start monitoring without a device IP address");
         return;
     }
 
@@ -113,11 +113,12 @@ void MetricsViewModel::startMonitoring(int intervalMs) {
 
     // Start continuous monitoring in MetricsController
     // MetricsController manages its own timer and calls to PingService
-    metricsController->startContinuousMonitoring(deviceIdentifier, monitoringInterval);
+    // Always use IP address for network operations, not UUID
+    metricsController->startContinuousMonitoring(deviceIp, monitoringInterval);
 
     Logger::info(QString("MetricsViewModel: Monitoring started for device %1 (%2) with interval %3ms")
                      .arg(currentDevice.hostname())
-                     .arg(deviceIdentifier)
+                     .arg(deviceIp)
                      .arg(monitoringInterval));
 
     emit monitoringStarted();
@@ -132,9 +133,9 @@ void MetricsViewModel::stopMonitoring() {
 
     // Stop continuous monitoring in MetricsController
     if (metricsController) {
-        QString deviceIdentifier = currentDevice.getId().isEmpty() ? currentDevice.getIp() : currentDevice.getId();
-        if (!deviceIdentifier.isEmpty()) {
-            metricsController->stopContinuousMonitoring(deviceIdentifier);
+        QString deviceIp = currentDevice.getIp();
+        if (!deviceIp.isEmpty()) {
+            metricsController->stopContinuousMonitoring(deviceIp);
         }
     }
 
@@ -187,11 +188,11 @@ int MetricsViewModel::getMaxHistorySize() const {
 }
 
 void MetricsViewModel::onMetricsCollected(const QString& deviceId, const NetworkMetrics& metrics) {
-    // Use IP as identifier if ID is empty
-    QString currentDeviceIdentifier = currentDevice.getId().isEmpty() ? currentDevice.getIp() : currentDevice.getId();
+    // Always use IP address for network operations comparison
+    QString currentDeviceIp = currentDevice.getIp();
 
-    // Only process metrics for the current device
-    if (deviceId != currentDeviceIdentifier) {
+    // Only process metrics for the current device (compare by IP)
+    if (deviceId != currentDeviceIp) {
         return;
     }
 
@@ -215,14 +216,14 @@ void MetricsViewModel::onMonitoringTimerTimeout() {
         return;
     }
 
-    // Use IP as identifier if ID is empty
-    QString deviceIdentifier = currentDevice.getId().isEmpty() ? currentDevice.getIp() : currentDevice.getId();
+    // Always use IP address for network operations
+    QString deviceIp = currentDevice.getIp();
 
     // Request metrics collection for current device
     Logger::debug(QString("MetricsViewModel: Collecting metrics for device %1 (%2)")
                       .arg(currentDevice.hostname())
-                      .arg(deviceIdentifier));
-    metricsController->collectMetricsOnce(deviceIdentifier);
+                      .arg(deviceIp));
+    metricsController->collectMetricsOnce(deviceIp);
 }
 
 void MetricsViewModel::pruneHistory() {

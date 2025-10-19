@@ -44,6 +44,7 @@ QJsonObject JsonExporter::deviceToJson(const Device& device) {
     obj["last_seen"] = device.getLastSeen().toString(Qt::ISODate);
     obj["open_ports"] = portsToJsonArray(device.getOpenPorts());
     obj["metrics"] = metricsToJson(device.getMetrics());
+    obj["comments"] = device.getComments();
 
     return obj;
 }

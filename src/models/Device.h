@@ -31,6 +31,8 @@ public:
     QList<PortInfo> openPorts() const;
     NetworkMetrics getMetrics() const;
     NetworkMetrics metrics() const;
+    QString getComments() const;
+    QString comments() const;
 
     // Setters
     void setId(const QString& id);
@@ -42,6 +44,7 @@ public:
     void setLastSeen(const QDateTime& lastSeen);
     void setOpenPorts(const QList<PortInfo>& ports);
     void setMetrics(const NetworkMetrics& metrics);
+    void setComments(const QString& comments);
 
     // Utility methods
     void addPort(const PortInfo& port);
@@ -58,6 +61,7 @@ private:
     QDateTime m_lastSeen;
     QList<PortInfo> m_openPorts;
     NetworkMetrics m_metrics;
+    QString m_comments;
 };
 
 #endif // DEVICE_H
