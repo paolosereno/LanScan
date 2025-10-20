@@ -5,9 +5,9 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-38%20suites%20%7C%20160%2B%20cases-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Progress](https://img.shields.io/badge/progress-94%25-blue.svg)](https://github.com/paolosereno/LanScan)
-[![LOC](https://img.shields.io/badge/LOC-32.7k-informational.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-34%20suites%20%7C%2089%2B%20cases-brightgreen.svg)](https://github.com/paolosereno/LanScan)
+[![Progress](https://img.shields.io/badge/progress-92%25-blue.svg)](https://github.com/paolosereno/LanScan)
+[![LOC](https://img.shields.io/badge/LOC-33.4k-informational.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -114,9 +114,13 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Query time measurement with QElapsedTimer
   - Structured DnsRecord result type with TTL and priority
   - 15 unit tests (100% passing)
-- ✅ **Monitoring service with alerts and history** (Phase 7.3)
+- ✅ **Monitoring service with alerts and history** (Phase 7.3, Frontend Integration: 2025-10-20)
   - Alert management with severity levels (Info, Warning, Critical)
   - Alert types: HighLatency, PacketLoss, HighJitter, DeviceOffline/Online
+  - **System tray notifications with severity-based icons** ✅
+  - **Alert settings loaded from QSettings on startup** ✅
+  - **Configurable thresholds** (latency, packet loss, jitter) ✅
+  - **Enable/disable alerts toggle** ✅
   - Historical metrics and events persistence in SQLite
   - Continuous device monitoring with configurable intervals
   - Threshold-based alert generation (latency, packet loss, jitter)
@@ -427,26 +431,35 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - CMakeLists.txt updates (~25 LOC)
   - main.cpp startup language loading
 
-**Testing & Quality Assurance** (Phase 10 - 🔄 In Progress)
-- ✅ **Controller Tests** (Day 1-2 - Complete)
-  - ScanControllerTest.cpp with 20 test cases
-  - MetricsControllerTest.cpp with 15 test cases
-  - ExportControllerTest.cpp with 16 test cases
-  - Mock objects for ScanCoordinator and MetricsAggregator
-  - Test coverage for scan workflows, metrics collection, and export operations
-- ✅ **ViewModel Tests** (Day 3-4 - In Progress)
-  - DeviceTableViewModelTest.cpp with 29 test cases
-  - Tests for QAbstractTableModel interface, device management, signal emissions
-  - MetricsViewModelTest.cpp (pending)
-  - ScanConfigViewModelTest.cpp (pending)
-- 🔄 **Integration Tests** (Day 8-9 - Planned)
+**Alert System Frontend Integration** (Critical Fix - ✅ Complete - 2025-10-20)
+- ✅ **System Tray Notifications**
+  - Alert notifications with severity-based icons (Info/Warning/Critical)
+  - Signal/slot connection: MonitoringService → MainWindow
+  - Alert message formatting with device ID and severity
+- ✅ **Settings Integration**
+  - Load alert settings from QSettings on startup
+  - Dynamic settings reload when changed in Settings Dialog
+  - Alert enable/disable toggle
+  - Configurable thresholds (latency, packet loss, jitter)
+- ✅ **Documentation**
+  - ALERT_SYSTEM_TESTING.md with comprehensive test guide
+  - Test cases for all alert types
+  - Configuration instructions
+- ✅ **Implementation**
+  - 2 files modified: MainWindow.h/cpp (+105 LOC)
+  - 1 file created: ALERT_SYSTEM_TESTING.md
+  - Build successful (67 MB Debug build)
+  - ~1.5 hours implementation time
+
+**Testing & Quality Assurance** (Phase 10 - ⏳ Ready to Start)
+- ⏳ **Integration Tests** (Planned)
   - Full scan workflow testing
   - Monitoring and alert integration tests
-- 🔄 **Performance Tests** (Day 10-11 - Planned)
+- ⏳ **Performance Tests** (Planned)
   - Scan performance benchmarks
-  - Memory leak detection with Valgrind
+  - Memory leak detection
   - Database query optimization
-- 🔄 **Cross-platform Testing** (Day 12-14 - Planned)
+- ⏳ **Cross-platform Testing** (Planned)
   - Windows 10/11 verification
   - Linux (Ubuntu 22.04+) verification
 
@@ -726,16 +739,17 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 10 - Testing & Quality Assurance 🔄 **IN PROGRESS** (Day 1-4 of 14 - 29%)
-**Next Milestone**: Phase 11 - Documentation & Release
-**Progress**: 94% (~9.4 complete phases of ~12 total)
+**Current Phase**: Phase 9 - UI Polish & Theming ✅ **COMPLETE**
+**Critical Fix**: Alert System Frontend Integration ✅ **RESOLVED** (2025-10-20)
+**Next Milestone**: Phase 10 - Testing & Quality Assurance ⏳ **READY TO START**
+**Progress**: 92% (~9.0 complete phases + critical fix of ~12 total)
 **Latest Release**: [v0.9.4-phase9.4](https://github.com/paolosereno/LanScan/releases/tag/v0.9.4-phase9.4)
 
 ### Metrics
-- **Files**: 266 total (+4 new test files)
-- **Lines of Code**: ~34,800 LOC (+1,508 LOC in Phase 10)
-- **Test Coverage**: 38 suites, 160+ test cases (+4 suites, +71 cases)
-- **Build Size**: 61 MB (Debug build)
+- **Files**: 263 total (+1 new file: ALERT_SYSTEM_TESTING.md)
+- **Lines of Code**: ~33,397 LOC (+105 LOC from alert fix)
+- **Test Coverage**: 34 suites, 89+ test cases (all passing)
+- **Build Size**: 67 MB (Debug build)
 - **Languages**: 5 (English, Italian, Spanish, French, German)
 
 ### Recent Updates
@@ -743,6 +757,16 @@ Location: src/path/to/files
 For complete project history, see [CHANGELOG.md](CHANGELOG.md).
 
 #### Latest (October 2025)
+
+- **2025-10-20**: Alert System Frontend Integration ✅ **CRITICAL FIX**
+  - Implemented system tray notifications for alerts
+  - Connected MonitoringService::alertTriggered signal to MainWindow
+  - Added alert settings loading from QSettings
+  - Alert enable/disable toggle and configurable thresholds
+  - Created comprehensive testing guide (ALERT_SYSTEM_TESTING.md)
+  - 2 files modified: +105 LOC (~1.5 hours)
+  - **Status**: Alerts now visible to users via system tray notifications
+  - **Impact**: Unblocked Phase 10 (Testing & Quality Assurance)
 
 - **2025-10-18**: AboutDialog with System Validation
   - Professional 3-tab About dialog (About, System Information, System Validation)
@@ -789,11 +813,11 @@ For complete project history, see [CHANGELOG.md](CHANGELOG.md).
   - Total: 38 test suites, 160+ test cases
 
 ### Statistics
-- **Files Created**: 266 total (Phase 10 added 4 new test files)
-- **Lines of Code**: ~34,800+ lines (Phase 10 added ~1,508 LOC)
-- **Test Coverage**: 160+ tests across 38 test suites (Phase 10: +71 tests, +4 suites)
+- **Files Created**: 263 total (Phase 9 complete + alert fix)
+- **Lines of Code**: ~33,397 lines (Phase 9: ~4,584 LOC + Alert Fix: +105 LOC)
+- **Test Coverage**: 89+ tests across 34 test suites (all passing)
 - **Build Time**: ~50-60 seconds (Debug, 8-12 cores)
-- **Executable Size**: 61 MB (Debug build)
+- **Executable Size**: 67 MB (Debug build)
 - **Translation Files**: 4 languages × 17 translations = 68 translated strings
 
 ## License

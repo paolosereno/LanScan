@@ -8,6 +8,7 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include "../models/Device.h"
+#include "../models/Alert.h"
 #include "../widgets/NetworkActivityIndicator.h"
 #include "../widgets/GradientProgressBar.h"
 
@@ -89,6 +90,10 @@ private slots:
     void onShowHideAction();
     void onTrayQuickScan();
 
+    // Alert system slots
+    void onAlertTriggered(const QString& deviceId, const Alert& alert);
+    void onSettingsApplied();
+
 protected:
     void closeEvent(QCloseEvent* event) override;
     void changeEvent(QEvent* event) override;
@@ -132,6 +137,14 @@ private:
     bool minimizeToTray;
     bool closeToTray;
 
+    // Alert settings
+    bool enableAlerts;
+    bool alertSound;
+    bool systemNotifications;
+    int latencyThreshold;
+    int packetLossThreshold;
+    int jitterThreshold;
+
     void setupMenuBar();
     void setupToolBar();
     void setupStatusBar();
@@ -141,6 +154,7 @@ private:
     void setupSystemTray();
     void updateStatusMessage(const QString& message);
     void loadTraySettings();
+    void loadAlertSettings();
     void updateIcons();
 };
 

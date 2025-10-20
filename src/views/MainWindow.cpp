@@ -70,6 +70,12 @@ MainWindow::MainWindow(
     , trayMenu(nullptr)
     , minimizeToTray(false)
     , closeToTray(false)
+    , enableAlerts(true)
+    , alertSound(false)
+    , systemNotifications(true)
+    , latencyThreshold(100)
+    , packetLossThreshold(5)
+    , jitterThreshold(10)
 {
     ui->setupUi(this);
 
@@ -84,8 +90,9 @@ MainWindow::MainWindow(
     // Load initial devices
     deviceTableViewModel->loadDevices();
 
-    // Load tray settings
+    // Load settings
     loadTraySettings();
+    loadAlertSettings();
 
     Logger::info("MainWindow initialized");
 }
@@ -308,6 +315,10 @@ void MainWindow::setupConnections() {
     // Theme manager signal
     connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
             this, &MainWindow::onThemeChanged);
+
+    // MonitoringService signals
+    connect(monitoringService, &MonitoringService::alertTriggered,
+            this, &MainWindow::onAlertTriggered);
 }
 
 void MainWindow::onNewScanTriggered() {
@@ -355,10 +366,7 @@ void MainWindow::onSettingsTriggered() {
     SettingsDialog dialog(this);
 
     // Connect settings applied signal to refresh application settings
-    connect(&dialog, &SettingsDialog::settingsApplied, this, [this]() {
-        Logger::info("Settings have been updated");
-        // TODO: Reload application settings if needed (theme, font, etc.)
-    });
+    connect(&dialog, &SettingsDialog::settingsApplied, this, &MainWindow::onSettingsApplied);
 
     dialog.exec();
 }
@@ -556,6 +564,20 @@ void MainWindow::loadTraySettings() {
         .arg(minimizeToTray).arg(closeToTray));
 }
 
+void MainWindow::loadAlertSettings() {
+    QSettings settings;
+    enableAlerts = settings.value("Notifications/EnableAlerts", true).toBool();
+    alertSound = settings.value("Notifications/AlertSound", false).toBool();
+    systemNotifications = settings.value("Notifications/SystemNotifications", true).toBool();
+    latencyThreshold = settings.value("Notifications/LatencyThreshold", 100).toInt();
+    packetLossThreshold = settings.value("Notifications/PacketLossThreshold", 5).toInt();
+    jitterThreshold = settings.value("Notifications/JitterThreshold", 10).toInt();
+
+    Logger::info(QString("Alert settings loaded: enabled=%1, sound=%2, sysNotif=%3, latency=%4ms, loss=%5%, jitter=%6ms")
+        .arg(enableAlerts).arg(alertSound).arg(systemNotifications)
+        .arg(latencyThreshold).arg(packetLossThreshold).arg(jitterThreshold));
+}
+
 void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason) {
     if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick) {
         onShowHideAction();
@@ -594,6 +616,63 @@ void MainWindow::onTrayQuickScan() {
             3000
         );
     }
+}
+
+void MainWindow::onAlertTriggered(const QString& deviceId, const Alert& alert) {
+    // Check if alerts are enabled
+    if (!enableAlerts) {
+        Logger::debug(QString("Alert suppressed (alerts disabled): %1").arg(alert.toString()));
+        return;
+    }
+
+    Logger::info(QString("Alert triggered: %1 - %2").arg(alert.typeToString()).arg(alert.message()));
+
+    // Show system tray notification if enabled
+    if (systemNotifications && trayIcon && trayIcon->isVisible()) {
+        // Determine icon based on severity
+        QSystemTrayIcon::MessageIcon icon;
+        switch (alert.severity()) {
+            case AlertSeverity::Info:
+                icon = QSystemTrayIcon::Information;
+                break;
+            case AlertSeverity::Warning:
+                icon = QSystemTrayIcon::Warning;
+                break;
+            case AlertSeverity::Critical:
+                icon = QSystemTrayIcon::Critical;
+                break;
+            default:
+                icon = QSystemTrayIcon::Information;
+                break;
+        }
+
+        // Format the title with alert type
+        QString title = QString("LanScan - %1").arg(alert.severityToString());
+
+        // Format the message with device ID and alert message
+        QString message = QString("%1\nDevice: %2")
+            .arg(alert.message())
+            .arg(deviceId);
+
+        // Show tray message
+        trayIcon->showMessage(title, message, icon, 5000);
+    }
+
+    // TODO: Play alert sound if enabled
+    if (alertSound) {
+        // Sound playback will be implemented in next step
+        Logger::debug("Alert sound playback requested (not yet implemented)");
+    }
+}
+
+void MainWindow::onSettingsApplied() {
+    Logger::info("Settings have been applied - reloading alert settings");
+
+    // Reload tray settings
+    loadTraySettings();
+
+    // Reload alert settings
+    loadAlertSettings();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
