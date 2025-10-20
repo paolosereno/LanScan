@@ -97,6 +97,23 @@ void SettingsManager::setDatabasePath(const QString& path) {
     settings->setValue("database/path", path);
 }
 
+// Window Settings
+QByteArray SettingsManager::getWindowGeometry() const {
+    return settings->value("window/geometry").toByteArray();
+}
+
+void SettingsManager::setWindowGeometry(const QByteArray& geometry) {
+    settings->setValue("window/geometry", geometry);
+}
+
+QByteArray SettingsManager::getWindowState() const {
+    return settings->value("window/state").toByteArray();
+}
+
+void SettingsManager::setWindowState(const QByteArray& state) {
+    settings->setValue("window/state", state);
+}
+
 // Persistence
 void SettingsManager::save() {
     settings->sync();

@@ -35,6 +35,12 @@ public:
     QString getDatabasePath() const;
     void setDatabasePath(const QString& path);
 
+    // Window Settings
+    QByteArray getWindowGeometry() const;
+    void setWindowGeometry(const QByteArray& geometry);
+    QByteArray getWindowState() const;
+    void setWindowState(const QByteArray& state);
+
     // Persistence
     void save();
     void load();

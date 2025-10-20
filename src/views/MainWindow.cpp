@@ -20,6 +20,7 @@
 #include "diagnostics/BandwidthTester.h"
 #include "diagnostics/DnsDiagnostics.h"
 #include "services/WakeOnLanService.h"
+#include "config/SettingsManager.h"
 #include "../utils/Logger.h"
 #include "utils/IconLoader.h"
 #include "managers/ThemeManager.h"
@@ -93,6 +94,19 @@ MainWindow::MainWindow(
     // Load settings
     loadTraySettings();
     loadAlertSettings();
+
+    // Restore window geometry and state
+    QByteArray geometry = SettingsManager::instance()->getWindowGeometry();
+    if (!geometry.isEmpty()) {
+        restoreGeometry(geometry);
+        Logger::info("Window geometry restored");
+    }
+
+    QByteArray state = SettingsManager::instance()->getWindowState();
+    if (!state.isEmpty()) {
+        restoreState(state);
+        Logger::info("Window state restored");
+    }
 
     Logger::info("MainWindow initialized");
 }
@@ -691,6 +705,12 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
         Logger::info("Window closed to tray");
     } else {
+        // Save window geometry and state before closing
+        SettingsManager::instance()->setWindowGeometry(saveGeometry());
+        SettingsManager::instance()->setWindowState(saveState());
+        SettingsManager::instance()->save();
+        Logger::info("Window geometry and state saved");
+
         event->accept();
         Logger::info("Application closing");
     }
