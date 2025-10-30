@@ -84,6 +84,7 @@ add_executable(IpScannerTest
     ${CMAKE_SOURCE_DIR}/src/network/discovery/DnsResolver.cpp
     ${CMAKE_SOURCE_DIR}/src/network/discovery/ArpDiscovery.cpp
     ${CMAKE_SOURCE_DIR}/src/network/sockets/TcpSocketManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PingService.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/IpAddressValidator.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
     ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
@@ -288,8 +289,20 @@ add_executable(MonitoringServiceTest
     ${CMAKE_SOURCE_DIR}/include/services/AlertService.h
     ${CMAKE_SOURCE_DIR}/src/services/HistoryService.cpp
     ${CMAKE_SOURCE_DIR}/include/services/HistoryService.h
+    ${CMAKE_SOURCE_DIR}/src/controllers/MetricsController.cpp
+    ${CMAKE_SOURCE_DIR}/include/controllers/MetricsController.h
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/MetricsAggregator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PingService.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/LatencyCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/JitterCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PacketLossCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/QualityScoreCalculator.cpp
     ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceCache.cpp
     ${CMAKE_SOURCE_DIR}/src/models/Alert.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
 )
@@ -401,13 +414,33 @@ add_test(NAME ThemeManagerTest COMMAND ThemeManagerTest)
 add_executable(ScanControllerTest
     ScanControllerTest.cpp
     ${CMAKE_SOURCE_DIR}/src/controllers/ScanController.cpp
+    ${CMAKE_SOURCE_DIR}/include/controllers/ScanController.h
     ${CMAKE_SOURCE_DIR}/src/coordinators/ScanCoordinator.cpp
+    ${CMAKE_SOURCE_DIR}/include/coordinators/ScanCoordinator.h
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/IpScanner.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/QuickScanStrategy.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/DeepScanStrategy.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/scanner/PortScanner.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/SubnetCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/MacVendorLookup.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/services/PortServiceMapper.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/HostDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/DnsResolver.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/discovery/ArpDiscovery.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/sockets/TcpSocketManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/MetricsAggregator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PingService.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/LatencyCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/JitterCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PacketLossCalculator.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/QualityScoreCalculator.cpp
     ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
     ${CMAKE_SOURCE_DIR}/src/database/DeviceCache.cpp
     ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
     ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
     ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/IpAddressValidator.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
 )
 target_include_directories(ScanControllerTest PRIVATE
@@ -449,12 +482,14 @@ add_test(NAME MetricsControllerTest COMMAND MetricsControllerTest)
 add_executable(ExportControllerTest
     ExportControllerTest.cpp
     ${CMAKE_SOURCE_DIR}/src/controllers/ExportController.cpp
+    ${CMAKE_SOURCE_DIR}/include/controllers/ExportController.h
     ${CMAKE_SOURCE_DIR}/src/export/CsvExporter.cpp
     ${CMAKE_SOURCE_DIR}/src/export/JsonExporter.cpp
     ${CMAKE_SOURCE_DIR}/src/export/XmlExporter.cpp
     ${CMAKE_SOURCE_DIR}/src/export/HtmlReportGenerator.cpp
     ${CMAKE_SOURCE_DIR}/src/database/DeviceRepository.cpp
     ${CMAKE_SOURCE_DIR}/src/database/DatabaseManager.cpp
+    ${CMAKE_SOURCE_DIR}/src/database/DeviceCache.cpp
     ${CMAKE_SOURCE_DIR}/src/models/Device.cpp
     ${CMAKE_SOURCE_DIR}/src/models/PortInfo.cpp
     ${CMAKE_SOURCE_DIR}/src/models/NetworkMetrics.cpp
@@ -516,12 +551,13 @@ target_include_directories(MetricsViewModelTest PRIVATE
     ${CMAKE_SOURCE_DIR}/include/utils
     ${CMAKE_SOURCE_DIR}/src/models
 )
-target_link_libraries(MetricsViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Network)
+target_link_libraries(MetricsViewModelTest PRIVATE Qt6::Test Qt6::Core Qt6::Network Qt6::Sql)
 add_test(NAME MetricsViewModelTest COMMAND MetricsViewModelTest)
 
 add_executable(ScanConfigViewModelTest
     ScanConfigViewModelTest.cpp
     ${CMAKE_SOURCE_DIR}/src/viewmodels/ScanConfigViewModel.cpp
+    ${CMAKE_SOURCE_DIR}/include/viewmodels/ScanConfigViewModel.h
     ${CMAKE_SOURCE_DIR}/src/utils/IpAddressValidator.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Logger.cpp
 )

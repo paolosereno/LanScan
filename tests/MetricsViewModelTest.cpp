@@ -41,13 +41,12 @@ private:
  */
 class MockDeviceRepository : public IDeviceRepository {
 public:
-    Device findById(const QString& id) const override { Q_UNUSED(id); return Device(); }
-    Device findByIp(const QString& ip) const override { Q_UNUSED(ip); return Device(); }
-    QList<Device> findAll() const override { return QList<Device>(); }
-    bool save(const Device& device) override { Q_UNUSED(device); return true; }
-    bool update(const Device& device) override { Q_UNUSED(device); return true; }
-    bool remove(const QString& id) override { Q_UNUSED(id); return true; }
+    Device findById(const QString& id) override { Q_UNUSED(id); return Device(); }
+    QList<Device> findAll() override { return QList<Device>(); }
+    void save(const Device& device) override { Q_UNUSED(device); }
+    void remove(const QString& id) override { Q_UNUSED(id); }
     void clear() override {}
+    int count() const override { return 0; }
 };
 
 /**
@@ -545,13 +544,13 @@ Device MetricsViewModelTest::createTestDevice(const QString& ip, const QString& 
 
 NetworkMetrics MetricsViewModelTest::createTestMetrics(double latency, double jitter, double packetLoss) {
     NetworkMetrics metrics;
-    metrics.latencyAvg = latency;
-    metrics.latencyMin = latency - 2.0;
-    metrics.latencyMax = latency + 2.0;
-    metrics.jitter = jitter;
-    metrics.packetLoss = packetLoss;
-    metrics.qualityScore = 95.0;
-    metrics.timestamp = QDateTime::currentDateTime();
+    metrics.setLatencyAvg(latency);
+    metrics.setLatencyMin(latency - 2.0);
+    metrics.setLatencyMax(latency + 2.0);
+    metrics.setJitter(jitter);
+    metrics.setPacketLoss(packetLoss);
+    metrics.calculateQualityScore();
+    metrics.setTimestamp(QDateTime::currentDateTime());
     return metrics;
 }
 

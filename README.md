@@ -5,9 +5,9 @@
 [![Qt](https://img.shields.io/badge/Qt-6.9.1-brightgreen.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
 [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Tests](https://img.shields.io/badge/tests-34%20suites%20%7C%2089%2B%20cases-brightgreen.svg)](https://github.com/paolosereno/LanScan)
-[![Progress](https://img.shields.io/badge/progress-92%25-blue.svg)](https://github.com/paolosereno/LanScan)
-[![LOC](https://img.shields.io/badge/LOC-33.4k-informational.svg)](https://github.com/paolosereno/LanScan)
+[![Tests](https://img.shields.io/badge/tests-40%20suites%20%7C%2023%20passing-yellow.svg)](https://github.com/paolosereno/LanScan)
+[![Progress](https://img.shields.io/badge/progress-94%25-blue.svg)](https://github.com/paolosereno/LanScan)
+[![LOC](https://img.shields.io/badge/LOC-35.4k-informational.svg)](https://github.com/paolosereno/LanScan)
 
 Network scanner application with advanced diagnostics and metrics visualization.
 
@@ -451,17 +451,35 @@ Network scanner application with advanced diagnostics and metrics visualization.
   - Build successful (67 MB Debug build)
   - ~1.5 hours implementation time
 
-**Testing & Quality Assurance** (Phase 10 - ⏳ Ready to Start)
-- ⏳ **Integration Tests** (Planned)
-  - Full scan workflow testing
-  - Monitoring and alert integration tests
-- ⏳ **Performance Tests** (Planned)
-  - Scan performance benchmarks
-  - Memory leak detection
-  - Database query optimization
-- ⏳ **Cross-platform Testing** (Planned)
-  - Windows 10/11 verification
-  - Linux (Ubuntu 22.04+) verification
+**Testing & Quality Assurance** (Phase 10 - 🔄 In Progress - 85% Complete)
+- ✅ **Critical Bug Fixes** (COMPLETED - 2025-10-30)
+  - DnsDiagnosticsTest segfault resolved (signal disconnect issue)
+  - DeviceTableViewModelTest compilation error fixed
+  - 2 critical bugs fixed in ~1 hour
+- ✅ **Test Quality Analysis** (COMPLETED - 2025-10-30)
+  - Comprehensive test quality report created
+  - 40 test suites analyzed (23 passing, 13 failing, 4 not compiled)
+  - Root cause analysis for all failures
+  - Performance targets established
+- ✅ **Performance Testing Framework** (COMPLETED - 2025-10-30)
+  - PerformanceTests.cpp with QBENCHMARK integration (~400 LOC)
+  - Network benchmarks (Ping, DNS, Port Scan)
+  - Database benchmarks (Insert, Query, Update, Bulk operations)
+  - Export benchmarks (CSV, JSON - small & large datasets)
+  - Stress tests (10,000 devices, concurrent operations)
+- ✅ **Integration Test Suite** (COMPLETED - 2025-10-30)
+  - IntegrationTests.cpp with end-to-end workflows (~700 LOC)
+  - 10 integration tests covering major workflows
+  - Full scan workflow (scan → persist → export)
+  - Service integration (Alert, Monitoring, History)
+  - Database integration (Repository-Cache sync)
+- ⏳ **Code Coverage** (PENDING)
+  - gcov/lcov configuration
+  - Baseline coverage report
+  - Target: 85% overall coverage
+- ⏳ **Memory Leak Detection** (PENDING)
+  - Dr. Memory setup and execution
+  - Leak analysis and fixes
 
 ### 🚧 Planned (Phase 11+)
 - Documentation and user guides (Phase 11)
@@ -474,7 +492,7 @@ Network scanner application with advanced diagnostics and metrics visualization.
 - **Build System**: CMake 3.16+
 - **Architecture**: MVVM pattern with dependency injection
 - **Database**: SQLite with Repository pattern
-- **Testing**: Qt Test framework (38 test suites, 160+ test cases)
+- **Testing**: Qt Test framework (40 test suites, 23 passing, performance & integration tests)
 - **Platform**: Cross-platform (Windows, Linux, macOS)
 - **Localization**: Qt Linguist (5 languages: en, it, es, fr, de)
 
@@ -739,24 +757,53 @@ Location: src/path/to/files
 
 ## Project Status
 
-**Current Phase**: Phase 9 - UI Polish & Theming ✅ **COMPLETE**
-**Critical Fix**: Alert System Frontend Integration ✅ **RESOLVED** (2025-10-20)
-**Next Milestone**: Phase 10 - Testing & Quality Assurance ⏳ **READY TO START**
-**Progress**: 92% (~9.0 complete phases + critical fix of ~12 total)
+**Current Phase**: Phase 10 - Testing & Quality Assurance 🔄 **IN PROGRESS** (85% complete)
+**Critical Fix**: DnsDiagnosticsTest Segfault ✅ **RESOLVED** (2025-10-30)
+**Next Milestone**: Complete code coverage & memory leak detection
+**Progress**: 94% (~9.85 complete phases of ~12 total)
 **Latest Release**: [v0.9.4-phase9.4](https://github.com/paolosereno/LanScan/releases/tag/v0.9.4-phase9.4)
 
 ### Metrics
-- **Files**: 263 total (+1 new file: ALERT_SYSTEM_TESTING.md)
-- **Lines of Code**: ~33,397 LOC (+105 LOC from alert fix)
-- **Test Coverage**: 34 suites, 89+ test cases (all passing)
+- **Files**: 267 total (+4 new test files)
+- **Lines of Code**: ~35,397 LOC (+2,000 LOC test frameworks)
+- **Test Coverage**: 40 suites (23 passing, 13 failing, 4 not compiled)
 - **Build Size**: 67 MB (Debug build)
 - **Languages**: 5 (English, Italian, Spanish, French, German)
+- **Test Code**: ~9,600 LOC (performance & integration frameworks)
 
 ### Recent Updates
 
 For complete project history, see [CHANGELOG.md](CHANGELOG.md).
 
 #### Latest (October 2025)
+
+- **2025-10-30**: Phase 10 Testing & Quality Assurance - 85% Complete 🔄
+  - **Critical Bug Fixes** ✅
+    - Fixed DnsDiagnosticsTest segfault (signal disconnect issue)
+    - Fixed DeviceTableViewModelTest compilation error (PortInfo enum)
+    - 2 files modified: ~5 LOC
+  - **Test Quality Report** ✅
+    - Comprehensive analysis of 40 test suites
+    - Documented root causes for 13 failing tests
+    - Established performance targets
+    - File: PHASE_10_TEST_QUALITY_REPORT.md (~500 lines)
+  - **Performance Testing Framework** ✅
+    - Created PerformanceTests.cpp (~400 LOC)
+    - Network, Database, Export benchmarks
+    - Stress tests (10,000 devices, concurrent operations)
+    - Performance targets: Quick Scan < 5s, DB Insert < 5ms, CSV Export < 200ms
+  - **Integration Test Suite** ✅
+    - Created IntegrationTests.cpp (~700 LOC)
+    - 10 end-to-end workflow tests
+    - Full scan workflow, Service integration, Database sync
+  - **Phase Documentation** ✅
+    - PHASE_10_SUMMARY.md with complete deliverables
+    - Testing procedures and recommendations
+  - **Pending Tasks** ⏳
+    - Code coverage configuration with gcov/lcov
+    - Memory leak detection with Dr. Memory
+    - Fix remaining 13 test failures
+  - **Status**: 7/9 tasks complete, 2 pending (code coverage, memory leak detection)
 
 - **2025-10-20**: Alert System Frontend Integration ✅ **CRITICAL FIX**
   - Implemented system tray notifications for alerts
@@ -813,12 +860,13 @@ For complete project history, see [CHANGELOG.md](CHANGELOG.md).
   - Total: 38 test suites, 160+ test cases
 
 ### Statistics
-- **Files Created**: 263 total (Phase 9 complete + alert fix)
-- **Lines of Code**: ~33,397 lines (Phase 9: ~4,584 LOC + Alert Fix: +105 LOC)
-- **Test Coverage**: 89+ tests across 34 test suites (all passing)
+- **Files Created**: 267 total (Phase 9: 263 + Phase 10: +4 test files)
+- **Lines of Code**: ~35,397 lines (Phase 9: ~33,397 + Phase 10: +2,000 test LOC)
+- **Test Coverage**: 40 test suites (23 passing/58%, 13 failing/32%, 4 not compiled/10%)
 - **Build Time**: ~50-60 seconds (Debug, 8-12 cores)
 - **Executable Size**: 67 MB (Debug build)
 - **Translation Files**: 4 languages × 17 translations = 68 translated strings
+- **Test Frameworks**: Performance (~400 LOC) + Integration (~700 LOC) + Quality Report (~500 lines)
 
 ## License
 

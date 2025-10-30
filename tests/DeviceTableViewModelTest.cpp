@@ -144,13 +144,13 @@ void DeviceTableViewModelTest::testData_DisplayRole() {
     device.setVendor("Test Vendor");
 
     NetworkMetrics metrics;
-    metrics.latencyAvg = 12.5;
-    metrics.qualityScore = 85;
+    metrics.setLatencyAvg(12.5);
+    metrics.setQualityScore(NetworkMetrics::QualityScore::Excellent);
     device.setMetrics(metrics);
 
-    PortInfo port;
-    port.setPort(80);
+    PortInfo port(80, PortInfo::TCP);
     port.setService("HTTP");
+    port.setState(PortInfo::Open);
     device.addPort(port);
 
     viewModel->addDevice(device);
@@ -185,7 +185,7 @@ void DeviceTableViewModelTest::testData_TextAlignmentRole() {
 void DeviceTableViewModelTest::testData_ForegroundRole() {
     Device device = createTestDevice("192.168.1.100", "device1");
     NetworkMetrics metrics;
-    metrics.qualityScore = 90; // Excellent quality
+    metrics.setQualityScore(NetworkMetrics::QualityScore::Excellent); // Excellent quality
     device.setMetrics(metrics);
 
     viewModel->addDevice(device);

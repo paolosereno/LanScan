@@ -18,7 +18,7 @@ class MockMetricsAggregator : public MetricsAggregator {
 
 public:
     explicit MockMetricsAggregator(QObject* parent = nullptr)
-        : MetricsAggregator(nullptr, nullptr, nullptr, nullptr, nullptr, parent)
+        : MetricsAggregator(nullptr, nullptr, nullptr, nullptr, parent)
         , mockCollecting(false)
     {}
 
@@ -417,9 +417,9 @@ void MetricsControllerTest::testSignal_MetricsCollected() {
     QCOMPARE(arguments.at(0).toString(), deviceId);
 
     NetworkMetrics collectedMetrics = arguments.at(1).value<NetworkMetrics>();
-    QCOMPARE(collectedMetrics.latencyAvg, testMetrics.latencyAvg);
-    QCOMPARE(collectedMetrics.jitter, testMetrics.jitter);
-    QCOMPARE(collectedMetrics.packetLoss, testMetrics.packetLoss);
+    QCOMPARE(collectedMetrics.latencyAvg(), testMetrics.latencyAvg());
+    QCOMPARE(collectedMetrics.jitter(), testMetrics.jitter());
+    QCOMPARE(collectedMetrics.packetLoss(), testMetrics.packetLoss());
 }
 
 void MetricsControllerTest::testSignal_MetricsError() {
@@ -477,13 +477,13 @@ Device MetricsControllerTest::createTestDevice(const QString& ip, const QString&
 
 NetworkMetrics MetricsControllerTest::createTestMetrics(double latency, double jitter, double packetLoss) {
     NetworkMetrics metrics;
-    metrics.latencyAvg = latency;
-    metrics.latencyMin = latency - 2.0;
-    metrics.latencyMax = latency + 2.0;
-    metrics.jitter = jitter;
-    metrics.packetLoss = packetLoss;
-    metrics.qualityScore = 95.0;
-    metrics.timestamp = QDateTime::currentDateTime();
+    metrics.setLatencyAvg(latency);
+    metrics.setLatencyMin(latency - 2.0);
+    metrics.setLatencyMax(latency + 2.0);
+    metrics.setJitter(jitter);
+    metrics.setPacketLoss(packetLoss);
+    metrics.calculateQualityScore();
+    metrics.setTimestamp(QDateTime::currentDateTime());
     return metrics;
 }
 

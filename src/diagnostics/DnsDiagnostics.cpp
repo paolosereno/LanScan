@@ -86,6 +86,8 @@ void DnsDiagnostics::cancel()
     Logger::info("DnsDiagnostics: Cancelling lookup");
 
     if (m_dnsLookup) {
+        // Disconnect all signals to prevent crashes if object is destroyed
+        disconnect(m_dnsLookup, nullptr, this, nullptr);
         m_dnsLookup->abort();
         m_dnsLookup->deleteLater();
         m_dnsLookup = nullptr;
