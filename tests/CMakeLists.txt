@@ -420,7 +420,7 @@ add_executable(ScanControllerTest
     ${CMAKE_SOURCE_DIR}/src/network/scanner/IpScanner.cpp
     ${CMAKE_SOURCE_DIR}/src/network/scanner/QuickScanStrategy.cpp
     ${CMAKE_SOURCE_DIR}/src/network/scanner/DeepScanStrategy.cpp
-    ${CMAKE_SOURCE_DIR}/src/network/scanner/PortScanner.cpp
+    ${CMAKE_SOURCE_DIR}/src/network/diagnostics/PortScanner.cpp
     ${CMAKE_SOURCE_DIR}/src/network/services/SubnetCalculator.cpp
     ${CMAKE_SOURCE_DIR}/src/network/services/MacVendorLookup.cpp
     ${CMAKE_SOURCE_DIR}/src/network/services/PortServiceMapper.cpp
